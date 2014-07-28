@@ -85,7 +85,7 @@
 	var twitterID = ["347783020163518464", "347787216354942976", "348846254127726592", "348817018734137344", "348817444414033922", "347786457651503104", "348817995189075971", "348818811291570177", "348819099444453376", "348819379582017539", "348819636558635008", "348819863118159873", "348820099265884160", "348820315805216769"];
 	var twitterName = ["Cicmty", "viaCICmty", "spuCICmty", "comCICmty", "emeCICmty", "segCICmty", "segCICsp", "segCICgpe", "segCICsn", "segCICapo", "segCICesc", "segCICgar", "segCICcad", "segCICsc"];
 	
-	/* CONSTANT VALUES */
+	/* CONSTANTS */
     
     var publicServices = ['ALCANTARILLAS','ALUMBRADO PUBLICO','BACHE O VIA DAÑADA','FALTA ELECTRICIDAD','FUGA','PARQUES DESCUIDADOS', 'RECOLECCION DE BASURA','SEMAFORO DESCOMPUESTO'];
 	var reportOrigins = ['Ushahidi', 'URI', 'CRM', 'Twitter', 'MAIL', 'SMS']; 
@@ -379,7 +379,10 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
     var _geoq;
 	
 	var selectedCat, selectedTitle, selectedContent, selectedTicket, selectedAddress, selectedUrl, selectedStatus, selectedFail, selectedCreate, selectedUpdate, selectedFollowup, selectedFollowupExt, selectedVotes, selectedStars, selectedAssets, selectedComments, selectedUUID;
-    var des, has, valulthoras = 3, horasdeldia, queryhorasdeldia = "(date_part('hour', "+table_name+".created_at at time zone '"+TZ+"') = 8 ) OR (date_part('hour', "+table_name+".created_at at time zone '"+TZ+"') = 9 ) OR (date_part('hour', "+table_name+".created_at at time zone '"+TZ+"') = 10 ) OR (date_part('hour', "+table_name+".created_at at time zone '"+TZ+"') = 11 ) OR (date_part('hour', "+table_name+".created_at at time zone '"+TZ+"') = 12 )", auxhas = true;
+    
+    var des, has, valulthoras = 3, horasdeldia, auxhas = true;
+    var queryhorasdeldia = "(date_part('hour', "+table_name+".created_at at time zone '"+TZ+"') = 8 ) OR (date_part('hour', "+table_name+".created_at at time zone '"+TZ+"') = 9 ) OR (date_part('hour', "+table_name+".created_at at time zone '"+TZ+"') = 10 ) OR (date_part('hour', "+table_name+".created_at at time zone '"+TZ+"') = 11 ) OR (date_part('hour', "+table_name+".created_at at time zone '"+TZ+"') = 12 )";
+	
 	var anyFilter=false;
 	
 	///ADD SPLICE TO STRING PROTOTYPE FOR INSERTION
