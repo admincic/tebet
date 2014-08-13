@@ -27,12 +27,9 @@
 <link rel="stylesheet" type="text/css" href="css/default.css" />
 <!-- JS References -->
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=drawing,places,panoramio,weather,visualization"></script>
+<script src="http://libs.cartocdn.com/cartodb.js/v2/cartodb.js"></script>
 <script src="js/jquery.js"></script> 
 <script src="js/jquery-ui.js"></script>
-
-<script type="text/javascript" src="http://libs.cartocdn.com/cartodb.js/v2/cartodb.js"></script>
-<!-- <script src="js/cartodb.js"></script> -->
-
 <script src="js/jquery.share.js"></script>
 <script src="js/jquery.raptorize.1.0.js"></script>
 <script src="js/jquery.searchMeme.js" ></script>
@@ -58,7 +55,7 @@
 <!-- OWN JS -->
 <script type="text/javascript" src="js/ageb.js" ></script>
 <script type="text/javascript" src="js/gdropdown.js"> </script>
-<script type="text/javascript" src="js/gheatmap.js"> </script>
+<!-- <script type="text/javascript" src="js/gheatmap.js"> </script> -->
 <!-- GOOGLE ANALYTICS -->
 <script type="text/javascript" src="js/ganalytics.js" ></script>
 <!-- BROWSER DETECTION -->
@@ -69,9 +66,9 @@
 	/* ACCOUNT-DEPENDING CONFIGURATIONS */
 	
 	//MARKER IMAGES SOURCE URL
-	var sourceurl = "http://cic.mx/src/";
+	var sourceurl = "http://cic-workshop.biz/tehuan-beta/ico/";
 	//DISQUS BOARD NAME FOR COMMENTS
-	var disqus_dashboard = 'tehuan-beta';
+	var disqus_shortname = 'tehuan-beta';
 	//CARTO
 	var area_name = 'mun_poly';
 	var table_name = 'nl_public';
@@ -127,41 +124,56 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 
 	/* CARTOCSS STYLE */
 	//CATEGORY AND MARKER IMAGE
+	
+	/*CONFIG ARRAY STRUCTURE: [0]: category name as on cartoDB
+					  		[1]: marker or thumbnail image (must be SAME name and type)
+					  		[2]: category group for marker 
+	*/
+	
 	var catMarkers = [
-		['MTYMUYBIEN', 'mtymuybien.png'],
-		['ALCANTARILLAS', 'alcantarillas.png'],
-		['ALUMBRADO PUBLICO', 'alumbrado.png'],
-		['FALTA ELECTRICIDAD', 'electricidad.png'],
-		['FUGA', 'fuga.png'],
-		['OTROS', 'otros.png'],
-		['PARQUES DESCUIDADOS', 'parques.png'],
-		['RECOLECCION DE BASURA', 'basura.png'],
-		['ACCIDENTE', 'accidente.png'],
-		['BACHE O VIA DAÑADA', 'bache.png'],
-		['OBRAS Y/O VIA CERRADA', 'viacerrada.png'],
-		['SEMAFORO DESCOMPUESTO', 'semaforo.png'],
-		['VIALIDAD', 'vialidad.png'],
-		['INCENDIO', 'incendio.png'],
-		['ROBO', 'robo.png'],
-		['SITUACION DE RIESGO', 'sitriesgo.png'],
-		['PROPUESTA COMUNIDAD', 'pcomunidad.png'],
-		['PROPUESTA SEGURIDAD', 'pseguridad.png'],
-		['PROPUESTA SERV PUBLICOS', 'pservpublicos.png'],
-		['PROPUESTA VIALIDAD', 'pvialidad.png'],
-		['EMERGENCIAS', 'emergencia.png'],
-		['AVISOS', 'aviso.png'],
-		['EVENTO PUBLICO', 'evento.png'],
-		['OBSERVADOR CIUDADANO', 'obscdn.png'],
-		['DETENCION DE BANDAS', 'bandas.png'],
-		['EXTORSION', 'extor.png'],
-		['HOMICIDIO', 'homic.png'],
-		['SECUESTRO', 'secues.png'],
-		['SOSPECHOSO', 'sospe.png'],
-		['ROBO CASA', 'robocasa.png'],
-		['ROBO COMERCIO', 'robocomer.png'],
-		['AUTO ABANDONADO', 'autoaban.png'],
-		['PERCEPCION DE INSEGURIDAD', 'perpinseg.png']
+		['MTYMUYBIEN', 'com-mty.png', 'COMUNIDAD'],
+		['AVISOS', 'com_avisos.png', 'COMUNIDAD'],
+		['EVENTO PUBLICO', 'com_eventos.png', 'COMUNIDAD'],
+		['OBSERVADOR CIUDADANO', 'com_observador.png', 'COMUNIDAD'],
+		['ALCANTARILLAS', 'ser_alcantarilla.png', 'SERVICIOS PUBLICOS'],
+		['ALUMBRADO PUBLICO', 'ser_alumbrado.png', 'SERVICIOS PUBLICOS'],
+		['FALTA ELECTRICIDAD', 'ser_electricidad.png', 'SERVICIOS PUBLICOS'],
+		['FUGA', 'ser_fuga.png', 'SERVICIOS PUBLICOS'],
+		['PARQUES DESCUIDADOS', 'ser_parque.png', 'SERVICIOS PUBLICOS'],
+		['RECOLECCION DE BASURA', 'ser_basura.png', 'SERVICIOS PUBLICOS'],
+		['ACCIDENTE', 'via_accidente.png', 'VIALIDAD Y TRANSITO'],
+		['BACHE O VIA DAÑADA', 'via_bache.png', 'VIALIDAD Y TRANSITO'],
+		['OBRAS Y/O VIA CERRADA', 'via_obras.png', 'VIALIDAD Y TRANSITO'],
+		['SEMAFORO DESCOMPUESTO', 'via_semaforo.png', 'VIALIDAD Y TRANSITO'],
+		['VIALIDAD', 'vialidad.png', 'VIALIDAD Y TRANSITO'],
+		['PROPUESTA COMUNIDAD', 'pro_comunidad.png', 'PROPUESTAS CIUDADANAS'],
+		['PROPUESTA SEGURIDAD', 'pro_seguridad.png', 'PROPUESTAS CIUDADANAS'],
+		['PROPUESTA SERV PUBLICOS', 'pro_servicios.png', 'PROPUESTAS CIUDADANAS'],
+		['PROPUESTA VIALIDAD', 'pro_vialidad.png', 'PROPUESTAS CIUDADANAS'],
+		['EMERGENCIAS', 'emergencia.png', 'EMERGENCIAS'],
+		['INCENDIO', 'seg_incendio.png', 'SEGURIDAD'],
+		['ROBO', 'seg_robo.png', 'SEGURIDAD'],
+		['SITUACION DE RIESGO', 'seg_sitriesgo.png', 'SEGURIDAD'],
+		['DETENCION DE BANDAS', 'seg_detbandas.png', 'SEGURIDAD'],
+		['EXTORSION', 'seg_extorsion.png', 'SEGURIDAD'],
+		['HOMICIDIO', 'seg_homicidio.png', 'SEGURIDAD'],
+		['SECUESTRO', 'seg_secuestro.png', 'SEGURIDAD'],
+		['SOSPECHOSO', 'seg_sospechoso.png', 'SEGURIDAD'],
+		['AUTO ABANDONADO', 'seg_autoaban.png', 'SEGURIDAD'],
+		['PERCEPCION DE INSEGURIDAD', 'seg_percdeinseg.png', 'SEGURIDAD'],
+		['OTROS', 'otros.png', 'OTROS'],
+		['ROBO AUTO', 'seg_roboauto.png', 'SEGURIDAD']
+	];	
+	var catColors = [
+		[ "#F48F33", 'VIALIDAD Y TRANSITO'],
+		[ "#FAD714", 'SERVICIOS PUBLICOS'],
+		[ "#BAD544", 'COMUNIDAD'],
+		[ "#E2E2E2", 'OTROS'],
+		[ "#4CB057", 'PROPUESTAS CIUDADANAS'],
+		[ "#669FD2", 'SEGURIDAD'],
+		[ "#DB3539", 'EMERGENCIAS']
 	];
+	
 	function createTileStyle(tStyle) {
 		var mOverlap;
 		var close;
@@ -185,7 +197,7 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 			break;
 		}
 		for (var i = 0; i < catMarkers.length; i++) {
-			tileStyle += "[post_cat='" + catMarkers[i][0] + "']{marker-file:url('" + sourceurl + "markers/" + catMarkers[i][1] + "');marker-clip:false;marker-allow-overlap:" + mOverlap + ";}";
+			tileStyle += "[post_cat='" + catMarkers[i][0] + "']{marker-file:url('" + sourceurl + "map/" + catMarkers[i][1] + "');marker-clip:true;marker-allow-overlap:" + mOverlap + ";marker-width:30 ;}";
 		}
 		tileStyle += closeStyle;
 		if (tStyle == "bubble") {
@@ -224,6 +236,20 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
     var execRepOffset = 0;
 	var execRepLimit = 3;
 	
+	/* DROPDOWN LAYER SELECTOR */	
+	var hideCheck;
+	var cicCheck=0;
+	var checkOptions;
+	var gMapsLayers = [
+		["carto","CIC"],
+		[new google.maps.TrafficLayer(), "Trafico"],
+		[new google.maps.TransitLayer(), "Metro"],
+		[new google.maps.BicyclingLayer(), "Bicicletas"],
+		[new google.maps.weather.WeatherLayer({temperatureUnits: google.maps.weather.TemperatureUnit.CELSIUS}), "Temperatura"],
+		[new google.maps.weather.CloudLayer(), "Nubes"],
+		[new google.maps.panoramio.PanoramioLayer(),"Fotos"]	
+	];	
+
 	/* LOADING SPINNER OPTIONS */
 	var opts = {
 		lines: 13, // The number of lines to draw
@@ -253,7 +279,7 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 	var layers = [];
 	var torque = null; 
 	var torqueOptions;
-	var _interactivity = "cartodb_id,post_title,channel,post_cat,formatted_address,post_content,status,close_fail,ticket,last_mod,uuid,follow_up,follow_up_external,votes,stars,assets";
+	var _interactivity = "cartodb_id,post_title,channel,post_cat,formatted_address,post_content,status,close_fail,ticket,last_mod,uuid,follow_up,follow_up_external,votes,stars,assets,created_at";
 	var agebLayerUrl = 'http://cicadmin.cartodb.com/api/v1/viz/'+table_ageb+'/viz.json';
 
 	//GMAPS
@@ -279,10 +305,6 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 	var choro = false;
 	var munLongName=[];
 	var rmdHexArr;
-	
-	//for layers
-	var sv = new google.maps.StreetViewService();
-	var panorama;	
 	
     /* FILTER VARIABLES AND JQUERY TRIGGERS FOR QUERY DEFINITION */
     //categorias
@@ -341,17 +363,20 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 		cad : false,
 		stg : false
 	};
-	//detalle de reporte
+	//status de reporte
     var repStatus = {
 		open : false,
 		closed : false,
 		closed_fail : false
 	};
-    var votos = false;
+    //detalle de reporte
+    var repDetail = {
+	  	voto: false,
+	  	star: false,
+	  	asset: false  
+    };
     var totalvotos = 0;
-    var star = false;	//calificacion
     var totalstar = 0;
-    var qassets = false;	//imagenes
     
     //distancia
     var closedistance = false;
@@ -363,7 +388,7 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 	};
     var polyfilter = false;
 
-	//para vistas
+	//para vistas consolidadas HC
 	var byweeks = false;	//consolidar por semana
 	var bymonths = false;	//consolidar por mes
 	
@@ -375,13 +400,16 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
     var searchInput = "";
     
     // globals for query definition
-    var _query;
+    var _query = "SELECT * FROM "+table_name; //initial query
     var _geoq;
 	
 	var selectedCat, selectedTitle, selectedContent, selectedTicket, selectedAddress, selectedUrl, selectedStatus, selectedFail, selectedCreate, selectedUpdate, selectedFollowup, selectedFollowupExt, selectedVotes, selectedStars, selectedAssets, selectedComments, selectedUUID;
     
-    var des, has, valulthoras = 3, horasdeldia, auxhas = true;
-    var queryhorasdeldia = "(date_part('hour', "+table_name+".created_at at time zone '"+TZ+"') = 8 ) OR (date_part('hour', "+table_name+".created_at at time zone '"+TZ+"') = 9 ) OR (date_part('hour', "+table_name+".created_at at time zone '"+TZ+"') = 10 ) OR (date_part('hour', "+table_name+".created_at at time zone '"+TZ+"') = 11 ) OR (date_part('hour', "+table_name+".created_at at time zone '"+TZ+"') = 12 )";
+    //variables for time filters
+    var desde, hasta;
+    var valUltHoras = 3
+    var firstTOD = 8, secondTOD = 12;
+	var queryhorasdeldia = "(date_part('hour', "+table_name+".created_at at time zone '"+TZ+"') BETWEEN "+firstTOD+" and "+secondTOD+")";
 	
 	var anyFilter=false;
 	
@@ -413,7 +441,6 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 	 var effectPercent = {}; 
 	 
 	 //DISQUS
-	 var disqus_shortname = disqus_dashboard;
      var disqus_identifier = '0';
      var disqus_url = window.location.href.split('?')[0];
      var disqus_developer = '1';
@@ -428,39 +455,46 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 <!-- MAP & CARTODB -->
 <script type="text/javascript">
 	/*   MAPS METHODS  */
+	
 	google.maps.event.addDomListener(window,'load', init);
-	google.maps.visualRefresh = true;
-	var hideCheck;
-	var gMapsLayers = [
-		["carto","CIC"],
-		["gheat","gMap Heat"],
-		[new google.maps.TrafficLayer(), "Trafico"],
-		[new google.maps.TransitLayer(), "Metro"],
-		[new google.maps.BicyclingLayer(), "Bicicletas"],
-		[new google.maps.weather.WeatherLayer({temperatureUnits: google.maps.weather.TemperatureUnit.CELSIUS}), "Temperatura"],
-		[new google.maps.weather.CloudLayer(), "Nubes"],
-		[new google.maps.panoramio.PanoramioLayer(),"Fotos"]	
-	];	
-	var cicCheck=0;
-	var checkOptions;
+	var panorama;	
+	var sv = new google.maps.StreetViewService();
+	geocoder = new google.maps.Geocoder();
 	
+	function reportElements (n, layer, latlng){
+		sql.execute(n).done(function(data) {
+		    selectedCreate = new Date(data.rows[0].created_at);
+            selectedUpdate = new Date(data.rows[0].last_mod);
+			layer.infowindow.set('template', $('#infowindow_template').html());
+            setReportContent();
+            getgSV(latlng);
+        }).error(function(errors) {});
+	}
 	
-	/* INIT OBJECTS */
+	function setSelected(data) {
+		selectedCat = data.post_cat;
+		selectedTitle = data.post_title;
+		selectedContent = (data.post_content == "") ? data.post_title : data.post_content;
+		selectedTicket = data.ticket;
+		selectedAddress = data.formatted_address;
+		selectedUrl = window.location.href.split('?')[0] + '?ticket=' + selectedTicket + '&table_name=' + table_name;
+		selectedStatus = (data.status == 'read') ? selectedStatus = "Abierto" : selectedStatus = "Cerrado";
+		selectedFail = data.close_fail;
+		selectedFollowup = data.follow_up;
+		selectedFollowupExt = data.follow_up_external;
+		selectedVotes = data.votes;
+		selectedStars = data.stars;
+		selectedAssets = data.assets;
+		selectedComments = 0;
+		selectedUUID = data.uuid;
+	}	
+	
+	/****************************************
+	************ INIT OBJECTS ***************
+	****************************************/
 	
 	function init(){
-		geocoder = new google.maps.Geocoder();
 		
-		var styler = [];
-		/* GMAPS STYLES courtesy of http://snazzymaps.com/ */
-		var styler2 = [{"featureType":"water","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":17}]},{"featureType":"landscape","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":20}]},{"featureType":"road.highway","elementType":"geometry.fill","stylers":[{"color":"#000000"},{"lightness":17}]},{"featureType":"road.highway","elementType":"geometry.stroke","stylers":[{"color":"#000000"},{"lightness":29},{"weight":0.2}]},{"featureType":"road.arterial","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":18}]},{"featureType":"road.local","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":16}]},{"featureType":"poi","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":21}]},{"elementType":"labels.text.stroke","stylers":[{"visibility":"on"},{"color":"#000000"},{"lightness":16}]},{"elementType":"labels.text.fill","stylers":[{"saturation":36},{"color":"#000000"},{"lightness":40}]},{"elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"transit","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":19}]},{"featureType":"administrative","elementType":"geometry.fill","stylers":[{"color":"#000000"},{"lightness":20}]},{"featureType":"administrative","elementType":"geometry.stroke","stylers":[{"color":"#000000"},{"lightness":17},{"weight":1.2}]}];
-		var styler3 =[{"featureType":"water","elementType":"geometry","stylers":[{"color":"#a2daf2"}]},{"featureType":"landscape.man_made","elementType":"geometry","stylers":[{"color":"#f7f1df"}]},{"featureType":"landscape.natural","elementType":"geometry","stylers":[{"color":"#d0e3b4"}]},{"featureType":"landscape.natural.terrain","elementType":"geometry","stylers":[{"visibility":"off"}]},{"featureType":"poi.park","elementType":"geometry","stylers":[{"color":"#bde6ab"}]},{"featureType":"poi","elementType":"labels","stylers":[{"visibility":"off"}]},{"featureType":"poi.medical","elementType":"geometry","stylers":[{"color":"#fbd3da"}]},{"featureType":"poi.business","stylers":[{"visibility":"off"}]},{"featureType":"road","elementType":"geometry.stroke","stylers":[{"visibility":"off"}]},{"featureType":"road","elementType":"labels","stylers":[{"visibility":"off"}]},{"featureType":"road.highway","elementType":"geometry.fill","stylers":[{"color":"#ffe15f"}]},{"featureType":"road.highway","elementType":"geometry.stroke","stylers":[{"color":"#efd151"}]},{"featureType":"road.arterial","elementType":"geometry.fill","stylers":[{"color":"#ffffff"}]},{"featureType":"road.local","elementType":"geometry.fill","stylers":[{"color":"black"}]},{"featureType":"transit.station.airport","elementType":"geometry.fill","stylers":[{"color":"#cfb2db"}]}];
-		var styler4 = [{"featureType":"water","stylers":[{"saturation":43},{"lightness":-11},{"hue":"#0088ff"}]},{"featureType":"road","elementType":"geometry.fill","stylers":[{"hue":"#ff0000"},{"saturation":-100},{"lightness":99}]},{"featureType":"road","elementType":"geometry.stroke","stylers":[{"color":"#808080"},{"lightness":54}]},{"featureType":"landscape.man_made","elementType":"geometry.fill","stylers":[{"color":"#ece2d9"}]},{"featureType":"poi.park","elementType":"geometry.fill","stylers":[{"color":"#ccdca1"}]},{"featureType":"road","elementType":"labels.text.fill","stylers":[{"color":"#767676"}]},{"featureType":"road","elementType":"labels.text.stroke","stylers":[{"color":"#ffffff"}]},{"featureType":"poi","stylers":[{"visibility":"off"}]},{"featureType":"landscape.natural","elementType":"geometry.fill","stylers":[{"visibility":"on"},{"color":"#b8cb93"}]},{"featureType":"poi.park","stylers":[{"visibility":"on"}]},{"featureType":"poi.sports_complex","stylers":[{"visibility":"on"}]},{"featureType":"poi.medical","stylers":[{"visibility":"on"}]},{"featureType":"poi.business","stylers":[{"visibility":"simplified"}]}];
-		
-		var styleMap = new google.maps.StyledMapType(styler,{name: "GMaps"});	
-		var styleMap2 = new google.maps.StyledMapType(styler2,{name: "Black"});	
-		var styleMap3 = new google.maps.StyledMapType(styler3,{name: "Apple Maps"});	
-		var styleMap4 = new google.maps.StyledMapType(styler4,{name: "Mapbox"});	
-	
 		/*  MAP  */
 		var mapOptions = {
 			center: new google.maps.LatLng(mapCenter[0], mapCenter[1]),
@@ -468,29 +502,39 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 			minZoom:5,
 			zoomControl: true,
 			zoomControlOptions: {
-				style: google.maps.ZoomControlStyle.DEFAULT,	
+				style: google.maps.ZoomControlStyle.SMALL,	
 			},
 			mapTypeControl: true,
 			mapTypeControlOptions: { 
-				mapTypeIds: [google.maps.MapTypeId.SATELLITE, 'style_','style_2','style_3','style_4'],
+				mapTypeIds: [google.maps.MapTypeId.SATELLITE, 'style_1','style_2','style_3','style_4'],
 				style: google.maps.MapTypeControlStyle.DROPDOWN_MENU
 			},
 			scrollwheel: true,
 			streetViewControl: true,
-			panControl:true,
+			panControl:false,
 			backgroundColor: '#163D74',
 			rotateControl:true,
 			overviewMapControl:true
 		};
 		map = new google.maps.Map(document.getElementById('map'), mapOptions);
 		
-		map.mapTypes.set('style_', styleMap);
+		/* GMAPS STYLES courtesy of http://snazzymaps.com/ */
+		var styler1 = [];
+		var styler2 = [{"featureType":"water","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":17}]},{"featureType":"landscape","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":20}]},{"featureType":"road.highway","elementType":"geometry.fill","stylers":[{"color":"#000000"},{"lightness":17}]},{"featureType":"road.highway","elementType":"geometry.stroke","stylers":[{"color":"#000000"},{"lightness":29},{"weight":0.2}]},{"featureType":"road.arterial","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":18}]},{"featureType":"road.local","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":16}]},{"featureType":"poi","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":21}]},{"elementType":"labels.text.stroke","stylers":[{"visibility":"on"},{"color":"#000000"},{"lightness":16}]},{"elementType":"labels.text.fill","stylers":[{"saturation":36},{"color":"#000000"},{"lightness":40}]},{"elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"transit","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":19}]},{"featureType":"administrative","elementType":"geometry.fill","stylers":[{"color":"#000000"},{"lightness":20}]},{"featureType":"administrative","elementType":"geometry.stroke","stylers":[{"color":"#000000"},{"lightness":17},{"weight":1.2}]}];
+		var styler3 =[{"featureType":"water","elementType":"geometry","stylers":[{"color":"#a2daf2"}]},{"featureType":"landscape.man_made","elementType":"geometry","stylers":[{"color":"#f7f1df"}]},{"featureType":"landscape.natural","elementType":"geometry","stylers":[{"color":"#d0e3b4"}]},{"featureType":"landscape.natural.terrain","elementType":"geometry","stylers":[{"visibility":"off"}]},{"featureType":"poi.park","elementType":"geometry","stylers":[{"color":"#bde6ab"}]},{"featureType":"poi","elementType":"labels","stylers":[{"visibility":"off"}]},{"featureType":"poi.medical","elementType":"geometry","stylers":[{"color":"#fbd3da"}]},{"featureType":"poi.business","stylers":[{"visibility":"off"}]},{"featureType":"road","elementType":"geometry.stroke","stylers":[{"visibility":"off"}]},{"featureType":"road","elementType":"labels","stylers":[{"visibility":"off"}]},{"featureType":"road.highway","elementType":"geometry.fill","stylers":[{"color":"#ffe15f"}]},{"featureType":"road.highway","elementType":"geometry.stroke","stylers":[{"color":"#efd151"}]},{"featureType":"road.arterial","elementType":"geometry.fill","stylers":[{"color":"#ffffff"}]},{"featureType":"road.local","elementType":"geometry.fill","stylers":[{"color":"black"}]},{"featureType":"transit.station.airport","elementType":"geometry.fill","stylers":[{"color":"#cfb2db"}]}];
+		var styler4 = [{"featureType":"water","stylers":[{"saturation":43},{"lightness":-11},{"hue":"#0088ff"}]},{"featureType":"road","elementType":"geometry.fill","stylers":[{"hue":"#ff0000"},{"saturation":-100},{"lightness":99}]},{"featureType":"road","elementType":"geometry.stroke","stylers":[{"color":"#808080"},{"lightness":54}]},{"featureType":"landscape.man_made","elementType":"geometry.fill","stylers":[{"color":"#ece2d9"}]},{"featureType":"poi.park","elementType":"geometry.fill","stylers":[{"color":"#ccdca1"}]},{"featureType":"road","elementType":"labels.text.fill","stylers":[{"color":"#767676"}]},{"featureType":"road","elementType":"labels.text.stroke","stylers":[{"color":"#ffffff"}]},{"featureType":"poi","stylers":[{"visibility":"off"}]},{"featureType":"landscape.natural","elementType":"geometry.fill","stylers":[{"visibility":"on"},{"color":"#b8cb93"}]},{"featureType":"poi.park","stylers":[{"visibility":"on"}]},{"featureType":"poi.sports_complex","stylers":[{"visibility":"on"}]},{"featureType":"poi.medical","stylers":[{"visibility":"on"}]},{"featureType":"poi.business","stylers":[{"visibility":"simplified"}]}];
+		
+		var styleMap1 = new google.maps.StyledMapType(styler1,{name: "GMaps"});	
+		var styleMap2 = new google.maps.StyledMapType(styler2,{name: "Black"});	
+		var styleMap3 = new google.maps.StyledMapType(styler3,{name: "Apple Maps"});	
+		var styleMap4 = new google.maps.StyledMapType(styler4,{name: "Mapbox"});	
+		
+		map.mapTypes.set('style_1', styleMap1);
 		map.mapTypes.set('style_2', styleMap2);
 		map.mapTypes.set('style_3', styleMap3);
 		map.mapTypes.set('style_4', styleMap4);
 
-		
-		map.setMapTypeId('style_');
+		map.setMapTypeId('style_1');
 		
 		google.maps.event.addListener(map, 'click', function(event) {
 	        if (radius.set) {
@@ -518,7 +562,6 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 			}
 			var check = new checkBox(checkOptions);
 			checkItems.push(check);
-			
 		}
 				
 		var ddDivOptions = {
@@ -557,9 +600,9 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 		        clickable: true,
 		        zIndex: 1,
 		        editable: true,
-		        draggable: false
+		        draggable: true
 		      }
-		    });
+		});
 		drawingManager.setMap(map);
 	    // Add an event listener for when shape is complete
 		google.maps.event.addListener(drawingManager, 'overlaycomplete', function(e) {
@@ -569,14 +612,16 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 	      layers[0].show();
 	      if (polyfilter) setQ();
 	      // Event listener for rightclick
+/*
 	      google.maps.event.addListener(newShape, 'rightclick', function() {
 			//clear shape
 			//newShape.setMap(null);
 			});
+*/
 	    newShape.setEditable(false);
 	    });
 		
-		//AUTOCOMPLETE
+		//AUTOCOMPLETE ADDRESS
 		var address = (document.getElementById('address'));
 		var autocomplete = new google.maps.places.Autocomplete(address);
 		autocomplete.bindTo('bounds', map);
@@ -597,136 +642,115 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 		    }
 		});
 		
+		
+		function filteredUrl(whatFor, _query) {
+			var qSelect, qGroup, n;
+			if (whatFor == 'singleUrl') {
+				qSelect = "*";
+			} else if (whatFor == 'totalCounter') {
+				qSelect = "COUNT(*)";
+			} else if (whatFor == 'groupCounter') {
+				qSelect = table_name + ".post_cat, COUNT(*)";
+				qGroup = " GROUP BY " + table_name + ".post_cat";
+			}
+			if (obj.ticket) n = "SELECT " + qSelect + " FROM " + table_name + " WHERE ticket = '" + obj.ticket + "'";
+			if (obj.hasOwnProperty('filter')) {
+				switch (obj.filter) {
+				case 'vialidad':
+					n = "SELECT " + qSelect + " FROM " + table_name + " WHERE (" + table_name + ".post_cat ilike '%ACCIDENTE%' OR " + table_name + ".post_cat ilike '%BACHE%' OR " + table_name + ".post_cat ilike '%OBRAS%' OR " + table_name + ".post_cat ilike '%SEMAFORO%')";
+					break;
+				case 'servicios':
+					n = "SELECT " + qSelect + " FROM " + table_name + " WHERE (" + table_name + " .post_cat ilike '%ALCANTARILLA%' OR " + table_name + " .post_cat ilike '%ALUMBR%' OR " + table_name + " .post_cat ilike '%ELECTRICIDAD%' OR " + table_name + " .post_cat ilike '%FUGA%' OR " + table_name + " .post_cat ilike '%PARQUES%' OR " + table_name + " .post_cat ilike '%BASURA%')";
+					break;
+				case 'seguridad':
+					n = "SELECT " + qSelect + " FROM " + table_name + "  WHERE (" + table_name + " .post_cat ilike '%INCENDIO%' OR " + table_name + " .post_cat ilike '%ROBO%' OR " + table_name + " .post_cat ilike '%RIESGO%')";
+					break;
+				case 'emergencias/':
+					n = "SELECT " + qSelect + " FROM " + table_name + " WHERE (" + table_name + ".post_cat ilike '%EMERGENCIA%')";
+					break;
+				}
+			}
+			if (n && whatFor == 'groupCounter') {
+				n += qGroup;
+			}
+			return n || _query;
+		}		
+		
 		/* CHECK FOR ANY URL PARAMETERS*/
 		var obj = getUrlVars();
 		if (obj.table_name) table_name = obj.table_name;
-		if (obj.ticket) _query = "SELECT * FROM "+table_name+" WHERE ticket ilike '" + obj.ticket + "'";
-		if (obj.filter) {
-			if (obj.filter == 'vialidad') _query = "SELECT * FROM "+table_name+" WHERE ("+table_name+".post_cat ilike '%ACCIDENTE%' OR "+table_name+".post_cat ilike '%BACHE%' OR "+table_name+".post_cat ilike '%OBRAS%' OR "+table_name+".post_cat ilike '%SEMAFORO%') ";
-			else if (obj.filter == 'servicios') _query = "SELECT * FROM "+table_name+" WHERE ("+table_name+" .post_cat ilike '%ALCANTARILLA%' OR "+table_name+" .post_cat ilike '%ALUMBR%' OR "+table_name+" .post_cat ilike '%ELECTRICIDAD%' OR "+table_name+" .post_cat ilike '%FUGA%' OR "+table_name+" .post_cat ilike '%PARQUES%' OR "+table_name+" .post_cat ilike '%BASURA%')";
-			else if (obj.filter == 'seguridad') _query = "SELECT * FROM "+table_name+"  WHERE ("+table_name+" .post_cat ilike '%INCENDIO%' OR "+table_name+" .post_cat ilike '%ROBO%' OR "+table_name+" .post_cat ilike '%RIESGO%')  ";
-			else if (obj.filter == 'emergencias') _query = "SELECT * FROM "+table_name+" WHERE ("+table_name+".post_cat ilike '%EMERGENCIA%')  ";
-			
+		
+		if ((obj.table_name && obj.ticket ) || obj.hasOwnProperty('filter')){
+			var someUrl = true;
 		}
-		 
+		
+		if (someUrl) _query = filteredUrl("singleUrl", _query);
+		
 		/* CARTO */
-		var layerOptions = {query: _query, tile_style: _tile_style_cluster,interactivity: _interactivity};
+		var layerOptions = {
+			query: _query,
+			tile_style: _tile_style_cluster,
+			interactivity: _interactivity
+		};		
 		cartodb.createLayer(map, layerUrl, layerOptions)
 			.on('done', function(layer) {
-					map.overlayMapTypes.setAt(0, layer);
-					layers.push(layer);
-					layer.on('featureClick', function(e, latlng, pos, data) {
-			            selectedCat = data.post_cat;
-			            selectedTitle = data.post_title;
-			            selectedContent = (data.post_content == "") ? data.post_title : data.post_content;
-			            selectedTicket = data.ticket;
-			            selectedAddress = data.formatted_address;
-			            selectedUrl = window.location.href.split('?')[0] + '?ticket=' + selectedTicket + '&table_name=' + table_name;
-			            selectedStatus = (data.status == 'read') ? selectedStatus = "Abierto" : selectedStatus = "Cerrado";
-			            selectedFail = data.close_fail;
-			            selectedFollowup = data.follow_up;
-			            selectedFollowupExt = data.follow_up_external; 
-			            selectedVotes =  data.votes;
-			            selectedStars =  data.stars;
-			            selectedAssets = data.assets;
-			            selectedComments = 0;
-			            selectedUUID = data.uuid;
-						selectedReport = data.cartodb_id;
-			            getAgebinfo(selectedReport);
-			            
-
-			            var n="SELECT created_at,last_mod FROM "+table_name+" WHERE cartodb_id = " + data.cartodb_id;
-						sql.execute(n).done(function(data) {
-						    selectedCreate = new Date(data.rows[0].created_at);
-			                selectedUpdate = new Date(data.rows[0].last_mod);
-							layer.infowindow.set('template', $('#infowindow_template').html());
-				            setReportContent();
-				            getgSV(latlng);
-				        }).error(function(errors) {});
-			       });
-			        if (obj.ticket){
-			          var rpos = "SELECT st_y(the_geom) as lat, st_x(the_geom) as lon FROM "+table_name+" WHERE ticket ilike '"+obj.ticket+"'";
-					  sql.execute(rpos).done(function(data) {
-							var latit = data.rows[0].lat; 
-							var longit = data.rows[0].lon;
-							var ticketLatlng = new google.maps.LatLng(latit, longit);
-							map.setCenter(ticketLatlng);
-					        sql.execute(_query).done(function(data) {
-							    selectedCat = data.rows[0].post_cat;
-							    selectedTitle = data.rows[0].post_title;
-					            selectedContent = (data.rows[0].post_content == "") ? data.rows[0].post_title : data.rows[0].post_content;
-					            selectedTicket = data.rows[0].ticket;
-					            selectedAddress = data.rows[0].formatted_address;
-					            selectedUrl = window.location.href.split('?')[0] + '?ticket=' + selectedTicket + '&table_name=' + table_name;
-					            selectedStatus = (data.rows[0].status == 'read') ? selectedStatus = "Abierto" : selectedStatus = "Cerrado";
-					            selectedFail = data.rows[0].close_fail;
-					            selectedFollowup = data.rows[0].follow_up;
-					            selectedFollowupExt = data.rows[0].follow_up_external; 
-					            selectedVotes =  data.rows[0].votes;
-					            selectedStars =  data.rows[0].stars;
-					            selectedAssets = data.rows[0].assets;
-					            selectedComments = 0;
-					            selectedUUID = data.rows[0].uuid;
-						        var n="SELECT created_at,last_mod FROM "+table_name+" WHERE cartodb_id = " + data.rows[0].cartodb_id;
-								sql.execute(n).done(function(data) {
-										selectedCreate = new Date(data.rows[0].created_at);
-										selectedUpdate = new Date(data.rows[0].last_mod);
-										layer.infowindow.set('template', $('#infowindow_template').html());    
-										setReportContent();
-										getgSV([latit,longit]);    
-								}).error(function(errors) {});			  
-							}).error(function(errors) {});
-				       }).error(function(errors) {});
-			       }
+				map.overlayMapTypes.setAt(0, layer);
+				layers.push(layer);
+				layer.on('featureClick', function(e, latlng, pos, data) {
+		            if(layers[1]) layers[1].setInteraction(false);
+		            setSelected(data);
+		            getAgebInfo(data.cartodb_id);
+		            var n="SELECT created_at,last_mod FROM "+table_name+" WHERE cartodb_id = " + data.cartodb_id;
+					reportElements (n, layer, latlng);
+				});
+		        if (obj.ticket) {
+					var rpos = "SELECT st_y(the_geom) as lat, st_x(the_geom) as lon, "+_interactivity+" FROM "+table_name+" WHERE ticket = '"+obj.ticket+"'";
+					sql.execute(rpos).done(function(data) {
+						var latit = data.rows[0].lat;
+						var longit = data.rows[0].lon;
+						var ticketLatlng = new google.maps.LatLng(latit, longit);
+						map.setCenter(ticketLatlng);
+						setSelected(data.rows[0]);
+						var n = "SELECT created_at,last_mod FROM " + table_name + " WHERE cartodb_id = " + data.rows[0].cartodb_id;
+						reportElements (n, layer, [latit, longit]);
+					}).error(function(errors) {});
+				}
 			}).on('error', function() {window.location.reload();});
 	    
 		
-		
 		//CREATE AGEB LAYER
-		var agebOptions = { query: "SELECT the_geom_webmercator FROM "+ table_ageb,
-							tile_style: "#{{table_name}}{polygon-opacity:0.0;}",
-							interaction: false };
+		var agebOptions = {
+			query: "SELECT the_geom_webmercator FROM " + table_ageb,
+			tile_style: "#{{table_name}}{polygon-opacity:0.0;}",
+			interaction: false
+		};
 		
 		cartodb.createLayer(map, agebLayerUrl, agebOptions)
 			.on('done', function(layer) {
-					map.overlayMapTypes.setAt(1, layer);
-					layers.push(layer);
-					agebClick();
+				map.overlayMapTypes.setAt(1, layer);
+				layers.push(layer);
+				agebClick();
 			}).on('error', function() {window.location.reload();});
 	      
-		//COUNTERS
-	      var n=("SELECT COUNT (*) FROM "+table_name+"");
-	      if (obj.ticket) n = "SELECT COUNT (*) FROM "+table_name+" WHERE ticket ilike '" + obj.ticket + "'";
-		  if (obj.filter) {
-			if (obj.filter == 'vialidad') n = "SELECT COUNT (*) FROM "+table_name+" WHERE ("+table_name+".post_cat ilike '%ACCIDENTE%' OR "+table_name+".post_cat ilike '%BACHE%' OR "+table_name+".post_cat ilike '%OBRAS%' OR "+table_name+".post_cat ilike '%SEMAFORO%') ";
-			else if (obj.filter == 'servicios') n = "SELECT COUNT (*) FROM "+table_name+" WHERE ("+table_name+" .post_cat ilike '%ALCANTARILLA%' OR "+table_name+" .post_cat ilike '%ALUMBR%' OR "+table_name+" .post_cat ilike '%ELECTRICIDAD%' OR "+table_name+" .post_cat ilike '%FUGA%' OR "+table_name+" .post_cat ilike '%PARQUES%' OR "+table_name+" .post_cat ilike '%BASURA%')";
-			else if (obj.filter == 'seguridad') n = "SELECT COUNT (*) FROM "+table_name+"  WHERE ("+table_name+" .post_cat ilike '%INCENDIO%' OR "+table_name+" .post_cat ilike '%ROBO%' OR "+table_name+" .post_cat ilike '%RIESGO%')  ";
-			else if (obj.filter == 'emergencias') n = "SELECT COUNT (*) FROM "+table_name+" WHERE ("+table_name+".post_cat ilike '%EMERGENCIA%')  ";
-			
-		}
-		  sql.execute(n).done(function(data) {
-		        var result;
-		  		for (var i = 0; i < data.total_rows; i++) { result = data.rows[i].count;} 
-		  		$( "#counterslide" ).show('fold', {}, 400);
-		  		$( "#counterVal" ).val(addCommas(result));
-		  }).error(function(errors) {});
-		  
-		  n=("SELECT "+table_name+".post_cat, COUNT (*) FROM "+table_name+" GROUP BY "+table_name+".post_cat");
-		  if (obj.ticket) 
-		  n = "SELECT "+table_name+".post_cat, COUNT (*) FROM "+table_name+" WHERE ticket ilike '" + obj.ticket + "' GROUP BY "+table_name+".post_cat";
-		  if (obj.filter) {
-			if (obj.filter == 'vialidad') n = "SELECT "+table_name+".post_cat, COUNT (*) FROM "+table_name+" WHERE ("+table_name+".post_cat ilike '%ACCIDENTE%' OR "+table_name+".post_cat ilike '%BACHE%' OR "+table_name+".post_cat ilike '%OBRAS%' OR "+table_name+".post_cat ilike '%SEMAFORO%') GROUP BY "+table_name+".post_cat";
-			else if (obj.filter == 'servicios') n = "SELECT "+table_name+".post_cat, COUNT (*) FROM "+table_name+" WHERE ("+table_name+" .post_cat ilike '%ALCANTARILLA%' OR "+table_name+" .post_cat ilike '%ALUMBR%' OR "+table_name+" .post_cat ilike '%ELECTRICIDAD%' OR "+table_name+" .post_cat ilike '%FUGA%' OR "+table_name+" .post_cat ilike '%PARQUES%' OR "+table_name+" .post_cat ilike '%BASURA%') GROUP BY "+table_name+".post_cat";
-			else if (obj.filter == 'seguridad') n = "SELECT "+table_name+".post_cat, COUNT (*) FROM "+table_name+"  WHERE ("+table_name+" .post_cat ilike '%INCENDIO%' OR "+table_name+" .post_cat ilike '%ROBO%' OR "+table_name+" .post_cat ilike '%RIESGO%') GROUP BY "+table_name+".post_cat";
-			else if (obj.filter == 'emergencias') n = "SELECT "+table_name+".post_cat, COUNT (*) FROM "+table_name+" WHERE ("+table_name+".post_cat ilike '%EMERGENCIA%') GROUP BY "+table_name+".post_cat";
-			
-		}	
-		  sql.execute(n).done(function(data) {
-		  		updateCounters(data);
-		  }).error(function(errors) {});
-
-	}//END INIT FUNCTION
+		//TOTAL COUNTER
+		var q = "SELECT COUNT(*) FROM " + table_name;
+		if (someUrl) n = filteredUrl("totalCounter", q);
+		else n = q;
+		sql.execute(n).done(function(data) {
+			$("#counterVal").val(addCommas(data.rows[0].count));
+		}).error(function(errors) {});
+		//PER CAT COUNTER
+		q = "SELECT " + table_name + ".post_cat, COUNT (*) FROM " + table_name + " GROUP BY " + table_name + ".post_cat";
+		if (someUrl) n = filteredUrl("groupCounter", q);
+		else n = q;
+		sql.execute(n).done(function(data) {
+			updateCounters(data);
+		}).error(function(errors) {});
+	}
 	
+	///////////////////////////////////////////////
+	//////////////END INIT FUNCTION////////////////
+	///////////////////////////////////////////////
 
 	/* ADDRESS BAR METHODS */
 	function codeAddress() {
@@ -758,77 +782,24 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 	
 	/* INFOWINDOW  + REPORT CONTENT HELPERS */  
     
-    function getImg(category){
-        var cat = typeof category !== 'undefined' ? category : selectedCat;
-        var img = false, img2 =false;
-        if (document.getElementById("theImg")) img =true;
-        if (document.getElementById("theImg2")) img2 =true;
-        var src = "";
-		switch (cat){
-		   /* //These are the non-squared icons
- case 'ACCIDENTE':src= "images/accidente.png";break;
-			case 'ALCANTARILLAS': src= "images/alcantarilla.png";break;
-			case 'ALUMBRADO PUBLICO': src= "images/alumbrado.png";break;
-			case 'BACHE O VIA DAÑADA': src= "images/bache.png";break;
-			case 'AVISOS': src= "images/com-avis.png";break;
-			case 'EMERGENCIAS': src= "images/emergencia.png";break;
-			case 'EVENTO PUBLICO': src="images/com-event.png";break;
-			case 'FALTA ELECTRICIDAD': src="images/falta-elect.png";break;
-			case 'FUGA': src="images/fuga.png";break;
-			case 'INCENDIO': src="images/incendio.png";break;
-			case 'OBRAS Y/O VIA CERRADA': src="images/via-cerrada.png";break;	
-			case 'OBSERVADOR CIUDADANO': src="images/obs-ciudadano.png";break;	
-			case 'OTROS': src="images/serv.png";break;	
-			case 'PARQUES DESCUIDADOS': src="images/parques.png";break;	
-			case 'PROPUESTA COMUNIDAD': src="images/prop-com.png";break;	
-			case 'PROPUESTA SERV PUBLICOS': src="images/prop-serv.png"; break;	
-			case 'PROPUESTA VIALIDAD': src="images/prop-vial.png"; break;	
-			case 'PROPUESTA SEGURIDAD': src="images/prop-seg.png"; break;		
-			case 'RECOLECCION DE BASURA': src="images/basura.png";break;	
-			case 'ROBO': src="images/robo.png";break;	
-			case 'SEMAFORO DESCOMPUESTO': src="images/semaforo.png";break;	
-			case 'SITUACION DE RIESGO': src="images/sit-riesgo.png";break;	
-			case 'VIALIDAD': src="images/viali.png";break;
-*/
-		    case 'MTYMUYBIEN':src= "images/mtymuybien.jpg";break;
-		    case 'ACCIDENTE':src= "images/accidente.jpg";break;
-			case 'ALCANTARILLAS': src= "images/alcantarillas.jpg";break;
-			case 'ALUMBRADO PUBLICO': src= "images/alumbrado.jpg";break;
-			case 'BACHE O VIA DAÑADA': src= "images/bache.jpg";break;
-			case 'AVISOS': src= "images/avisos.jpg";break;
-			case 'EMERGENCIAS': src= "images/emergencias.jpg";break;
-			case 'EVENTO PUBLICO': src="images/eventos.jpg";break;
-			case 'FALTA ELECTRICIDAD': src="images/electricidad.jpg";break;
-			case 'FUGA': src="images/fuga.jpg";break;
-			case 'INCENDIO': src="images/incendio.jpg";break;
-			case 'OBRAS Y/O VIA CERRADA': src="images/obras.jpg";break;	
-			case 'OBSERVADOR CIUDADANO': src="images/observador.png";break;	
-			case 'OTROS': src="images/serv.png";break;	
-			case 'PARQUES DESCUIDADOS': src="images/parques.png";break;	
-			case 'PROPUESTA COMUNIDAD': src="images/pcomunidad.jpg";break;	
-			case 'PROPUESTA SERV PUBLICOS': src="images/pservicios.jpg"; break;	
-			case 'PROPUESTA VIALIDAD': src="images/pvialidad.jpg"; break;	
-			case 'PROPUESTA SEGURIDAD': src="images/pseguridad.jpg"; break;		
-			case 'RECOLECCION DE BASURA': src="images/basura.jpg";break;	
-			case 'ROBO': src="images/robo.jpg";break;	
-			case 'SEMAFORO DESCOMPUESTO': src="images/semaforo.jpg";break;	
-			case 'SITUACION DE RIESGO': src="images/sitriesgo.jpg";break;	
-			case 'VIALIDAD': src="images/viali.png";break;
-			case 'DETENCION DE BANDAS': src="images/bandas.png"; break;
-			case 'EXTORSION': src="images/extorsion.png";break;
-			case 'HOMICIDIO': src="images/homicidio.png";break;
-			case 'SECUESTRO': src="images/secuestro.png";break;
-			case 'SOSPECHOSO': src="images/sospechoso.png";break;
-			case 'AUTO ABANDONADO': src="images/autoabandonado.png";break;
-			case 'PERCEPCION DE INSEGURIDAD': src="images/percinseg.png";break;
-
-			default:document.getElementById("theImg").src="#";break;
+	function getImg(category) {
+		var cat = typeof category !== 'undefined' ? category : selectedCat;
+		var img = false,
+			img2 = false;
+		if (document.getElementById("theImg")) img = true;
+		if (document.getElementById("theImg2")) img2 = true;
+		var src = "";
+		for (var i = 0; i < catMarkers.length; i++) {
+			if (cat === catMarkers[i][0]) {
+				src = sourceurl + "cat/" + catMarkers[i][1];
+				break;
+			}
 		}
-		if(img) document.getElementById("theImg").src=src;
-		if(img2) document.getElementById("theImg2").src=src;
+		if (img) document.getElementById("theImg").src = src;
+		if (img2) document.getElementById("theImg2").src = src;
 		if (category) return src;
-	}
-    function getAssets(assets){
+	}   
+	function getAssets(assets){
     	var _asset = typeof assets !== 'undefined' ? assets : selectedAssets;
 	    var src = '';
 	    var assets = false;
@@ -838,33 +809,32 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 	    	if (_asset.search(/"/i) != -1){
 	    	    assetsString = _asset.substring(_asset.search(/"/i)+1);
 	    	    assetsString =  assetsString.substring(0,assetsString.search(/"/i));
-	    	    
 	    	    if (assetsString.search(/citivox/i) != -1) return false;
 	    	    else if  (assetsString.search(/http/i) != -1) src = assetsString;
 	    	    else src = 'http://assets.' + accountURL + assetsString;
 		    	if (assets){
+		    		document.getElementById("assetID").href= src;
+		    		document.getElementById("assetID").target = "_blank";
 		    		document.getElementById("theAssets").width=200;
 					document.getElementById("theAssets").height=200;
 					document.getElementById("theAssets").src=src;
+					
 				}
 	    	}
-	   return src;
+	    return src;
     }
-    function setReportContent(){
-	    /*console.log(selectedAssets);
-    	  console.log(selectedFollowup);
-    	  console.log(selectedFollowupExt);
-    	  console.log(selectedUUID);
-    	  console.log(selectedVotes);
-    	  console.log(selectedStars);*/
+    function setReportContent(){ // *** CHANGE TO WRITE HTML BEFORE CALL AS COMPONENT ONLY CHANGE CONTENT
     	  var days = 0;
 	      if (selectedAddress.search(/null/i) != -1) selectedAddress = "No especificada, ver mapa";
-	      var execRep="<center><table><tbody>"; 
+	      
+	      var execRep="<center><table><tbody>";
+	       
 	      /* HEADER ELEMENT */
 	      execRep+="<tr bgcolor=\"F2F2F2\">";
 	      execRep+="<td valign=\"top\" style=\"padding: 15px;vertical-align: top;text-align: center; border-radius: 2px;\">";
   		  execRep+="<div style=\"max-width: 100px;max-height: 62px; margin-left:0px\"><img width=\"94\" height=\"94\" src=\""+getImg(selectedCat)+"\" class=\"attachment-thumbnail\"/></div>";
   		  execRep+="<div style=\"\"><div style=\"position: absolute;left: 158px;top: 28px;\"><a class=\"xcnr\">"+selectedTicket+"</a>";
+		  
 		  if (selectedStatus == "Abierto"){
         	execRep+="<a class=\"verificado2\" style=\"margin-top: 3;\">"+selectedStatus+"</a></div>";
         	execRep+="<div class=\"verticalLine\"></div>";
@@ -875,7 +845,7 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
                execRep+="<input type=\"checkbox\" id=\"star"+j+"\" name=\"rating\" value=\""+j+"\" disabled><label for=\"star"+j+"\">"+j+" stars</label>";
             }
             execRep+="</div></div>";
-          } else{
+          } else {
         	if (selectedFail) execRep+="<a class=\"verificado3\" style=\"margin-top: 3;\">"+selectedStatus+"</a></div>";
         	else execRep+="<a class=\"verificado\" style=\"margin-top: 3;\">"+selectedStatus+"</a></div>";
         	execRep+="<div class=\"verticalLine\"></div>";
@@ -891,28 +861,27 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
             execRep+="</div></div>";
           }
           execRep+="</div>";
+          
           /* HEADER-STATUS DETAIL ELEMENT FOR PUBLIC SERVICES*/
-          if (isPublicService(selectedCat))
-          	execRep+="<div style=\"height:30px; width:350px; margin-top:-3px; margin-left:-5px;\"><div style=\"min-width:120px; background-image:url(images/bg-status_cic.png);background-repeat: no-repeat; height: 36px;margin-left: 124px; color:#fff\"></div>";
-          else
-            execRep+="<div style=\"height:30px; width:350px; margin-top:-3px; margin-left:-5px;\"><div style=\"min-width:120px; background-image:url(images/bg-status_cic.png);background-repeat: no-repeat; height: 36px;margin-left: 124px; color:#fff\"></div>";
-          	
-          	if (selectedStatus == "Abierto"){
-          		days = Math.round((Date.today()-selectedCreate.getTime())/(1000*60*60*24));
-          		if (days < 0 ) days = 0;
-		  		execRep+="<div style=\"min-width:120px; background-image:url(images/bg-status_aut.png);background-repeat: no-repeat; height: 36px; margin-top:-36px; margin-left: 189px; color:#fff\"><h5 style=\"font-size:12px; position: absolute;left: 265px; top: 96px;\"> "+days+" días</h5></div>";
-	          	execRep+="<div style=\"min-width:120px; background-image:url(images/bg-status_pend.png);background-repeat: no-repeat; height: 36px; margin-top:-36px; margin-left: 271px; color:#fff\"></div>";
-          	}else if (selectedFail){
-          	    days = Math.round((selectedUpdate.getTime()-selectedCreate.getTime())/(1000*60*60*24));
-          		execRep+="<div style=\"min-width:120px; background-image:url(images/bg-status_aut.png);background-repeat: no-repeat; height: 36px; margin-top:-36px; margin-left: 189px; color:#fff\"><h5 style=\"font-size:12px; position: absolute;left: 265px;top: 96px;\"> "+days+" días</h5></div>";
-	          	execRep+="<div style=\"min-width:120px; background-image:url(images/bg-status_fail.png);background-repeat: no-repeat; height: 36px; margin-top:-36px; margin-left: 271px; color:#fff\"></div>";
-          	}else{
-          		days = Math.round((selectedUpdate.getTime()-selectedCreate.getTime())/(1000*60*60*24));
-          		execRep+="<div style=\"min-width:120px; background-image:url(images/bg-status_aut.png);background-repeat: no-repeat; height: 36px; margin-top:-36px; margin-left: 189px; color:#fff\"><h5 style=\"font-size:12px; position: absolute;left: 265px;top: 96px;\"> "+days+" días</h5></div>";
-	          	execRep+="<div style=\"min-width:120px; background-image:url(images/bg-status_succ.png);background-repeat: no-repeat; height: 36px; margin-top:-36px; margin-left: 271px; color:#fff\"></div>";
-          	}
-          execRep+="</div>";
-          execrep+="</td></tr>";
+			if (isPublicService(selectedCat)) execRep += "<div style=\"height:30px; width:350px; margin-top:-3px; margin-left:-5px;\"><div style=\"min-width:120px; background-image:url(images/bg-status_cic.png);background-repeat: no-repeat; height: 36px;margin-left: 124px; color:#fff\"></div>";
+			else execRep += "<div style=\"height:30px; width:350px; margin-top:-3px; margin-left:-5px;\"><div style=\"min-width:120px; background-image:url(images/bg-status_cic.png);background-repeat: no-repeat; height: 36px;margin-left: 124px; color:#fff\"></div>";
+			if (selectedStatus == "Abierto") {
+				days = Math.round((Date.today() - selectedCreate.getTime()) / (1000 * 60 * 60 * 24));
+				if (days < 0) days = 0;
+				execRep += "<div style=\"min-width:120px; background-image:url(images/bg-status_aut.png);background-repeat: no-repeat; height: 36px; margin-top:-36px; margin-left: 189px; color:#fff\"><h5 style=\"font-size:12px; position: absolute;left: 265px; top: 96px;\"> " + days + " días</h5></div>";
+				execRep += "<div style=\"min-width:120px; background-image:url(images/bg-status_pend.png);background-repeat: no-repeat; height: 36px; margin-top:-36px; margin-left: 271px; color:#fff\"></div>";
+			} else if (selectedFail) {
+				days = Math.round((selectedUpdate.getTime() - selectedCreate.getTime()) / (1000 * 60 * 60 * 24));
+				execRep += "<div style=\"min-width:120px; background-image:url(images/bg-status_aut.png);background-repeat: no-repeat; height: 36px; margin-top:-36px; margin-left: 189px; color:#fff\"><h5 style=\"font-size:12px; position: absolute;left: 265px;top: 96px;\"> " + days + " días</h5></div>";
+				execRep += "<div style=\"min-width:120px; background-image:url(images/bg-status_fail.png);background-repeat: no-repeat; height: 36px; margin-top:-36px; margin-left: 271px; color:#fff\"></div>";
+			} else {
+				days = Math.round((selectedUpdate.getTime() - selectedCreate.getTime()) / (1000 * 60 * 60 * 24));
+				execRep += "<div style=\"min-width:120px; background-image:url(images/bg-status_aut.png);background-repeat: no-repeat; height: 36px; margin-top:-36px; margin-left: 189px; color:#fff\"><h5 style=\"font-size:12px; position: absolute;left: 265px;top: 96px;\"> " + days + " días</h5></div>";
+				execRep += "<div style=\"min-width:120px; background-image:url(images/bg-status_succ.png);background-repeat: no-repeat; height: 36px; margin-top:-36px; margin-left: 271px; color:#fff\"></div>";
+			}
+			execRep += "</div>";
+			execrep += "</td></tr>";
+			          
           /* DETAILS ELEMENT */
 		  execRep+="<tr bgcolor=\"F2F2F2\">";
 		  execRep+="<td valign=\"top\"  style=\"max-width:350px;padding: 15px;vertical-align: top;text-align: left; border-radius: 2px;\">";
@@ -924,28 +893,12 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 		  if (selectedFollowupExt!='') execRep+="<br><h3 class=\"reportsection\">Seguimiento de Autoridad</h3><h3 style=\"text-align:left;font-size:11px;max-width:350px;margin-top:7px;\">"+selectedFollowupExt+"</h3>";
 		  execrep+="</td></tr>";
 		  
-
 		  /* G STREET VIEW */
 		  execRep+="<tr bgcolor=\"F2F2F2\" id='gSVsection'>";
-		  
 		  execRep+="<td valign=\"top\"  style=\"max-width:350px;padding: 15px;vertical-align: top;text-align: left; border-radius: 2px;\">";
 		  execRep+="<h3 class=\"reportsection\">Google Street View</h3><br>"
 		  execRep+="<div id = 'gSV' style='position: relative; width: 350px;height: 300px;background-color: rgb(229, 227, 223,0)!important;overflow: hidden;-webkit-transform: translateZ(0px);margin-left: -14px;'></div>";
-		  
-/*
-		  execRep+="<h5 style=\"text-align:left;font-size:12px;max-width:350px;margin-left: 3;\" >"+selectedTitle+"</h5>";
-		  execRep+="<h5 style=\"font-size:11px;max-width:350px;margin-left: 3;\" class=\"direccion\">"+selectedAddress+"</h5>";
-		  execRep+="<h5 style=\"font-size:11px;max-width:350px;margin-left: 3;\" class=\"calendario\">"+selectedCreate+"</h5>";
-		  execRep+="<br><h3 class=\"reportsection\">Descripción</h3><h3 style=\"text-align:left;font-size:11px;max-width:350px;margin-top:7px;\" >"+selectedContent+"</h3>";
-		  
-		  if (selectedFollowup!='') execRep+="<br><h3 class=\"reportsection\">Seguimiento</h3><h3 style=\"text-align:left;font-size:11px;max-width:350px;margin-top:7px;\">"+selectedFollowup+"</h3>";
-		  if (selectedFollowupExt!='') execRep+="<br><h3 class=\"reportsection\">Seguimiento de Autoridad</h3><h3 style=\"text-align:left;font-size:11px;max-width:350px;margin-top:7px;\">"+selectedFollowupExt+"</h3>";
-*/
-		  
 		  execrep+="</td></tr>";
-		  
-		  
-		  
 		  
 		  /* DISQUS ELEMENT */
 		  execRep+="<tr bgcolor=\"F2F2F2\">";
@@ -953,6 +906,7 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 		  execRep+="<div id=\"disqus_thread\"></div>";
 		  execrep+="</td></tr>";
 		  execRep+="</table></center>";
+          
           $( "#report-content" ).html(execRep);
   		  $( "#report-content" ).removeAttr('style').show('fold', {}, 400);
   		  
@@ -984,32 +938,31 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 	    }
 	    return false;
     }
-    function sendStars(stars,uuid){
-    	stars+=1;
-	    var _url = accountAPI+'rate';
-	    var _data = '{"uuid":"'+uuid+'", "star":"'+stars+'"}';
-	    $('.body').css('cursor','progress');
-	    var request = $.ajax({
-                url: _url,
-                type: 'POST',
-                contentType: 'application/json',
-                data: _data,
-                success: function(data, textStatus, jqXHR) {
-                    var n="SELECT votes, stars FROM "+table_name+" WHERE uuid = '"+uuid+"'";
-				    sql.execute(n).done(function(data) {
-					    //console.log(data);
-					    selectedStars = (data.rows[0].stars != 0) ? Math.round((data.rows[0].stars + stars) / 2) : stars;
-					    if (activeView == 'home') setReportContent(); else setQ();
-						$('body').css('cursor','auto');
-				    });
-                },
-                error: function(jqXHR, textStatus, errorThrown) {
-                    alert('Lo sentimos, hubo un problema y tu calificación no ha sido procesada, por favor refresca la página e intenta de nuevo.');
-
-                }});
-	    
-    }
-    function sendVote(uuid){
+	function sendStars(stars, uuid) {
+		stars += 1;
+		var _url = accountAPI + 'rate';
+		var _data = '{"uuid":"' + uuid + '", "star":"' + stars + '"}';
+		$('.body').css('cursor', 'progress');
+		var request = $.ajax({
+			url: _url,
+			type: 'POST',
+			contentType: 'application/json',
+			data: _data,
+			success: function(data, textStatus, jqXHR) {
+				var n = "SELECT votes, stars FROM " + table_name + " WHERE uuid = '" + uuid + "'";
+				sql.execute(n).done(function(data) {
+					selectedStars = (data.rows[0].stars != 0) ? Math.round((data.rows[0].stars + stars) / 2) : stars;
+					if (activeView == 'home') setReportContent();
+					else setQ();
+					$('body').css('cursor', 'auto');
+				});
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+				alert('Hubo un problema al procesar tu calificación, por favor carga de nuevo la página e intentalo otra vez.');
+			}
+		});
+	}   
+	function sendVote(uuid){
 	    var _url = accountAPI+'vote';
 	    var _data = '{"uuid":"'+uuid+'"}';
 	    $('body').css('cursor','progress');
@@ -1032,13 +985,11 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
                 }});
 	    
     }
-    
     function printContent(divID) {
             //Get the HTML of div
             var divElements = document.getElementById(divID).innerHTML;
             //Get the HTML of whole page
             var oldPage = document.body.innerHTML;
-
             //Reset the page's HTML with div's HTML only
             var newBody = '<html><head><title></title></head><body><div class="reportslide" id="' +divID +'" style="display: block;">'+divElements + '</div></body>';
             document.body.innerHTML = newBody.replace("Versión de impresión","");
@@ -1054,135 +1005,108 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 
             //Restore orignal HTML
             window.open(_url,'_self');
-/*
-            document.body.innerHTML = oldPage;
-            writeContent();
-*/
-
-          
         }
-    
-    function getgSV(latlong){
-	   if (document.getElementById('gSV')){
-	   
-	   
-	   panorama = new google.maps.StreetViewPanorama(document.getElementById('gSV'));
-	   var reportLoc=new google.maps.LatLng(latlong[0], latlong[1]);
-	   console.log(reportLoc);
-	   
-	   sv.getPanoramaByLocation(reportLoc, 50, function (data, status){
-		   
-		   console.log(data);
-		   console.log(status);
+	function getgSV(latlong) {
+		if (document.getElementById('gSV')) {
+			panorama = new google.maps.StreetViewPanorama(document.getElementById('gSV'));
+			var reportLoc = new google.maps.LatLng(latlong[0], latlong[1]);
+			sv.getPanoramaByLocation(reportLoc, 50, function(data, status) {
 				if (status == google.maps.StreetViewStatus.OK) {
- 
-				document.getElementById('gSVsection').style.display = 'block';	    
-			    
-			    var panoramaOptions = {
-						   linksControl: false,
-						   panControl: false,
-						   zoomControlOptions: {
-						     style: google.maps.ZoomControlStyle.SMALL
-						   },
-						   enableCloseButton: false	
-				};
-			   panorama.setOptions(panoramaOptions);
-			   panorama.setPano(data.location.pano);
-			   panorama.setPov({
-			     heading: 90,
-			     pitch: 0
-			   });
-			   
-			   var postCatIcon; 
-			   
-			   for (var i = 0; i < catMarkers.length; i++) {
-			   		if(selectedCat == catMarkers[i][0]){
-				   		postCatIcon=sourceurl + "markers/" + catMarkers[i][1];
-			   		}
-			   }
-			   
-			   var reportMarker = new google.maps.Marker({
-				    position: reportLoc,
-				    map: panorama,
-				    icon: postCatIcon,
-				    title: selectedCat,
-				    animation: google.maps.Animation.DROP
-			  });			   
-			   
-/* 			   google.maps.event.addListener(reportMarker, 'click', toggleBounce); */
-			   
-			   
-			   panorama.setVisible(true);
-			   /* map.setStreetView(panorama) */; 
+					document.getElementById('gSVsection').style.display = 'block';
+					var panoramaOptions = {
+						linksControl: false,
+						panControl: false,
+						zoomControlOptions: {
+							style: google.maps.ZoomControlStyle.SMALL
+						},
+						enableCloseButton: false
+					};
+					panorama.setOptions(panoramaOptions);
+					panorama.setPano(data.location.pano);
+					panorama.setPov({
+						heading: 90,
+						pitch: 0
+					});
+					var postCatIcon;
+					for (var i = 0; i < catMarkers.length; i++) {
+						if (selectedCat == catMarkers[i][0]) {
+							postCatIcon = sourceurl + "map/" + catMarkers[i][1];
+							break;
+						}
+					}
+					var reportMarker = new google.maps.Marker({
+						position: reportLoc,
+						map: panorama,
+						icon: postCatIcon,
+						title: selectedCat,
+						animation: google.maps.Animation.DROP
+					});
+					panorama.setVisible(true);;
+				} else {
+					panorama.setVisible(false);
+					document.getElementById('gSVsection').style.display = 'none';
+					console.log("AQUI NO HAY STREETVIEW PAPAGIORGIO");
+				}
+			});
+		}
+	}    
+</script>
+
+
+	<!-- INFOWINDOW TEMPLATES -->
+		
+		<!-- REPORT INFOWINDOW -->
+	<script type="infowindow/html" id="infowindow_template">
+	    <div class="cartodb-popup" id="infowindow" >
+	      <a href="#close" class="cartodb-popup-close-button close" onclick="$('#report-content:visible').hide('fold', {}, 400);$('#ageb-content:visible').hide('clip', {}, 400);">x</a>
+	       <div class="cartodb-popup-content-wrapper" >
+	         <div class="cartodb-popup-header">
+	         	<img id="theImg" src="images/favicon.ico" onload="getImg()" width="38px" height="38px" style="float:left;"><h3 style="float:right; width:140px; height:38px; text-align:left; color:#444; margin-top:5px;">{{content.data.post_cat}}</h3>
+			 </div>
+	         <div class="cartodb-popup-content" >
+	          	<a id="assetID" href=""> <img id="theAssets" src="images/blank.png" onload="getAssets()" width="1" height="1"></>
+	         </div>
+	       </div>
+	       <div class="cartodb-popup-tip-container" style="margin-top:-1px!important;"></div>
+	    </div>
+	</script>
 	
-			  } else {
-			    panorama.setVisible(false);
-			    document.getElementById('gSVsection').style.display = 'none';
-			    console.log("AQUI NO HAY STREETVIEW PAPAGIORGIO");
-			  }
-		   
-		   
-	   });
-    }
-    }
-    
-/*
-    function toggleBounce() {
-
-  if (marker.getAnimation() != null) {
-    marker.setAnimation(null);
-  } else {
-    marker.setAnimation(google.maps.Animation.BOUNCE);
-  }
-}
-*/
-    
-    
-</script>
-
-<!-- INFOWINDOW TEMPLATES -->
+		<!-- AGEB INFOWINDOW -->
+	<script type="infowindow/html" id="infowindow_ageb">
+	    <div class="cartodb-popup" id="infowindow_ag" >
+	      <a href="#close" class="cartodb-popup-close-button close" onclick="$('#report-content:visible').hide('fold', {}, 400);$('#ageb-content:visible').hide('clip', {}, 400);">x</a>
+	       <div class="cartodb-popup-content-wrapper" >
+	         <div class="cartodb-popup-header">
+	         	<h3 id="agebReportcount">Total de reportes: ...</h3>
+			 </div>
+	         <div class="cartodb-popup-content" >
+	          	<img src="images/blank.png" onload="agebInfowindow()" width="1" height="1">
+	         	<div id="agebReportDetail"></div>
+	         </div>
+	       </div>
+	       <div class="cartodb-popup-tip-container" style="margin-top:-1px!important;"></div>
+	    </div>
+	</script>
 	
-	<!-- REPORT INFOWINDOW -->
-<script type="infowindow/html" id="infowindow_template">
-    <div class="cartodb-popup" id="infowindow" >
-      <a href="#close" class="cartodb-popup-close-button close" onclick="$('#report-content:visible').hide('fold', {}, 400);$('#ageb-content:visible').hide('clip', {}, 400);">x</a>
-       <div class="cartodb-popup-content-wrapper" >
-         <div class="cartodb-popup-header">
-         	<img  id="theImg" src="images/favicon.ico" onload="getImg()" width="38px" height="38px" style="float:left;"><h3 style="float: right; width: 140px;height: 38px;text-align: left;color: #444;margin-top: 5px;">{{content.data.post_cat}}</h3>
-		 </div>
-         <div class="cartodb-popup-content" >
-          	<img  id="theAssets" src="images/blank.png" onload="getAssets()" width="1" height="1">
-         </div>
-       </div>
-       <div class="cartodb-popup-tip-container" style="margin-top:-1px!important;"></div>
-    </div>
-</script>
+	<!-- Chartbeat -->
+	
+	<script type="text/javascript">var _sf_startpt=(new Date()).getTime()</script> 
 
-	<!-- AGEB INFOWINDOW -->
-<script type="infowindow/html" id="infowindow_ageb">
-    <div class="cartodb-popup" id="infowindow_ag" >
-      <a href="#close" class="cartodb-popup-close-button close" onclick="$('#report-content:visible').hide('fold', {}, 400);$('#ageb-content:visible').hide('clip', {}, 400);">x</a>
-       <div class="cartodb-popup-content-wrapper" >
-         <div class="cartodb-popup-header">
-         	<h3 id= "agebReportcount" >Total de reportes: ...</h3>
-		 </div>
-         <div class="cartodb-popup-content" >
-          	<img src="images/blank.png" onload="agebInfowindow()" width="1" height="1">
-         	<div id = "agebReportDetail"></div>
-         </div>
-       </div>
-       <div class="cartodb-popup-tip-container" style="margin-top:-1px!important;"></div>
-    </div>
-</script>
-<!-- Chartbeat -->
-<script type="text/javascript">var _sf_startpt=(new Date()).getTime()</script> 
+
 </head>
+			<!--
+			***********
+			END OF HEAD
+			***********
+					-->
 <body>
 	<!-- ZENDESK BUTTON -->
 	<script type="text/javascript" src="//assets.zendesk.com/external/zenbox/v2.5/zenbox.js"></script>
+	
 	<style type="text/css" media="screen, projection">
 	  @import url(//assets.zendesk.com/external/zenbox/v2.5/zenbox.css);
 	</style>
+	
 	<script type="text/javascript">
 	  if (typeof(Zenbox) !== "undefined") {
 	    Zenbox.init({
@@ -1194,25 +1118,27 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 	    });
 	  }
 	</script>
-	
     <a href="#" class="button" style="display:none;"></a>
-	<script type="text/javascript">
+
+<script type="text/javascript">
 	  /* ONLOAD CONFIGURATIONS */
-	  $(function() {
-	        BrowserDetect.init();
 	  
-			$(window).load(function() {
-			  	/* RAPTOR */
-				$('.button').raptorize({
-					'enterOn' : 'konami-code'
-				});
-				$('#socialshare').share({
-			        networks: ['facebook','twitter','googleplus','email'],
-			        theme: 'square'
-			    });
-
-
-				/* PUT*  
+	  //EXECUTE ON DOM READY
+	  $(function() { //execute when DOM is ready
+	  	BrowserDetect.init();
+	  	$(window).load(function() { /* RAPTOR */
+	  		
+	  		$('.button').raptorize({
+	  			'enterOn': 'konami-code'
+	  		});
+	  		
+	  		$('#socialshare').share({
+	  			networks: ['facebook', 'twitter', 'googleplus', 'email'],
+	  			theme: 'square'
+	  		});
+	  		
+	  		
+	  		/*PUT*TO  
 				if (window.addEventListener) {
 				    var keys = [],
 				        //code = "38,38,40,40,37,39,37,39,66,65"; //konami-code
@@ -1224,231 +1150,224 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 				            keys = [];
 				        };
 				    }, true);
-				};*/
-				
-				/* WORDLE */
-				wordle = new WORDLEJS.Wordle(document.getElementById('wordle-container'));
-			});
-
-			/* LOADING SPINNER */
-			var target = document.getElementById('map');
-			var spinner = new Spinner(opts).spin(target);
-			
-			/* BUTTONS FOR SUBMENUS TOOLTIPS */
-			
-				
-			/* BUTTONS FOR FILTERING PAGESLIDES */
-		    var auxSlide = "";	
-			$( "#slide-cate" ).click(function() {
-			  fade(auxSlide); 
-		      if ($("#filtercate").is(":visible")){  $( "#filtercate" ).hide('fold', {}, 400); auxSlide = "";}
-		      else{ $( "#filtercate" ).show('fold', {}, 400);auxSlide = 'filtercate' ;}return false;
-		    });	
-		    $( "#slide-date" ).click(function() {
-		      fade(auxSlide); 
-		      if ($("#filterdate").is(":visible")){  $( "#filterdate" ).hide('fold', {}, 400); auxSlide = "";}
-		      else{ $( "#filterdate" ).show('fold', {}, 400);auxSlide = 'filterdate' ;}return false;		    
-		    });		
-		    $( "#slide-muni" ).click(function() {
-		      fade(auxSlide); 
-		      if ($("#filtermuni").is(":visible")){  $( "#filtermuni" ).hide('fold', {}, 400); auxSlide = "";}
-		      else{ $( "#filtermuni" ).show('fold', {}, 400);auxSlide = 'filtermuni' ;}return false;	
-		    });		
-		    $( "#slide-stat" ).click(function() {
-		      fade(auxSlide); 
-		      if ($("#filterstat").is(":visible")){  $( "#filterstat" ).hide('fold', {}, 400); auxSlide = "";}
-		      else{ $( "#filterstat" ).show('fold', {}, 400);auxSlide = 'filterstat' ;}return false;	
-		    });		
-		    $( "#slide-dist" ).click(function() {
-		      fade(auxSlide); 
-		      if ($("#filterdist").is(":visible")){  $( "#filterdist" ).hide('fold', {}, 400); auxSlide = "";}
-		      else{ $( "#filterdist" ).show('fold', {}, 400);auxSlide = 'filterdist' ;}return false;		 
-		    });		
-		    
-		    /* CALENDAR */
-		    var t = new Date();
-		    var y = new Date();
-		    t.setFullYear(t.getFullYear(), t.getMonth(), t.getDate());   //console.log(t);
-		    y.setFullYear(y.getFullYear(), y.getMonth(), y.getDate()); 
-		    y.setDate(y.getDate()-1);
-			var t_year =  t.getFullYear();
-			var t_month = t.getMonth()+1;
-			var t_day = t.getDate();
-			var y_year =  y.getFullYear();
-			var y_month = y.getMonth()+1;
-			var y_day = y.getDate();
-			var todaydate = t_year + '-' + (t_month<10 ? '0' : '') + t_month + '-' + (t_day<10 ? '0' : '') + t_day;
-		    var yesterdaydate = y_year + '-' + (y_month<10 ? '0' : '') + y_month + '-' + (y_day<10 ? '0' : '') + y_day;
-		    document.getElementById('desde').value=yesterdaydate;
-		    document.getElementById('hasta').value=todaydate;
-		    des=yesterdaydate;
-		    has=todaydate;	
-		    $( "#desde" ).datepicker({
-		      dateFormat: "yy-mm-dd",
-		      changeMonth: true,
-		      changeYear: true,
-		      numberOfMonths: 1,
-		      onClose: function( selectedDate ) {
-		        $( "#hasta" ).datepicker( "option", "minDate", selectedDate );
-		        des=selectedDate;
-		        if (dates.calendario) setQ();
-		      }
-		    });
-		    $( "#hasta" ).datepicker({
-		      dateFormat: "yy-mm-dd",
-		      changeMonth: true,
-		      changeYear: true,
-		      numberOfMonths: 1,
-		      onClose: function( selectedDate ) {
-		        $( "#desde" ).datepicker( "option", "maxDate", selectedDate );
-		        has=selectedDate;
-		        auxhas=true; //used for knowing if we come from  a 'has' action
-		        if (dates.calendario) setQ();
-		      }
-		    });	
-		    $( "#slider-ulthoras" ).slider({
-		      range: "max",
-		      min: 1,
-		      max: 24,
-		      value: 3,
-		      slide: function( event, ui ) {
-				  $( "#amount" ).val( ui.value );
-				  valulthoras = ui.value;
-				  }
-			});
-			$( "#amount" ).val( $( "#slider-ulthoras" ).slider( "value" ) );
-		    
-		    $( "#slider-horasdeldia" ).slider({
-				range: true,
-			    min: 0,
-			    max: 23,
-			    values: [ 8, 12 ],
-				slide: function( event, ui ) {
-					$( "#amount1" ).val( ui.values[ 0 ] + " - " + ui.values[ 1 ] );
-					horasdeldia=ui.values;
-					queryhorasdeldia='';
-					if (horasdeldia[0]===horasdeldia[1]){
-					queryhorasdeldia = "(date_part('hour', "+table_name+".created_at at time zone '"+TZ+"') = "+horasdeldia[0]+" )"
-					}else{
-						for(var cont = horasdeldia[0];cont<= horasdeldia[1];cont++){
-							if(cont===horasdeldia[1]){queryhorasdeldia += "(date_part('hour', "+table_name+".created_at at time zone '"+TZ+"') = "+ cont+" )"
-							}else{queryhorasdeldia += "(date_part('hour', "+table_name+".created_at at time zone '"+TZ+"') = "+ cont+" ) OR "}
-						}
-					}
-				}
-			});
-		    $( "#amount1" ).val( $( "#slider-horasdeldia" ).slider( "values", 0 ) + " - " + $( "#slider-horasdeldia" ).slider( "values", 1 ) );
-			
-			/* POLYGON */
-			$( "#slider-radius" ).slider({
-		      range: "max",
-		      min: 50,
-		      step:50,
-		      max: 5000,
-		      value: 5000,
-		      slide: function( event, ui ) {
-				  $( "#radiusval" ).val( ui.value );
-				  radius.rad = ui.value;
-				  //map.setZoom(number);
-				  
-				  }
-			});
-			$( "#radiusval" ).val( $( "#slider-radius" ).slider( "value" ) );
-			
-			//Slider for close distance reports
-			$( "#slider-closedistance" ).slider({
-		      range: "max",
-		      min: 1,
-		      max: 100,
-		      value: 10,
-		      slide: function( event, ui ) {
-				  $( "#amount2" ).val( ui.value );
-				  closeByReports = ui.value;
-				  }
-			});
-			$( "#amount2" ).val( $( "#slider-closedistance" ).slider( "value" ) );
-
-			//Slider for votes
-			$( "#slider-voto" ).slider({
-		      range: "max",
-		      min: 0,
-		      max: 30,
-		      value: 0,
-		      slide: function( event, ui ) {
-				  $( "#amountvoto" ).val( ui.value );
-				  totalvotos = ui.value;
-				  }
-			});
-			$( "#amountvoto" ).val( $( "#slider-voto" ).slider( "value" ) );
-			
-			
-			//Slider for star rating
-			$( "#slider-star" ).slider({
-		      range: "max",
-		      min: 0,
-		      max: 5,
-		      value: 0,
-		      slide: function( event, ui ) {
-				  $( "#amountstar" ).val( ui.value );
-				  totalstar = ui.value;
-				  }
-			});
-			$( "#amountstar" ).val( $( "#slider-star" ).slider( "value" ) );
-			
-					
-			/* CHARTS OPTIONS */
-			Highcharts.setOptions({
-				lang: {
-					months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 
-						'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-					shortMonths: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
-					weekdays: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado']
-				}
-			});		
-			//CUSTOM DATE FORMAT TO SHOW WEEKS ON THE XAXIS FOR HIGHCHARTS
-			Highcharts.dateFormats = {
-			    W: function (timestamp) {
-			        var date = new Date(timestamp),
-						day = date.getUTCDay() == 0 ? 7 : date.getUTCDay(),
-						dayNumber;
-						date.setDate(date.getUTCDate() + 4 - day);
-						dayNumber = Math.floor((date.getTime() - new Date(date.getUTCFullYear(), 0, 1, -6)) / 86400000);
-						return 1 + Math.floor(dayNumber / 7);
-				}
+				};
+			*/
+	  		
+	  	/* WORDLE */
+	  		wordle = new WORDLEJS.Wordle(document.getElementById('wordle-container'));
+	  	});
+	  	
+	  	/* LOADING SPINNER */
+	  	var target = document.getElementById('map');
+	  	var spinner = new Spinner(opts).spin(target); 
+	  	
+	  	/* LOWER FILTER MENU */
+	    var auxSlide = "";	
+		var sliderID;
+		$('.dock-item2').click(function() {
+			fade(auxSlide);
+			console.log(this);
+			switch ($(this).attr('id')) {
+			case 'slide-cate':
+				sliderID = "filtercate";
+				break;
+			case 'slide-date':
+				sliderID = "filterdate";
+				break;
+			case 'slide-muni':
+				sliderID = "filtermuni";
+				break;
+			case 'slide-stat':
+				sliderID = "filterstat";
+				break;
+			case 'slide-dist':
+				sliderID = "filterdist";
+				break;
 			}
-			
-			// JQUERY UI
-			var icons = {
-		      header: "ui-icon-circle-arrow-e",
-		      activeHeader: "ui-icon-circle-arrow-s"
-		    };
-            $( "#accordion" ).accordion({
-                collapsible: true,
-                heightStyle: "content",
-                active: false,
-                disabled: true,
-                icons: icons
-            }).sortable({
-                axis: "y",
-                handle: "h3",
-                stop: function( event, ui ) {
-                  ui.item.children( "h3" ).triggerHandler( "focusout" );
-                }
-            });
-            
-            // Switchers (of the Chart1 type) - onclick handler
-            $('.cicswitcher').click(function () {  
-                var newType = $(this).attr('id');
-                if (activeView == 'score' )
-                	ChangeChartType($('#chart0').highcharts().series, newType);
-                if (activeView == 'stats')
-                	ChangeChartType($('#columnContainer').highcharts().series, newType);
-            });
-            
-           
-				
+			if ($("#" + sliderID).is(":visible")) {
+				$("#" + sliderID).hide('fold', {}, 400);
+				auxSlide = "";
+			} else {
+				$("#" + sliderID).show('fold', {}, 400);
+				auxSlide = sliderID;
+			}
+			return false;
+		});	  	
+	  	
+	  	/* CALENDAR */
+	  	var t = new Date();
+	  	var y = new Date();
+	  	y.setDate(y.getDate() - 1);
+	  	var tdy = t.toISOString();
+	  	var ytrdy = y.toISOString();
+	  	var todaydate = tdy.substring(0,tdy.search(/t/i));
+	  	var yesterdaydate = ytrdy.substring(0,ytrdy.search(/t/i));
+	  	document.getElementById('desde').value = yesterdaydate;
+	  	document.getElementById('hasta').value = todaydate;
+	  	
+	  	desde = yesterdaydate;
+	  	hasta = todaydate;
+	  	
+	  	//DATEPICKER DESDE
+	  	$("#desde").datepicker({
+	  		dateFormat: "yy-mm-dd",
+	  		changeMonth: true,
+	  		changeYear: true,
+	  		numberOfMonths: 1,
+	  		maxDate: todaydate,
+	  		onSelect: function(selectedDate) {
+	  			$("#hasta").datepicker("option", "minDate", selectedDate);
+	  			desde = selectedDate;
+	  			if (dates.calendario) setQ();
+	  		}
+	  	});
+	  	//DATE PICKER HASTA
+	  	$("#hasta").datepicker({
+	  		dateFormat: "yy-mm-dd",
+	  		changeMonth: true,
+	  		changeYear: true,
+	  		numberOfMonths: 1,
+	  		minDate: desde,
+	  		maxDate: todaydate,
+	  		onSelect: function(selectedDate) {
+	  			$("#desde").datepicker("option", "maxDate", selectedDate);
+	  			hasta = selectedDate;
+	  			if (dates.calendario) setQ();
+	  		}
+	  	});
+	  	
+	  	//SLIDER CONTROL ULTIMAS HORAS
+	  	$("#slider-ulthoras").slider({
+	  		range: "max",
+	  		min: 1,
+	  		max: 24,
+	  		value: 3,
+	  		slide: function(event, ui) {
+	  			$("#amountUlthoras").val(ui.value);
+	  			valUltHoras = ui.value;
+	  		}
+	  	});
+	  	$("#amountUlthoras").val($("#slider-ulthoras").slider("value"));
+	  	
+	  	//SLIDER CONTROL HORARIO DE INTERES
+	  	$("#slider-horasdeldia").slider({
+	  		range: true,
+	  		min: 0,
+	  		max: 23,
+	  		values: [firstTOD, secondTOD],
+	  		slide: function(event, ui) {
+	  			$("#amountHrsDia").val(ui.values[0] + " - " + ui.values[1]);
+	  			queryhorasdeldia = "(date_part('hour', " + table_name + ".created_at at time zone '" + TZ + "')";
+	  			if (ui.values[0] === ui.values[1]) {
+	  				queryhorasdeldia = " = " + ui.values[0] + " )";
+	  			} else {
+	  				queryhorasdeldia = " BETWEEN " + ui.values[0] + " AND " + ui.values[1] + ")";
+	  			}
+	  		}
+	  	});
+	  	$("#amountHrsDia").val($("#slider-horasdeldia").slider("values", 0) + " - " + $("#slider-horasdeldia").slider("values", 1)); /* POLYGON */
+	  	
+	  	
+	  	//SLIDER CONTROL RADIUS
+	  	$("#slider-radius").slider({
+	  		range: "max",
+	  		min: 50,
+	  		step: 50,
+	  		max: 5000,
+	  		value: 5000,
+	  		slide: function(event, ui) {
+	  			$("#radiusval").val(ui.value);
+	  			radius.rad = ui.value;
+	  			//map.setZoom(number);
+	  		}
+	  	});
+	  	$("#radiusval").val($("#slider-radius").slider("value"));
+	  	
+	  	
+	  	//SLIDER CONTROL CLOSE DISTANCE
+	  	$("#slider-closedistance").slider({
+	  		range: "max",
+	  		min: 1,
+	  		max: 100,
+	  		value: 10,
+	  		slide: function(event, ui) {
+	  			$("#amountReports").val(ui.value);
+	  			closeByReports = ui.value;
+	  		}
+	  	});
+	  	$("#amountReports").val($("#slider-closedistance").slider("value"));
+	  	
+	  	//SLIDER CONTROL VOTOS
+	  	$("#slider-voto").slider({
+	  		range: "max",
+	  		min: 0,
+	  		max: 30,
+	  		value: 0,
+	  		slide: function(event, ui) {
+	  			$("#amountvoto").val(ui.value);
+	  			totalvotos = ui.value;
+	  		}
+	  	});
+	  	$("#amountvoto").val($("#slider-voto").slider("value"));
+	  	
+	  	//SLIDER CONTROL STAR RATING
+	  	$("#slider-star").slider({
+	  		range: "max",
+	  		min: 0,
+	  		max: 5,
+	  		value: 0,
+	  		slide: function(event, ui) {
+	  			$("#amountstar").val(ui.value);
+	  			totalstar = ui.value;
+	  		}
+	  	});
+	  	$("#amountstar").val($("#slider-star").slider("value")); /* CHARTS OPTIONS */
+	  	
+	  	//HIGHCHART LANGUAGE OPTIONS
+	  	Highcharts.setOptions({
+	  		lang: {
+	  			months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+	  			shortMonths: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+	  			weekdays: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado']
+	  		}
+	  	});
+	  	//CUSTOM DATE FORMAT TO SHOW WEEKS ON THE XAXIS FOR HIGHCHARTS
+	  	Highcharts.dateFormats = {
+	  		W: function(timestamp) {
+	  			var date = new Date(timestamp),
+	  				day = date.getUTCDay() == 0 ? 7 : date.getUTCDay(),
+	  				dayNumber;
+	  			date.setDate(date.getUTCDate() + 4 - day);
+	  			dayNumber = Math.floor((date.getTime() - new Date(date.getUTCFullYear(), 0, 1, -6)) / 86400000);
+	  			return 1 + Math.floor(dayNumber / 7);
+	  		}
+	  	}
+	  	// JQUERY UI
+	  	var icons = {
+	  		header: "ui-icon-circle-arrow-e",
+	  		activeHeader: "ui-icon-circle-arrow-s"
+	  	};
+	  	$("#accordion").accordion({
+	  		collapsible: true,
+	  		heightStyle: "content",
+	  		active: false,
+	  		disabled: true,
+	  		icons: icons
+	  	}).sortable({
+	  		axis: "y",
+	  		handle: "h3",
+	  		stop: function(event, ui) {
+	  			ui.item.children("h3").triggerHandler("focusout");
+	  		}
+	  	});
+	  	// Switchers (of the Chart1 type) - onclick handler (column, area, line, spline, areaspline)
+	  	$('.cicswitcher').click(function() {
+	  		var newType = $(this).attr('id');
+	  		if (activeView == 'score') ChangeChartType($('#chart0').highcharts().series, newType);
+	  		if (activeView == 'stats') ChangeChartType($('#columnContainer').highcharts().series, newType);
+	  	});
 	  });
-
+	  
 	  /*					 **
 	  **      HELPER 	     **
 	  **      METHODS		 **
@@ -1466,28 +1385,9 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 	  
 	  /* METHODS TO UPDATE COUNTERS*/
 	  function updateCounters(data) {
-	  	(categories.avisos) ? console.log() : $("#counterVal_avisos").val(0);
-	  	(categories.eventos) ? console.log() : $("#counterVal_eventos").val(0);
-	  	(categories.observador) ? console.log() : $("#counterVal_observador").val(0);
-	  	(categories.mtymuybien) ? console.log() : $("#counterVal_mtymuybien").val(0);
-	  	(categories.pcomunidad) ? console.log() : $("#counterVal_pcomunidad").val(0);
-	  	(categories.pseguridad) ? console.log() : $("#counterVal_pseguridad").val(0);
-	  	(categories.pservicios) ? console.log() : $("#counterVal_pservicios").val(0);
-	  	(categories.pvialidad) ? console.log() : $("#counterVal_pvialidad").val(0);
-	  	(categories.incendio) ? console.log() : $("#counterVal_incendio").val(0);
-	  	(categories.robo) ? console.log() : $("#counterVal_robo").val(0);
-	  	(categories.sitriesgo) ? console.log() : $("#counterVal_sitriesgo").val(0);
-	  	(categories.alcantarillas) ? console.log() : $("#counterVal_alcantarillas").val(0);
-	  	(categories.alumbrado) ? console.log() : $("#counterVal_alumbrado").val(0);
-	  	(categories.electricidad) ? console.log() : $("#counterVal_electricidad").val(0);
-	  	(categories.fuga) ? console.log() : $("#counterVal_fuga").val(0);
-	  	(categories.parques) ? console.log() : $("#counterVal_parques").val(0);
-	  	(categories.basura) ? console.log() : $("#counterVal_basura").val(0);
-	  	(categories.accidente) ? console.log() : $("#counterVal_accidente").val(0);
-	  	(categories.bache) ? console.log() : $("#counterVal_bache").val(0);
-	  	(categories.obras) ? console.log() : $("#counterVal_obras").val(0);
-	  	(categories.semaforo) ? console.log() : $("#counterVal_semaforo").val(0);
-	  	(categories.emergencias) ? console.log() : $("#counterVal_emergencias").val(0);
+	  	for(var x in categories){
+		  	if(!categories[x]) $("#counterVal_"+x).val(0);
+	  	}
 	  	for (var i = 0; i < data.total_rows; i++) {
 	  		if (data.rows[i].post_cat == "AVISOS") $("#counterVal_avisos").val(addCommas(data.rows[i].count));
 	  		if (data.rows[i].post_cat == "MTYMUYBIEN") $("#counterVal_mtymuybien").val(addCommas(data.rows[i].count));
@@ -1515,10 +1415,11 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 	  }
 	  function addCommas(val) {
 	  	while (/(\d+)(\d{3})/.test(val.toString())) {
-	  		val = val.toString().replace(/(\d+)(\d{3})/, '$1' + ',' + '$2');
+	  		var val = val.toString().replace(/(\d+)(\d{3})/, '$1' + ',' + '$2');
 	  	}
 	  	return val;
 	  }	  
+	  
 	  /* METHODS FOR ACTIVE FILTERS*/
 	  function updateActiveFilters() {
 	  	var divCat = document.getElementById("activeF_Cat");
@@ -1732,15 +1633,15 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 	  		htmlSta += "<br><input type=\"text\" class=\"rangevalue\" value=\"C. Fallo\"style=\"width:auto; text-align:center; font-size:12px;\"disabled/>";
 	  		anyFilter = true;
 	  	}
-	  	if (votos) {
+	  	if (repDetail.voto) {
 	  		htmlSta += "<br><input type=\"text\" class=\"rangevalue\" value=\"Votos\"style=\"width:auto; text-align:center; font-size:12px;\"disabled/>";
 	  		anyFilter = true;
 	  	}
-	  	if (star) {
+	  	if (repDetail.star) {
 	  		htmlSta += "<br><input type=\"text\" class=\"rangevalue\" value=\"Calificación\"style=\"width:auto; text-align:center; font-size:12px;\"disabled/>";
 	  		anyFilter = true;
 	  	}
-	  	if (qassets) {
+	  	if (repDetail.asset) {
 	  		htmlSta += "<br><input type=\"text\" class=\"rangevalue\" value=\"Imágenes\"style=\"width:auto; text-align:center; font-size:12px;\"disabled/>";
 	  		anyFilter = true;
 	  	}
@@ -1771,139 +1672,49 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 	  		$('.activeslide').css('cursor', 'default');
 	  	}
 	  }	  
-	  
-	  
-	  
-	  function resetFilters(){
-		  	categories = {
-			  avisos : false,
-			  eventos : false,
-			  observador : false,
-			  mtymuybien : false,
-			  pcomunidad : false,
-			  pseguridad : false,
-			  pservicios : false,
-			  pvialidad : false,
-			  incendio : false,
-			  robo : false,
-			  sitriesgo : false,
-			  alcantarillas : false,
-			  alumbrado : false,
-			  electricidad : false,
-			  fuga : false,
-			  parques : false,
-			  basura : false,
-			  accidente : false,
-			  bache : false,
-			  obras : false,
-			  semaforo : false,
-			  emergencias : false
-		  };
-		  	dates = {
-			  calendario :  false,
-			  sietedias : false,
-			  quincedias : false,
-			  treintadias : false,
-			  noventadias : false,
-			  ulthoras : false,
-			  horasdeldia : false,
-			  domingo: false,
-			  lunes: false, 
-			  martes: false,
-			  miercoles: false,
-			  jueves: false,
-			  viernes: false,
-			  sabado: false
-		  };
-		  	mun = {
-		  	  mty : false,
-		  	  sp : false,
-		  	  sn : false,
-		  	  sc : false,
-		  	  gpe : false,
-		  	  apo : false,
-		  	  esc : false,
-		  	  jua : false,
-		  	  gar : false,
-		  	  cad : false,
-		  	  stg : false
-		  };
-		  	repStatus = {
-		  	  open : false,
-		  	  closed : false,
-		  	  closed_fail : false
-		  };
-			$('#ageb-choropleth').attr('checked', false);
+	  function resetFilters() {
+			
+			for (var a in categories) {
+				categories[a] = false;
+				$('#' + a).attr('checked', false);
+			}
+			for (var a in dates) {
+				dates[a] = false;
+				$('#' + a).attr('checked', false);
+			}
+			for (var a in mun) {
+				mun[a] = false;
+				$('#' + a).attr('checked', false);
+			}
+			for (var a in repStatus) {
+				repStatus[a] = false;
+				$('#' + a).attr('checked', false);
+			}
+			for (var a in repDetail) {
+				repDetail[a] = false;
+				$('#' + a).attr('checked', false);
+			}
+						
 			choro=false;
+			$('#ageb-choropleth').attr('checked', false);
 		    $('#mun-legend-div').css('display', 'none');
+		  	
 		  	radius.set =false;
-		  	polyfilter = false;
-		  	closedistance=false;
-		  	votos= false;
-		  	star=false;
-		  	qassets=false;
-		    $('#avisos').attr('checked', false);
-			$('#eventos').attr('checked', false);
-			$('#observador').attr('checked', false);
-			$('#mtymuybien').attr('checked', false);
-			$('#pcomunidad').attr('checked', false);
-			$('#pseguridad').attr('checked', false);
-			$('#pservicios').attr('checked', false);
-			$('#pvialidad').attr('checked', false);
-			$('#incendio').attr('checked', false);
-			$('#robo').attr('checked', false);
-			$('#sitriesgo').attr('checked', false);
-			$('#alcantarillas').attr('checked', false);
-			$('#alumbrado').attr('checked', false);
-			$('#electricidad').attr('checked', false);
-			$('#fuga').attr('checked', false);
-			$('#parques').attr('checked', false);
-			$('#basura').attr('checked', false);
-			$('#accidente').attr('checked', false);
-			$('#bache').attr('checked', false);
-			$('#obras').attr('checked', false);
-			$('#semaforo').attr('checked', false);
-			$('#emergencias').attr('checked', false);
-		    $('#calendario').attr('checked', false);
-			$('#sietedias').attr('checked', false);
-			$('#quincedias').attr('checked', false);
-			$('#treintadias').attr('checked', false);
-			$('#noventadias').attr('checked', false);
-			$('#ulthoras').attr('checked', false);
-		    $('#horasdeldia').attr('checked', false);
-		    $('#amount1').attr('checked', false);
-		    $('#domingo').attr('checked', false);
-		    $('#lunes').attr('checked', false);
-		    $('#martes').attr('checked', false);
-		    $('#miercoles').attr('checked', false);
-		    $('#jueves').attr('checked', false);
-		    $('#viernes').attr('checked', false);
-		    $('#sabado').attr('checked', false);
-		    $('#monterrey').attr('checked', false);
-			$('#sanpedro').attr('checked', false);
-			$('#sannico').attr('checked', false);
-			$('#santacat').attr('checked', false);
-			$('#guadalupe').attr('checked', false);
-			$('#apodaca').attr('checked', false);
-			$('#escobedo').attr('checked', false);
-			$('#juarez').attr('checked', false);
-			$('#garcia').attr('checked', false);
-			$('#cadereyta').attr('checked', false);
-			$('#santiago').attr('checked', false);
-	        $('#abierto').attr('checked', false);
-			$('#cerrado').attr('checked', false);
-			$('#cerradofail').attr('checked', false);
 		    $('#radius').attr('checked', false);
+		  	
+		  	polyfilter = false;
 		    $('#polyfilter').attr('checked', false);
+		  	
+		  	closedistance=false;
 		    $('#closedistance').attr('checked', false);
-		    $('#voto').attr('checked', false);
-		    $('#star').attr('checked', false);
-		    $('#asset').attr('checked', false);
+		  	
+			map.setZoom(11);
+			execRepOffset=0;
+			
 			clearGeo();
 			drawCircle();
 			clearPolygons();
-			map.setZoom(11);
-			execRepOffset=0;
+			
 			setQ();
 	  }
 	  
@@ -1947,35 +1758,18 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 	  
 	  /* METHODS FOR ADDITIONAL CATEGORIES FILTERING*/
 	  function multipleCat(group, aux){
-	  	aux = typeof aux !== 'undefined' ? aux : true;
-	  	var q = true;
+		  aux = typeof aux !== 'undefined' ? aux : true;
+		  var q = true;
+		  
 		  switch (group){
-			  case 'municipio':
+			  case 'MUNICIPIO':
 			        if (!mun.mty  || !mun.sp  || !mun.sn  || !mun.sc  || !mun.gpe  || !mun.apo  || !mun.esc  || !mun.jua  || !mun.gar  || !mun.cad  || !mun.stg) aux=true; else aux = false;
-			  		mun.mty =aux;
-					mun.sp =aux;
-					mun.sn =aux;
-					mun.sc =aux;
-					mun.gpe =aux;
-					mun.apo =aux;
-					mun.esc =aux;
-					mun.jua =aux;
-					mun.gar =aux;
-					mun.cad =aux;
-					mun.stg =aux;
-					document.getElementById("monterrey").checked = aux;
-					document.getElementById("sanpedro").checked = aux;
-					document.getElementById("guadalupe").checked = aux;
-					document.getElementById("sannico").checked = aux;
-					document.getElementById("santacat").checked = aux;
-					document.getElementById("apodaca").checked = aux;
-					document.getElementById("garcia").checked = aux;
-					document.getElementById("escobedo").checked = aux;
-					document.getElementById("juarez").checked = aux;
-					document.getElementById("cadereyta").checked = aux;
-					document.getElementById("santiago").checked = aux;
-					break;
-			  case 'comunidad':
+				  	for (var a in mun){
+					  	mun[a]= aux;
+					  	document.getElementById(a).checked = aux;
+				  	}
+		  	  break;
+			  case 'COMUNIDAD':
 			        if (!categories.avisos || !categories.eventos || !categories.observador || !categories.mtymuybien) aux=true; else aux = false;
 			  		categories.avisos = aux;
 					categories.eventos = aux;
@@ -1986,7 +1780,7 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 					document.getElementById("observador").checked =aux;
 					document.getElementById("mtymuybien").checked =aux;
 			  break;
-			  case 'propuestas':
+			  case 'PROPUESTAS CIUDADANAS':
 			        if (!categories.pcomunidad || !categories.pseguridad || !categories.pservicios || !categories.pvialidad) aux=true; else aux = false;
 			  		categories.pcomunidad = aux;
 					categories.pseguridad = aux;
@@ -1997,7 +1791,7 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 					document.getElementById("pservicios").checked =aux;
 					document.getElementById("pvialidad").checked =aux;
 			  break;
-			  case 'seguridad':
+			  case 'SEGURIDAD':
 			  		if (!categories.incendio || !categories.robo || !categories.sitriesgo) aux=true; else aux = false;
 			  		categories.incendio = aux;
 					categories.robo = aux;
@@ -2006,9 +1800,8 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 					document.getElementById("robo").checked =aux;
 					document.getElementById("sitriesgo").checked =aux;
 			  break;
-			  case 'servicios':
-			  		if (!categories.alcantarillas || !categories.alumbrado || !categories.electricidad ||
-			  		    !categories.fuga || !categories.parques || !categories.basura) aux=true; else aux = false;
+			  case 'SERVICIOS PUBLICOS':
+			  		if (!categories.alcantarillas || !categories.alumbrado || !categories.electricidad || !categories.fuga || !categories.parques || !categories.basura) aux=true; else aux = false;
 			  		categories.alcantarillas = aux;
 					categories.alumbrado = aux;
 					categories.electricidad = aux;
@@ -2022,7 +1815,7 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 					document.getElementById("parques").checked =aux;
 					document.getElementById("basura").checked =aux;
 			  break;
-			  case 'vialidad':
+			  case 'VIALIDAD Y TRANSITO':
 			  		if (!categories.accidente || !categories.bache || !categories.obras || !categories.semaforo) aux=true; else aux = false;
 			  		categories.accidente = aux;
 					categories.bache = aux;
@@ -2033,12 +1826,17 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 					document.getElementById("obras").checked =aux;
 					document.getElementById("semaforo").checked =aux;
 			  break;
-			  case 'emergencia':
+			  case 'EMERGENCIAS':
 			  		if (!categories.emergencias) aux=true; else aux = false;
 			  		categories.emergencias = aux;
 			  		document.getElementById("emergencias").checked =aux;
 			  break;
 			  case 'all':
+				  	for (var a in categories){
+					  categories[a]= aux;
+					  document.getElementById(a).checked = aux;
+				  	}			  		
+/*
 			  		categories.avisos = aux;
 					categories.eventos = aux;
 					categories.observador = aux;
@@ -2083,6 +1881,7 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 					document.getElementById("semaforo").checked =aux;
 					categories.emergencias = aux;
 			  		document.getElementById("emergencias").checked =aux;
+*/
 			  		q=false;
 			  break;
 		  }
@@ -2120,7 +1919,7 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 	  }
 	  
 	  /* METHODS FOR QUERYING BY DISTANCE */
-	  var drawCircle = function() {
+	  function drawCircle() {
 		    if (overlay) overlay.setMap(null);
 		    if (overlay_T) overlay_T.setMap(null);
 		    if (radius.set) {
@@ -2148,7 +1947,7 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 		        }
 		    }
 		}
-	  var updateRadDeg = function(dist) {
+	  function updateRadDeg(dist) {
 		    var deg = 180,
 		        brng = deg * Math.PI / 180,
 		        dist = dist / 6371000,
@@ -2163,12 +1962,15 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 		
 		    radDeg = radius.lat - (lat2 * 180 / Math.PI);
 	  }
-	  function updateBounds(){
-		  var bounds = new google.maps.LatLngBounds();
-		  var myLatLng = new google.maps.LatLng(radius.lat, radius.lng); 
-          bounds.extend(myLatLng);myLatLng = new google.maps.LatLng(radius.lat+0.01*radius.rad/1000, radius.lng+0.01*radius.rad/1000);
-          bounds.extend(myLatLng);myLatLng = new google.maps.LatLng(radius.lat-0.01*radius.rad/1000, radius.lng-0.01*radius.rad/1000);
-          bounds.extend(myLatLng);map.fitBounds(bounds);
+	  function updateBounds() {
+	  	var bounds = new google.maps.LatLngBounds();
+	  	var myLatLng = new google.maps.LatLng(radius.lat, radius.lng);
+	  	bounds.extend(myLatLng);
+	  	myLatLng = new google.maps.LatLng(radius.lat + 0.01 * radius.rad / 1000, radius.lng + 0.01 * radius.rad / 1000);
+	  	bounds.extend(myLatLng);
+	  	myLatLng = new google.maps.LatLng(radius.lat - 0.01 * radius.rad / 1000, radius.lng - 0.01 * radius.rad / 1000);
+	  	bounds.extend(myLatLng);
+	  	map.fitBounds(bounds);
 	  }
 	  function clearPolygons(){
 	      drawingManager.setOptions({drawingControl: false});
@@ -2177,26 +1979,27 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 				}
 				shapesArray=[]; 
 	  }
-	  function takePolygons(){
-	      if (radius.set) { drawCircle(); }
-		  if (polyfilter){
-			  if (activeView == 'torque') { 
-			  	drawingManager.setMap(map_T); 
-			  	if (shapesArray.length>0){
-					for(i=0;i<shapesArray.length;i++){
-						shapesArray[i].setMap(map_T);
-					}
-				}
-			  } else{
-				drawingManager.setMap(map);
-				if (shapesArray.length>0){
-					for(i=0;i<shapesArray.length;i++){
-						shapesArray[i].setMap(map);
-					}
-				}  
-			  }
-			  
-		  }
+	  function takePolygons() {
+	  	if (radius.set) {
+	  		drawCircle();
+	  	}
+	  	if (polyfilter) {
+	  		if (activeView == 'torque') {
+	  			drawingManager.setMap(map_T);
+	  			if (shapesArray.length > 0) {
+	  				for (i = 0; i < shapesArray.length; i++) {
+	  					shapesArray[i].setMap(map_T);
+	  				}
+	  			}
+	  		} else {
+	  			drawingManager.setMap(map);
+	  			if (shapesArray.length > 0) {
+	  				for (i = 0; i < shapesArray.length; i++) {
+	  					shapesArray[i].setMap(map);
+	  				}
+	  			}
+	  		}
+	  	}
 	  }
 	  function detectUserLocation() {
 	  	if (navigator.geolocation) {
@@ -2250,76 +2053,51 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 	  	gmarker = null;
 	  	//map.setZoom(11);			
 	  }	  
-	  function clearDistance(dist){
-		  switch (dist){
-		      case "close": 
-		      	  radius.set =false; document.getElementById('radius').checked = false;
-			  	  polyfilter = false; document.getElementById('polyfilter').checked = false;
-			  	  drawCircle();clearPolygons();
-				  break;
-		      case "rad": 
-		      	  closedistance =false; document.getElementById('closedistance').checked = false;
-			  	  polyfilter = false; document.getElementById('polyfilter').checked = false;
-			  	  clearGeo(); clearPolygons(); 
-				  break;
-		      case "poly": 
-		          closedistance =false; document.getElementById('closedistance').checked = false;
-			  	  radius.set =false; document.getElementById('radius').checked = false;
-			  	  clearGeo(); drawCircle();
-				  break;
-			  default: break;
-		  }
-	  }
-	  
+	  function clearDistance(dist) {
+			switch (dist) {
+			case "close":
+				radius.set = false;
+				document.getElementById('radius').checked = false;
+				polyfilter = false;
+				document.getElementById('polyfilter').checked = false;
+				drawCircle();
+				clearPolygons();
+				break;
+			case "rad":
+				closedistance = false;
+				document.getElementById('closedistance').checked = false;
+				polyfilter = false;
+				document.getElementById('polyfilter').checked = false;
+				clearGeo();
+				clearPolygons();
+				break;
+			case "poly":
+				closedistance = false;
+				document.getElementById('closedistance').checked = false;
+				radius.set = false;
+				document.getElementById('radius').checked = false;
+				clearGeo();
+				drawCircle();
+				break;
+			default:
+				break;
+			}
+		}	  
 	  /* METHOD FOR DATE AND TIME FILTERING */
-	  function clearDates(date){
-		  switch (date){
-		      case "calendario": 
-				  dates.sietedias = false; document.getElementById('sietedias').checked = false;
-				  dates.quincedias = false; document.getElementById('quincedias').checked = false;
-				  dates.treintadias = false; document.getElementById('treintadias').checked = false;
-				  dates.noventadias = false; document.getElementById('noventadias').checked = false;
-				  dates.ulthoras = false; document.getElementById('ulthoras').checked = false;
-				  break;
-		      case "sietedias": 
-		      	  dates.calendario =  false;document.getElementById('calendario').checked = false;
-				  dates.quincedias = false;document.getElementById('quincedias').checked = false;
-				  dates.treintadias = false;document.getElementById('treintadias').checked = false;
-				  dates.noventadias = false;document.getElementById('noventadias').checked = false;
-				  dates.ulthoras = false;document.getElementById('ulthoras').checked = false;
-		      	  break;
-		      case "quincedias": 
-		          dates.calendario =  false;document.getElementById('calendario').checked = false;
-				  dates.sietedias = false;document.getElementById('sietedias').checked = false;
-				  dates.treintadias = false;document.getElementById('treintadias').checked = false;
-				  dates.noventadias = false;document.getElementById('noventadias').checked = false;
-				  dates.ulthoras = false;document.getElementById('ulthoras').checked = false;
-		          break;
-		      case "treintadias": 
-		          dates.calendario =  false;document.getElementById('calendario').checked = false;
-				  dates.sietedias = false;document.getElementById('sietedias').checked = false;
-				  dates.quincedias = false;document.getElementById('quincedias').checked = false;
-				  dates.noventadias = false;document.getElementById('noventadias').checked = false;
-				  dates.ulthoras = false;document.getElementById('ulthoras').checked = false;
-		          break;
-		      case "noventadias": 
-		      	  dates.calendario =  false;document.getElementById('calendario').checked = false;
-				  dates.sietedias = false;document.getElementById('sietedias').checked = false;
-				  dates.quincedias = false;document.getElementById('quincedias').checked = false;
-				  dates.treintadias = false;document.getElementById('treintadias').checked = false;
-				  dates.ulthoras = false;document.getElementById('ulthoras').checked = false;
-		      	  break;
-		      case "ulthoras": 
-		      	  dates.calendario =  false;document.getElementById('calendario').checked = false;
-				  dates.sietedias = false;document.getElementById('sietedias').checked = false;
-				  dates.quincedias = false;document.getElementById('quincedias').checked = false;
-				  dates.treintadias = false;document.getElementById('treintadias').checked = false;
-				  dates.noventadias = false;document.getElementById('noventadias').checked = false;
-		      	  break;
-			  default: break;
-		  }
-	  }
-	  	  
+	  function clearDates(date) {
+	  	//array contains HTML IDs which toggle between each other 
+	  	var array = ["calendario", "sietedias", "quincedias", "treintadias", "noventadias", "ulthoras"];
+	  	var index = array.indexOf(date);
+	  	if (index > -1) {
+	  		var pushBack = array[index];
+	  		array.splice(index, 1);
+	  		for (var i = 0, j = array.length; i < j; i++) {
+	  			dates[array[i]] = false;
+	  			document.getElementById(array[i]).checked = false;
+	  		}
+	  		array.push(pushBack);
+	  	}
+	  }	  	  
 	  /* METHOD FOR WORDLE WORD CLICK ACTION*/
 	  function wordClick(text){
 		  	searchInput = text;
@@ -2333,67 +2111,55 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 	  
 	  /* METHODS FOR DRAWING CO-OCCURRENCE*/
 	  function drawTiles() {
-	
-			var calcs = _getCalcs(),
-				range = [];
-			for (var i = 1; i <= buckets; i++) {
-				range.push(i);
-			}
-			
-			var bucket = d3.scale.quantize().domain([0, calcs.max > 0 ? calcs.max : 1]).range(range),
-			side = d3.select('#tiles').attr('class');
-	
-	
-			if (side === 'front') {
-				side = 'back';
-			} else {
-				side = 'front';
-			}
-			
-			for (var d = 0; d < formattedData.length; d++) {
-				for (var h = 0; h < formattedData[d].length; h++) {
-		
-					var sel = '#d' + d + 'h' + h + ' .tile .' + side,
-						val = formattedData[d][h];
-					
-					// erase all previous bucket designations on this cell
-					for (var i = 1; i <= buckets; i++) {
-						var cls = 'q' + i + '-' + buckets;
-						d3.select(sel).classed(cls , false);
-					}
-					
-					// set new bucket designation for this cell
-					var cls = 'q' + (val > 0 ? bucket(val) : 0) + '-' + buckets;
-					d3.select(sel).classed(cls, true);
-				}
-			}
-			flipTiles();
-			_drawHourlyChart(-1);
-		}
+	  	var calcs = _getCalcs(),
+	  		range = [];
+	  	for (var i = 1; i <= buckets; i++) {
+	  		range.push(i);
+	  	}
+	  	var bucket = d3.scale.quantize().domain([0, calcs.max > 0 ? calcs.max : 1]).range(range),
+	  		side = d3.select('#tiles').attr('class');
+	  	if (side === 'front') {
+	  		side = 'back';
+	  	} else {
+	  		side = 'front';
+	  	}
+	  	for (var d = 0; d < formattedData.length; d++) {
+	  		for (var h = 0; h < formattedData[d].length; h++) {
+	  			var sel = '#d' + d + 'h' + h + ' .tile .' + side,
+	  				val = formattedData[d][h];
+	  			// erase all previous bucket designations on this cell
+	  			for (var i = 1; i <= buckets; i++) {
+	  				var cls = 'q' + i + '-' + buckets;
+	  				d3.select(sel).classed(cls, false);
+	  			}
+	  			// set new bucket designation for this cell
+	  			var cls = 'q' + (val > 0 ? bucket(val) : 0) + '-' + buckets;
+	  			d3.select(sel).classed(cls, true);
+	  		}
+	  	}
+	  	flipTiles();
+	  	_drawHourlyChart(-1);
+	  }	  
 	  function _getCalcs() {
-	
-			var min = 1,
-				max = -1;
-			
-			// calculate min + max
-			for (var d = 0; d < formattedData.length; d++) {
-				for (var h = 0; h < formattedData[d].length; h++) {
-					
-					var tot = formattedData[d][h];
-					
-					
-					if (tot > max) {
-						max = tot;
-					}
-					
-					if (tot < min) {
-						min = tot;
-					}
-				}
-			}
-			
-			return {'min': min, 'max': max};
-		}
+	  	var min = 1,
+	  		max = -1;
+	  	// calculate min + max
+	  	for (var d = 0; d < formattedData.length; d++) {
+	  		for (var h = 0; h < formattedData[d].length; h++) {
+	  			var tot = formattedData[d][h];
+	  			if (tot > max) {
+	  				max = tot;
+	  			}
+	  			if (tot < min) {
+	  				min = tot;
+	  			}
+	  		}
+	  	}
+	  	return {
+	  		'min': min,
+	  		'max': max
+	  	};
+	  }
 	  function _drawHourlyChart(day) {
 	
 			d3.selectAll('#hourly_values svg').remove();
@@ -2511,6 +2277,8 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 	}
 	  
 	/* METHODS FOR DRAWING SCORE CHARTS*/
+	   	
+	   	
 	   	/*DRAW SCORE FOR CATS */
 	  function drawScore(score,status,origin){
 	  		var promSPmun = {};
@@ -2526,10 +2294,6 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 		         				 	lineColor: Highcharts.getOptions().colors[3],
 				 				 	fillColor: 'white'};
 				 				 	
-/*
-console.log("El objeto de Scores (Dias promedio para cerrar reportes) Categorias/municipio");
-console.log(score);
-*/
 
 			//INIT DIVISORS FOR AVG PER CAT
 			for (var mun in score){
@@ -2555,10 +2319,6 @@ console.log(score);
 							if(score[mun][cat] != 0){promSPcatdiv[cat]+=1;}	
 						}
 				}
-/*
-console.log('Arreglo de dias prom para '+mun);
-console.log(data);
-*/
 				contcat++;
 				if(cont == 0) promSPmun[mun] = 0; 
 				else promSPmun[mun] = Math.round(suma/cont);
@@ -2575,16 +2335,6 @@ console.log(data);
 			$('#chart0').highcharts().addSeries(promOb);
 			$('#chart0').highcharts().hideLoading();
 			
-/*
-console.log("Totales Por Categoria");
-console.log(promSPcat);
-console.log("dividendos");
-console.log(promSPcatdiv);
-console.log("Promedios Por Categoria");
-console.log(promcatarray);
-console.log("Promedios Por Municipio");
-console.log(promSPmun);
-*/
 			
 			//DRAW INDIVIDUAL PLOTS FOR EVERY MUN
 			for (var mun in score) plotCounty(status,origin,mun);
@@ -2646,22 +2396,10 @@ console.log(promSPmun);
 					datapieObj['color'] = colors[datapieArr.length];
 					datapieArr.push(datapieObj);
 			}
-/*
-console.log('Municipio '+mun);
-console.log("Arreglo de objects para pie");
-console.log(datapieArr);
-console.log("Arreglo de obj para donut");
-console.log(dataDonArr);
-*/
 			effectPercent[mun]= Math.round(((cerrados)/(cerrados+cerradosfail))*100);
 			if(isNaN(effectPercent[mun])) {
 				effectPercent[mun] = 0;
 			}
-/*
-console.log("Total municipio "+mun);
-console.log(total_mun);		
-*/
-
 			
 			var chartID = 'chart'+mun;
 			var county = getFullName(mun);
@@ -2807,10 +2545,6 @@ console.log(total_mun);
 }
 	  function fillSummary(effectPercent,promSPmun){
 			var html="";
-			//console.log('ePercent');
-			//console.log(effectPercent);
-			//console.log('promSPmun');
-			//console.log(promSPmun);
 			html+= '<table border="1" bordercolor="#163D74" style="background-color:#FFF" width="100%" cellpadding="3" cellspacing="3">';
 			html+= '<tr style="background-color:#163D74; color: #FFF;" align="center" valign="middle" ><td>Municipio</td><td>Tiempo promedio de resolución en días</td><td>Porcentaje de resolución exitosa</td></tr>';
 			for (var mun in effectPercent){
@@ -4281,116 +4015,207 @@ console.log(total_mun);
 	  
 	  /* ONLOAD JQUERY CHECKBOXES FILTER ACTIVATION */
 	  $(function() {
-$('#avisos').change(function(){this.checked ? categories.avisos = true : categories.avisos = false; execRepOffset=0;setQ();});
-$('#eventos').change(function(){this.checked ? categories.eventos = true : categories.eventos = false; execRepOffset=0;setQ();});
-$('#observador').change(function(){this.checked ? categories.observador = true : categories.observador = false; execRepOffset=0;setQ();});
-$('#mtymuybien').change(function(){this.checked ? categories.mtymuybien = true : categories.mtymuybien = false; execRepOffset=0;setQ();});
-$('#pcomunidad').change(function(){this.checked ? categories.pcomunidad = true : categories.pcomunidad = false; execRepOffset=0;setQ();});
-$('#pseguridad').change(function(){this.checked ? categories.pseguridad = true : categories.pseguridad = false; execRepOffset=0;setQ();});
-$('#pservicios').change(function(){this.checked ? categories.pservicios = true : categories.pservicios = false; execRepOffset=0;setQ();});
-$('#pvialidad').change(function(){this.checked ? categories.pvialidad = true : categories.pvialidad = false; execRepOffset=0;setQ();});
-$('#incendio').change(function(){this.checked ? categories.incendio = true : categories.incendio = false; execRepOffset=0;setQ();});
-$('#robo').change(function(){this.checked ? categories.robo = true : categories.robo = false; execRepOffset=0;setQ();});
-$('#sitriesgo').change(function(){this.checked ? categories.sitriesgo = true : categories.sitriesgo = false; execRepOffset=0;setQ();});
-$('#alcantarillas').change(function(){this.checked ? categories.alcantarillas = true : categories.alcantarillas = false; execRepOffset=0;setQ();});
-$('#alumbrado').change(function(){this.checked ? categories.alumbrado = true : categories.alumbrado = false; execRepOffset=0;setQ();});
-$('#electricidad').change(function(){this.checked ? categories.electricidad = true : categories.electricidad = false; execRepOffset=0;setQ();});
-$('#fuga').change(function(){this.checked ? categories.fuga = true : categories.fuga = false; execRepOffset=0;setQ();});
-$('#parques').change(function(){this.checked ? categories.parques = true : categories.parques = false; execRepOffset=0;setQ();});
-$('#basura').change(function(){this.checked ? categories.basura = true : categories.basura = false; execRepOffset=0;setQ();});
-$('#accidente').change(function(){this.checked ? categories.accidente = true : categories.accidente = false; execRepOffset=0;setQ();});
-$('#bache').change(function(){this.checked ? categories.bache = true : categories.bache = false; execRepOffset=0;setQ();});
-$('#obras').change(function(){this.checked ? categories.obras = true : categories.obras = false; execRepOffset=0;setQ();});
-$('#semaforo').change(function(){this.checked ? categories.semaforo = true : categories.semaforo = false; execRepOffset=0;setQ();});
-$('#emergencias').change(function(){this.checked ? categories.emergencias = true : categories.emergencias = false; setQ();});
-
-$('#calendario').change(function(){this.checked ? dates.calendario = true : dates.calendario=false; clearDates('calendario'); execRepOffset=0;setQ();});
-$('#sietedias').change(function(){this.checked ? dates.sietedias = true : dates.sietedias=false; clearDates('sietedias'); execRepOffset=0;setQ();});
-$('#quincedias').change(function(){this.checked ? dates.quincedias = true : dates.quincedias=false; clearDates('quincedias'); execRepOffset=0;setQ();});
-$('#treintadias').change(function(){this.checked ? dates.treintadias = true : dates.treintadias=false; clearDates('treintadias'); execRepOffset=0;setQ();});
-$('#noventadias').change(function(){this.checked ? dates.noventadias = true : dates.noventadias=false; clearDates('noventadias'); execRepOffset=0;setQ();});
-$('#ulthoras').change(function(){this.checked ? dates.ulthoras = true : dates.ulthoras=false; clearDates('ulthoras'); execRepOffset=0;setQ();});
-$('#slider-ulthoras').mouseup(function() {if (dates.ulthoras){clearDates('ulthoras'); execRepOffset=0;setQ();}});
-$('#amount').change(function() {if (dates.ulthoras){setQ();}});
-$('#horasdeldia').change(function(){this.checked ? dates.horasdeldia = true : dates.horasdeldia=false; execRepOffset=0;setQ();});
-$('#slider-horasdeldia').mouseup(function() {if (dates.horasdeldia){execRepOffset=0;setQ();}});
-$('#amount1').change(function() {if (dates.horasdeldia){execRepOffset=0;setQ();}});
-$('#domingo').change(function(){this.checked ? dates.domingo = true : dates.domingo=false;  execRepOffset=0;setQ();});
-$('#lunes').change(function(){this.checked ? dates.lunes = true : dates.lunes=false;  execRepOffset=0;setQ();});
-$('#martes').change(function(){this.checked ? dates.martes = true : dates.martes=false; execRepOffset=0;setQ();});
-$('#miercoles').change(function(){this.checked ? dates.miercoles = true : dates.miercoles=false;  execRepOffset=0;setQ();});
-$('#jueves').change(function(){this.checked ? dates.jueves = true : dates.jueves=false;  execRepOffset=0;setQ();});
-$('#viernes').change(function(){this.checked ? dates.viernes = true : dates.viernes=false; execRepOffset=0;setQ();});
-$('#sabado').change(function(){this.checked ? dates.sabado = true : dates.sabado=false; execRepOffset=0;setQ();});
-
-$('#monterrey').change(function(){this.checked ? mun.mty = true : mun.mty = false; execRepOffset=0;setQ();});
-$('#sanpedro').change(function(){this.checked ? mun.sp = true : mun.sp = false; execRepOffset=0;setQ();});
-$('#sannico').change(function(){this.checked ? mun.sn = true : mun.sn = false; execRepOffset=0;setQ();});
-$('#santacat').change(function(){this.checked ? mun.sc = true : mun.sc = false; execRepOffset=0;setQ();});
-$('#guadalupe').change(function(){this.checked ? mun.gpe = true : mun.gpe = false; execRepOffset=0;setQ();});
-$('#apodaca').change(function(){this.checked ? mun.apo = true : mun.apo = false; execRepOffset=0;setQ();});
-$('#escobedo').change(function(){this.checked ? mun.esc = true : mun.esc = false; execRepOffset=0;setQ();});
-$('#juarez').change(function(){this.checked ? mun.jua = true : mun.jua = false; execRepOffset=0;setQ();});
-$('#garcia').change(function(){this.checked ? mun.gar = true : mun.gar = false; execRepOffset=0;setQ();});
-$('#cadereyta').change(function(){this.checked ? mun.cad = true : mun.cad = false; execRepOffset=0;setQ();});
-$('#santiago').change(function(){this.checked ? mun.stg = true : mun.stg = false; execRepOffset=0;setQ();});
-
-$('#abierto').change(function(){this.checked ? repStatus.open = true : repStatus.open = false; execRepOffset=0;setQ();});
-$('#cerrado').change(function(){this.checked ? repStatus.closed = true : repStatus.closed = false; execRepOffset=0;setQ();});
-$('#cerradofail').change(function(){this.checked ? repStatus.closed_fail = true : repStatus.closed_fail = false; execRepOffset=0;setQ();});
-
-$('#radius').change(function(){this.checked ? radius.set = true : radius.set = false; execRepOffset=0; 
-			                                if (radius.set){radius.lat = map.getCenter().lat();radius.lng = map.getCenter().lng();
-															 updateRadDeg(radius.rad);drawCircle();updateBounds();
-															 clearDistance('rad'); setQ();}
-			                                else {drawCircle(); setQ();}});
-$('#slider-radius').mouseup(function() {if (radius.set){updateRadDeg(radius.rad);drawCircle();updateBounds();execRepOffset=0;setQ();}});
-$('#polyfilter').change(function(){this.checked ? polyfilter = true : polyfilter = false; 
-	            if (!polyfilter){
-	                clearPolygons(); drawingManager.setOptions({drawingControl: false}); drawingManager.setDrawingMode(null);              
-	            }else{
-	                drawingManager.setOptions({drawingControl: true});
-	                drawingManager.setDrawingMode('polygon');
-	                clearDistance('poly');
-	            } execRepOffset=0;setQ(); }); 
-$('#closedistance').change(function(){this.checked ? closedistance = true : closedistance = false;execRepOffset=0;
-				if (!closedistance) {
-					clearGeo();
-					setQ();
-				}else{ 
-					clearDistance('close');
-					detectUserLocation();
-				}
-});
-$('#slider-closedistance').mouseup(function() {if (closedistance) {execRepOffset=0; setQ();}});            	            
-
-$('#voto').change(function(){this.checked ? votos = true : votos = false;execRepOffset=0;setQ();});
-$('#star').change(function(){this.checked ? star = true : star = false;execRepOffset=0;setQ();});
-$('#asset').change(function(){this.checked ? qassets = true : qassets = false;execRepOffset=0;setQ();});
-$('#slider-voto').mouseup(function() {if (votos) {execRepOffset=0; setQ();}});
-$('#slider-star').mouseup(function() {if (star) {execRepOffset=0; setQ();}});     
-
-$('#search-green').searchMeme({ onSearch: function (searchText) {
-                setTimeout(function () { $('#search-green').searchMeme({ searchComplete: true });}, 3000);
-                searchInput = searchText;     
-                execRepOffset=0;
-                setQ();
-            }, buttonPlacement: 'right', button: 'green'});
-
-$('#ageb-choropleth').change(function(){this.checked ? choro = true : choro = false;setQ();});
-
-$('#cluster').change(function(){this.checked ? mapcluster = true : mapcluster = false; 
-					mapcluster ? $("#clusterImg").attr("src","images/bt-group.png") : $("#clusterImg").attr("src","images/bt-ungroup.png");
-					execRepOffset=0;
-					setQ();});
-
-$('#bubbles').change(function(){this.checked ? bubbles = true : bubbles = false; 
-					execRepOffset=0;
-					setQ();});
-        
+	  	
+		  	/* SWITCHERS */
+		  	
+			$('.switch').change(function() {
+	
+				var that = $(this).attr('id');
+		  		/* CATEGORIES */
+		  		for (var a in categories){
+			  		if (a==that){
+					  	this.checked ? categories[that] = true : categories[that] = false;
+					  	execRepOffset = 0;
+					  	setQ();
+					  	break;	
+			  		}
+		  		}
+		  		/* DATES */
+		  		for (var b in dates){
+			  		if (b==that){
+					  	this.checked ? dates[that] = true : dates[that] = false;
+					  	clearDates(that);
+					  	execRepOffset = 0;
+					  	setQ();
+					  	break;	
+			  		}
+		  		}
+		  		/* MUNS */
+		  		for (var c in mun){
+			  		if (c==that){
+					  	this.checked ? mun[that] = true : mun[that] = false;
+					  	execRepOffset = 0;
+					  	setQ();
+					  	break;	
+			  		}
+		  		}
+		  		/* REPORT STATUS */
+		  		for (var d in repStatus){
+			  		if (d==that){
+					  	this.checked ? repStatus[that] = true : repStatus[that] = false;
+					  	execRepOffset = 0;
+					  	setQ();
+					  	break;	
+			  		}
+		  		}
+			  	
+		  		/* REPORT DETAIL */
+		  		for (var e in repDetail){
+			  		if (e==that){
+					  	this.checked ? repDetail[that] = true : repDetail[that] = false;
+					  	execRepOffset = 0;
+					  	setQ();
+					  	break;	
+			  		}
+		  		}
+			  		
+		  	});	  	
+		  	
+		  	/* DATE SLIDERS */
+		  	
+		  	$('#slider-ulthoras').on("slidestop", function(event, ui)  {
+		  		if (dates.ulthoras) {
+		  			clearDates('ulthoras');
+		  			execRepOffset = 0;
+		  			setQ();
+		  		}
+		  	});
+		  	$('#slider-horasdeldia').on("slidestop", function(event, ui)  {
+		  		if (dates.horasdeldia) {
+		  			execRepOffset = 0;
+		  			setQ();
+		  		}
+		  	});
+		  		  	
+		  	
+		  	/* DETAIL SLIDERS */
+	
+		  	$('#slider-voto').on("slidestop", function() {
+		  		if (repDetail.voto) {
+		  			execRepOffset = 0;
+		  			setQ();
+		  		}
+		  	});
+		  	$('#slider-star').on("slidestop", function() {
+		  		if (repDetail.star) {
+		  			execRepOffset = 0;
+		  			setQ();
+		  		}
+		  	});
+		  	
+		  	
+		  	/* GEO LOCATION */
+		  	
+		  	$('#closedistance').change(function() {
+		  		this.checked ? closedistance = true : closedistance = false;
+		  		execRepOffset = 0;
+		  		if (!closedistance) {
+		  			clearGeo();
+		  			setQ();
+		  		} else {
+		  			clearDistance('close');
+		  			detectUserLocation();
+		  		}
+		  	});
+		  	$('#slider-closedistance').on("slidestop", function() {
+		  		if (closedistance) {
+		  			execRepOffset = 0;
+		  			setQ();
+		  		}
+		  	});
+		  	
+		  	
+		  	/* RADIAL DISTANCE */
+		  	
+		  	$('#radius').change(function() {
+		  		this.checked ? radius.set = true : radius.set = false;
+		  		execRepOffset = 0;
+		  		if (radius.set) {
+		  			radius.lat = map.getCenter().lat();
+		  			radius.lng = map.getCenter().lng();
+		  			updateRadDeg(radius.rad);
+		  			drawCircle();
+		  			updateBounds();
+		  			clearDistance('rad');
+		  		} else {
+		  			drawCircle();
+		  		}
+		  		setQ();
+		  	});
+		  	$('#slider-radius').on("slidestop", function() {
+		  		if (radius.set) {
+		  			updateRadDeg(radius.rad);
+		  			drawCircle();
+		  			updateBounds();
+		  			execRepOffset = 0;
+		  			setQ();
+		  		}
+	  	});
+	  	
+	  	
+	  	/* POLYGONS */
+	  	
+	  	$('#polyfilter').change(function() {
+	  		this.checked ? polyfilter = true : polyfilter = false;
+	  		if (!polyfilter) {
+	  			clearPolygons();
+	  			drawingManager.setOptions({
+	  				drawingControl: false
+	  			});
+	  			drawingManager.setDrawingMode(null);
+	  		} else {
+	  			drawingManager.setOptions({
+	  				drawingControl: true
+	  			});
+	  			drawingManager.setDrawingMode('polygon');
+	  			clearDistance('poly');
+	  		}
+	  		execRepOffset = 0;
+	  		setQ();
+	  	});
+	  	
+	  	
+	  	/* TEXT SEARCH */
+	  	
+	  	$('#search-green').searchMeme({
+	  		onSearch: function(searchText) {
+	  			setTimeout(function() {
+	  				$('#search-green').searchMeme({
+	  					searchComplete: true
+	  				});
+	  			}, 3000);
+	  			searchInput = searchText;
+	  			execRepOffset = 0;
+	  			setQ();
+	  		},
+	  		buttonPlacement: 'right',
+	  		button: 'green'
+	  	});
+	  	
+	  	/* AGEB CHOROPLETH */
+	  	
+	  	$('#ageb-choropleth').change(function() {
+	  		this.checked ? choro = true : choro = false;
+	  		setQ();
+	  	});
+	  	
+	  	/* MARKER CLUSTER & BUBBLE VIEWS */
+	  	
+	  	$('#cluster').change(function() {
+	  		this.checked ? mapcluster = true : mapcluster = false;
+	  		mapcluster ? $("#clusterImg").attr("src", "images/bt-group.png") : $("#clusterImg").attr("src", "images/bt-ungroup.png");
+	  		execRepOffset = 0;
+	  		setQ();
+	  	});
+	  	$('#bubbles').change(function() {
+	  		this.checked ? bubbles = true : bubbles = false;
+	  		execRepOffset = 0;
+	  		setQ();
+	  	});
+	  
 	  });
-
-
+	  
+	  
 	  /* SET Q */
 	  /* QUERY CONSTRUCTOR + CARTODB CALL*/
 	  function setQ(){
@@ -4452,17 +4277,17 @@ if (categories.emergencias){	if (auxWhere) {if(auxInter) {_query+=" OR ";} else 
 if (auxInter) {_query+=")"; auxInter = false}; 
 
 /* DATES */  
-if (dates.calendario){ 		
-						if (auxWhere) {_query+=" AND (" } else {_query+=" WHERE (";} 
-						if(auxhas){
-							var _tmp = parseInt(has.substring(5,7));_tmp-=1;
-							var tmp = new Date(); tmp.setFullYear(has.substr(0,4), _tmp, has.substr(8,10)); tmp.setDate(tmp.getDate()+1);
-							_tmp=tmp.getMonth()+1;
-							has=tmp.getFullYear()+"-"+_tmp+"-"+tmp.getDate(); 
-							auxhas=false;
-						}
-							_query+="("+table_name+".created_at < (DATE '" + has +"')) and ("+table_name+".created_at > (DATE '" + des + "'))" ; 
-							auxWhere=true; auxInter=true; }  
+if (dates.calendario) {
+	if (auxWhere) {
+		_query += " AND ("
+	} else {
+		_query += " WHERE (";
+	}
+	_query += "(" + table_name + ".created_at at time zone '" + TZ + "' BETWEEN ('" + desde + "') AND (DATE '" + hasta + "' + 1))";
+	auxWhere = true;
+	auxInter = true;
+}
+							  
 if (dates.sietedias){ 		if (auxWhere) {_query+=" AND (" } else {_query+=" WHERE (";} 
 							_query+="((now() at time zone '"+TZ+"')-"+table_name+".created_at at time zone '"+TZ+"') < INTERVAL '7 day'" ; auxWhere=true; auxInter=true; }
 if (dates.quincedias){ 		if (auxWhere) {_query+=" AND (" } else {_query+=" WHERE (";} 
@@ -4492,7 +4317,7 @@ if (auxInter) {_query+=")";auxInter = false;};
 
 /* HOURS */
 if (dates.ulthoras){ 		if (auxWhere) {_query+=" AND (" } else {_query+=" WHERE (";} 
-							_query+="((now() at time zone '"+TZ+"')-"+table_name+".created_at at time zone '"+TZ+"') < INTERVAL '"+ valulthoras +" hour'" ; auxWhere=true; auxInter=true; }
+							_query+="((now() at time zone '"+TZ+"')-"+table_name+".created_at at time zone '"+TZ+"') < INTERVAL '"+ valUltHoras +" hour'" ; auxWhere=true; auxInter=true; }
 if (auxInter) {_query+=")"; auxInter = false;};
 if (dates.horasdeldia){ 	if (auxWhere) {_query+=" AND (" } else {_query+=" WHERE (";} 
 							_query+= queryhorasdeldia; auxWhere=true; auxInter=true; }
@@ -4509,17 +4334,17 @@ if (repStatus.closed_fail){	if (auxWhere) {if(auxInter) {_query+=" OR ";} else {
 if (auxInter) {_query+=")"; auxInter = false};
 
 //VOTES
-if (votos){	if (auxWhere) {_query+=" AND (" } else {_query+=" WHERE (";} 
+if (repDetail.voto){	if (auxWhere) {_query+=" AND (" } else {_query+=" WHERE (";} 
 							_query+=table_name+".votes >= "+ totalvotos ; auxWhere=true; auxInter=true;}
 if (auxInter) {_query+=")"; auxInter = false};
 
 //STAR RATING
-if (star){	if (auxWhere) {_query+=" AND (" } else {_query+=" WHERE (";} 
+if ( repDetail.star){	if (auxWhere) {_query+=" AND (" } else {_query+=" WHERE (";} 
 							_query+=table_name+".stars >= "+ totalstar ; auxWhere=true; auxInter=true;}
 if (auxInter) {_query+=")"; auxInter = false};
 
 //ASSETS
-if (qassets){	if (auxWhere) {_query+=" AND (" } else {_query+=" WHERE (";} 
+if ( repDetail.asset){	if (auxWhere) {_query+=" AND (" } else {_query+=" WHERE (";} 
 							_query+=table_name+".assets != '[]'" + " AND " + table_name+".assets not ilike '%citivox%'"; auxWhere=true; auxInter=true;}
 if (auxInter) {_query+=")"; auxInter = false};
 
@@ -4622,7 +4447,7 @@ console.log("MAIN Q");
 console.log(_geoq);
 if (activeView == 'home'){
 	layers[1].hide();
-	if (votos){	
+	if ( repDetail.voto){	
 		if (mapcluster) {layers[0].setOptions({query: _geoq,tile_style: _tile_style_cluster,interactivity: _interactivity});
 				if(polyfilter&&(shapesArray.length==0))layers[0].hide();
 				else {layers[0].show();
@@ -4713,6 +4538,13 @@ searchInput = "";
 	   }
 </script>
   	
+		<!--				****
+		****				****
+		START OF HTML DEFINITION 
+		****				****
+		****				*-->
+
+
   	<!-- CSS-DOCK MENUS -->	
 	<div class="dock">
 		<!--top dock -->
@@ -5206,7 +5038,7 @@ searchInput = "";
 	<div class="filterslide" id="filtercate">
 	    <div style="margin-left:15px!important;">
 	    	<h2 style="max-width:250px;"> Categoría </h2><br>
-			<img style="padding-top:3px; padding-bottom:3px; cursor:pointer;" src="images/comunidad.png" alt="COMUNIDAD" onclick="multipleCat('comunidad')">
+			<img style="padding-top:3px; padding-bottom:3px; cursor:pointer;" src="images/comunidad.png" alt="COMUNIDAD" onclick="multipleCat('COMUNIDAD')">
 			<div>
 				<input type="checkbox" id="avisos" class="switch" />
 				<label for="avisos"> 
@@ -5235,7 +5067,7 @@ searchInput = "";
 					&nbsp;&nbsp;MTY muy bien
 				</label>
 			</div>
-			<img style="padding-top:6px; padding-bottom:3px; cursor:pointer;" src="images/propuestas.png"/ alt="PROPUESTAS" onclick="multipleCat('propuestas')">
+			<img style="padding-top:6px; padding-bottom:3px; cursor:pointer;" src="images/propuestas.png"/ alt="PROPUESTAS" onclick="multipleCat('PROPUESTAS CIUDADANAS')">
 			<div>
 				<input type="checkbox" id="pcomunidad" class="switch" />
 				<label for="pcomunidad"> 
@@ -5264,7 +5096,7 @@ searchInput = "";
 					&nbsp;&nbsp;Vialidad
 				</label>
 			</div>
-			<img style="padding-top:6px; padding-bottom:3px; cursor:pointer;" src="images/seguridad.png"/ alt="SEGURIDAD" onclick="multipleCat('seguridad')">
+			<img style="padding-top:6px; padding-bottom:3px; cursor:pointer;" src="images/seguridad.png"/ alt="SEGURIDAD" onclick="multipleCat('SEGURIDAD')">
 			<div>
 				<input type="checkbox" id="incendio" class="switch" />
 				<label for="incendio"> 
@@ -5286,7 +5118,7 @@ searchInput = "";
 					&nbsp;&nbsp;Situación de riesgo
 				</label>
 			</div>
-			<img style="padding-top:6px; padding-bottom:3px; cursor:pointer;" src="images/servicios.png"/ alt="SERVICIOS" onclick="multipleCat('servicios')">
+			<img style="padding-top:6px; padding-bottom:3px; cursor:pointer;" src="images/servicios.png"/ alt="SERVICIOS" onclick="multipleCat('SERVICIOS PUBLICOS')">
 			<div>	
 				<input type="checkbox" id="alcantarillas" class="switch" />
 				<label for="alcantarillas"> 
@@ -5329,7 +5161,7 @@ searchInput = "";
 					&nbsp;&nbsp;Recolección de basura
 				</label>
 			</div>
-			<img style="padding-top:6px; padding-bottom:3px; cursor:pointer;" src="images/vialidad.png"/ alt="VIALIDAD" onclick="multipleCat('vialidad')">
+			<img style="padding-top:6px; padding-bottom:3px; cursor:pointer;" src="images/vialidad.png"/ alt="VIALIDAD" onclick="multipleCat('VIALIDAD Y TRANSITO')">
 			<div>	
 				<input type="checkbox" id="accidente" class="switch" />
 				<label for="accidente"> 
@@ -5358,7 +5190,7 @@ searchInput = "";
 					&nbsp;&nbsp;Semáforo descompuesto
 				</label>
 			</div>
-			<img style="padding-top:3px; cursor:pointer" src="images/emergencias.png"/ alt="EMERGENCIAS" onclick="multipleCat('emergencia')">
+			<img style="padding-top:3px; cursor:pointer" src="images/emergencias.png"/ alt="EMERGENCIAS" onclick="multipleCat('EMERGENCIAS')">
 			<div>	
 				<input type="checkbox" id="emergencias" class="switch" />
 				<label for="emergencias"> 
@@ -5435,13 +5267,13 @@ searchInput = "";
 			<div>
 				<input type="checkbox" id="ulthoras" name="checkbox" class="switch"/>
 				<label for="ulthoras">Activar últimas horas</label>
-				<input type="text" id="amount" class="rangevalue" style="float:left; margin-right: 60%; width: 65px; text-align: center; " disabled/>
+				<input type="text" id="amountUlthoras" class="rangevalue" style="float:left; margin-right: 60%; width: 65px; text-align: center; " disabled/>
 				<div id="slider-ulthoras" style="width: 126px; margin-left: 77px!important;"></div>
 			</div>
 			<div>
 				<input type="checkbox" id="horasdeldia" name="checkbox" class="switch"/>
 				<label for="horasdeldia">Activar horario de interés</label>
-				<input type="text" id="amount1" class="rangevalue" style="float:left; margin-right: 60%; width: 65px; text-align: center; " disabled/>
+				<input type="text" id="amountHrsDia" class="rangevalue" style="float:left; margin-right: 60%; width: 65px; text-align: center; " disabled/>
 				<div id="slider-horasdeldia" style="width: 126px; margin-left: 77px!important;"></div>
 			</div>
 							
@@ -5451,80 +5283,80 @@ searchInput = "";
 	<div class="filterslide" id="filtermuni">
 	  <div style="margin-left:15px!important;">
 		    <h2 style="max-width:250px;"> Municipio </h2><br>
-			<img style="padding-top:3px; padding-bottom:6px; cursor:pointer;" src="images/municipio.png" alt="MUNICIPIO" onclick="multipleCat('municipio')">
+			<img style="padding-top:3px; padding-bottom:6px; cursor:pointer;" src="images/municipio.png" alt="MUNICIPIO" onclick="multipleCat('MUNICIPIO')">
 			<div>
-				<input type="checkbox" id="monterrey" class="switch" />
-				<label for="monterrey"> 
+				<input type="checkbox" id="mty" class="switch" />
+				<label for="mty"> 
 					<img style="vertical-align:text-top" width="17" height="17" src="images/mun_mty.png">
 					&nbsp;&nbsp;Monterrey
 				</label>
 			</div>
 			<div>
-				<input type="checkbox" id="sanpedro" class="switch" />
-				<label for="sanpedro"> 
+				<input type="checkbox" id="sp" class="switch" />
+				<label for="sp"> 
 					<img style="vertical-align:text-top" width="17" height="17" src="images/mun_sp.png">
 					&nbsp;&nbsp;San Pedro
 				</label>
 			</div>
 			<div>
-				<input type="checkbox" id="guadalupe" class="switch" />
-				<label for="guadalupe"> 
+				<input type="checkbox" id="gpe" class="switch" />
+				<label for="gpe"> 
 					<img style="vertical-align:text-top" width="17" height="17" src="images/mun_gpe.png">
 					&nbsp;&nbsp;Guadalupe
 				</label>
 			</div>
 			<div>
-				<input type="checkbox" id="sannico" class="switch" />
-				<label for="sannico"> 
+				<input type="checkbox" id="sn" class="switch" />
+				<label for="sn"> 
 					<img style="vertical-align:text-top" width="17" height="17" src="images/mun_sn.png">
 					&nbsp;&nbsp;San Nicolás
 				</label>
 			</div>
 			<div>
-				<input type="checkbox" id="santacat" class="switch" />
-				<label for="santacat"> 
+				<input type="checkbox" id="sc" class="switch" />
+				<label for="sc"> 
 					<img style="vertical-align:text-top" width="17" height="17" src="images/mun_sc.png">
 					&nbsp;&nbsp;Santa Catarina
 				</label>
 			</div>
 			<div>
-				<input type="checkbox" id="apodaca" class="switch" />
-				<label for="apodaca"> 
+				<input type="checkbox" id="apo" class="switch" />
+				<label for="apo"> 
 					<img style="vertical-align:text-top" width="17" height="17" src="images/mun_apo.png">
 					&nbsp;&nbsp;Apodaca
 				</label>
 			</div>
 			<div>
-				<input type="checkbox" id="garcia" class="switch" />
-				<label for="garcia"> 
+				<input type="checkbox" id="gar" class="switch" />
+				<label for="gar"> 
 					<img style="vertical-align:text-top" width="17" height="17" src="images/mun_gar.png">
 					&nbsp;&nbsp;García
 				</label>
 			</div>
 			<div>
-				<input type="checkbox" id="escobedo" class="switch" />
-				<label for="escobedo"> 
+				<input type="checkbox" id="esc" class="switch" />
+				<label for="esc"> 
 					<img style="vertical-align:text-top" width="17" height="17" src="images/mun_esc.png">
 					&nbsp;&nbsp;Escobedo
 				</label>
 			</div>
 			<div>
-				<input type="checkbox" id="juarez" class="switch" />
-				<label for="juarez"> 
+				<input type="checkbox" id="jua" class="switch" />
+				<label for="jua"> 
 					<img style="vertical-align:text-top" width="17" height="17" src="images/mun_jua.png">
 					&nbsp;&nbsp;Juárez
 				</label>
 			</div>
 			<div>
-				<input type="checkbox" id="cadereyta" class="switch" />
-				<label for="cadereyta"> 
+				<input type="checkbox" id="cad" class="switch" />
+				<label for="cad"> 
 					<img style="vertical-align:text-top" width="17" height="17" src="images/mun_cad.png">
 					&nbsp;&nbsp;Cadereyta
 				</label>
 			</div>
 			<div>
-				<input type="checkbox" id="santiago" class="switch" />
-				<label for="santiago"> 
+				<input type="checkbox" id="stg" class="switch" />
+				<label for="stg"> 
 					<img style="vertical-align:text-top" width="17" height="17" src="images/mun_stg.png">
 					&nbsp;&nbsp;Santiago
 				</label>
@@ -5537,22 +5369,22 @@ searchInput = "";
 		     <h2 style="max-width:250px;"> Detalle de reporte </h2><br>
 			<img style="padding-top:3px; padding-bottom:6px;" src="images/repstatus.png" alt="ESTADO">
 			<div>
-				<input type="checkbox" id="abierto" class="switch" />
-				<label for="abierto"> 
+				<input type="checkbox" id="open" class="switch" />
+				<label for="open"> 
 					<img style="vertical-align:text-top" width="17" height="17" src="images/bt-open.png">
 					&nbsp;&nbsp;Abierto
 				</label>
 			</div>
 			<div>
-				<input type="checkbox" id="cerrado" class="switch" />
-				<label for="cerrado"> 
+				<input type="checkbox" id="closed" class="switch" />
+				<label for="closed"> 
 					<img style="vertical-align:text-top" width="17" height="17" src="images/bt-closed.png">
 					&nbsp;&nbsp;Cerrado con éxito
 				</label>
 			</div>
 			<div>
-				<input type="checkbox" id="cerradofail" class="switch" />
-				<label for="cerradofail"> 
+				<input type="checkbox" id="closed_fail" class="switch" />
+				<label for="closed_fail"> 
 					<img style="vertical-align:text-top" width="17" height="17" src="images/bt-closed_fail.png">
 					&nbsp;&nbsp;Cerrado con fallo
 				</label>
@@ -5603,7 +5435,7 @@ searchInput = "";
 				<label for="closedistance"> 
 					&nbsp;&nbsp;Total de reportes
 				</label>
-				<input type="text" id="amount2" class="rangevalue" style="float:left; margin-right: 60%; width: 52px!important; margin-left: 3px!important; text-align: center; " disabled/>
+				<input type="text" id="amountReports" class="rangevalue" style="float:left; margin-right: 60%; width: 52px!important; margin-left: 3px!important; text-align: center; " disabled/>
 				<div id="slider-closedistance" style="width: 126px; margin-left: 70px!important;"></div>
 			</div>
 			<img class="imgDist" src="images/polygonrad.png" alt="RADIO">
@@ -5638,32 +5470,33 @@ searchInput = "";
 			        data-theme="dark"
 			        data-cookiepolicy="single_host_origin">
 			    </button>
-			  </div>
-			  <div id="authOps" style="display:none">
-    <h2  style="display:none">User is now signed in to the app using Google+</h2>
-    <p  style="display:none">If the user chooses to disconnect, the app must delete all stored
-    information retrieved from Google for the given user.</p>
-    <button id="disconnect" class="logout danger"></button>
-    
-    <h2  style="display:none">User's profile information</h2>
-    <div id="profile" style="position:absolute;bottom:-23px;height:40px"></div>
-
-    <h2  style="display:none">User's friends that are visible to this app</h2>
-    <div id="visiblePeople"  style="display:none"></div>
-
-    <h2  style="display:none">Authentication Logs</h2>
-    <pre id="authResult"  style="display:none"></pre>
-  </div>
-			  <div id="loaderror">
+			</div>
+			<div id="authOps" style="display:none">
+			    <h2  style="display:none">User is now signed in to the app using Google+</h2>
+			    <p  style="display:none">If the user chooses to disconnect, the app must delete all stored
+			    information retrieved from Google for the given user.</p>
+			    <button id="disconnect" class="logout danger"></button>
+			    
+			    <h2  style="display:none">User's profile information</h2>
+			    <div id="profile" style="position:absolute;bottom:-23px;height:40px"></div>
+			
+			    <h2  style="display:none">User's friends that are visible to this app</h2>
+			    <div id="visiblePeople"  style="display:none"></div>
+			
+			    <h2  style="display:none">Authentication Logs</h2>
+			    <pre id="authResult"  style="display:none"></pre>
+			</div>
+			<div id="loaderror">
 			    This section will be hidden by JQuery. If you can see this message, you
 			    may be viewing the file rather than running a web server.<br />
 			    The sample must be run from http or https. See instructions at
 			    <a href="https://developers.google.com/+/quickstart/javascript">
 			    https://developers.google.com/+/quickstart/javascript</a>.
-			  </div>
-		
+			</div>
 	</div>
 	
+<!-- DISQUS -->
+
 <script type="text/javascript">
 /* * * DON'T EDIT BELOW THIS LINE * * */
 (function () {
@@ -5673,7 +5506,11 @@ s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
 (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
 }());
 </script>
+
+
 <!-- Chartbeat -->
+
+
 <script type="text/javascript">
 var _sf_async_config={};
 /** CONFIGURATION START **/
@@ -5694,7 +5531,18 @@ _sf_async_config.domain = "cic.mx";
     loadChartbeat : function() { oldonload(); loadChartbeat(); };
 })();
 </script>	
+
+
+
 </body>
+
+<!--			***
+
+	END OF BODY
+
+***				-->
+
+
 <!-- G+ SIGN-IN SCRIPTS-->
 <script type="text/javascript">
   (function() {
@@ -5705,6 +5553,11 @@ _sf_async_config.domain = "cic.mx";
     s.parentNode.insertBefore(po, s);
   })();
   </script>
+
+
+
+
+
 <script type="text/javascript">
 var helper = (function() {
   var BASE_API_PATH = 'plus/v1/';

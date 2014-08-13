@@ -1,13 +1,13 @@
 	function agebClick() {
 		layers[1].on('featureClick', function(e, latlng, pos, data) {
 			selectedAgeb = data.cartodb_id;
-			getAgebinfo(selectedAgeb);
+			getAgebInfo(selectedAgeb);
 			agebHighlight(selectedAgeb);
 			layers[1].infowindow.set('template', $('#infowindow_ageb').html());
 		});
 	}
 
-	function getAgebinfo(ID) {
+	function getAgebInfo(ID) {
 		var n = "SELECT " + table_ageb + ".* FROM " + table_ageb;
 		if (activeView != "agebUrbano") n += ", " + table_name + " WHERE ST_Intersects(" + table_name + ".the_geom, " + table_ageb + ".the_geom) AND " + table_name + ".cartodb_id = " + ID;
 		else n += " WHERE " + table_ageb + ".cartodb_id = " + ID;
@@ -577,139 +577,19 @@
 			document.getElementById("agebReportcount").innerHTML = "Total de reportes: " + data.total_rows;
 			var agebDiv = document.getElementById("agebReportDetail");
 			for (var i = 0; i < data.total_rows; i++) {
-				switch (data.rows[i].post_cat) {
-				case 'ACCIDENTE':
-					infowAgebStyle = "#F48F33";
-					infowAgebImg = "images/accidente.jpg";
-					break;
-				case 'BACHE O VIA DAÑADA':
-					infowAgebStyle = "#F48F33";
-					infowAgebImg = "images/bache.jpg";
-					break;
-				case 'OBRAS Y/O VIA CERRADA':
-					infowAgebStyle = "#F48F33";
-					infowAgebImg = "images/obras.jpg";
-					break;
-				case 'SEMAFORO DESCOMPUESTO':
-					infowAgebStyle = "#F48F33";
-					infowAgebImg = "images/semaforo.jpg";
-					break;
-				case 'VIALIDAD':
-					infowAgebStyle = "#F48F33";
-					infowAgebImg = "images/viali.png";
-					break;
-				case 'ALCANTARILLAS':
-					infowAgebStyle = "#FAD714";
-					infowAgebImg = "images/alcantarillas.jpg";
-					break;
-				case 'ALUMBRADO PUBLICO':
-					infowAgebStyle = "#FAD714";
-					infowAgebImg = "images/alumbrado.jpg";
-					break;
-				case 'FALTA ELECTRICIDAD':
-					infowAgebStyle = "#FAD714";
-					infowAgebImg = "images/electricidad.jpg";
-					break;
-				case 'FUGA':
-					infowAgebStyle = "#FAD714";
-					infowAgebImg = "images/fuga.jpg";
-					break;
-				case 'PARQUES DESCUIDADOS':
-					infowAgebStyle = "#FAD714";
-					infowAgebImg = "images/parques.png";
-					break;
-				case 'RECOLECCION DE BASURA':
-					infowAgebStyle = "#FAD714";
-					infowAgebImg = "images/basura.jpg";
-					break;
-				case 'AVISOS':
-					infowAgebStyle = "#BAD544";
-					infowAgebImg = "images/avisos.jpg";
-					break;
-				case 'EVENTO PUBLICO':
-					infowAgebStyle = "#BAD544";
-					infowAgebImg = "images/eventos.jpg";
-					break;
-				case 'OBSERVADOR CIUDADANO':
-					infowAgebStyle = "#BAD544";
-					infowAgebImg = "images/observador.png";
-					break;
-				case 'MTYMUYBIEN':
-					infowAgebStyle = "#AD48CE";
-					infowAgebImg = "images/mtymuybien.jpg";
-					break;
-				case 'OTROS':
-					infowAgebStyle = "#E2E2E2";
-					infowAgebImg = "images/serv.png";
-					break;
-				case 'PROPUESTA COMUNIDAD':
-					infowAgebStyle = "#4CB057";
-					infowAgebImg = "images/pcomunidad.jpg";
-					break;
-				case 'PROPUESTA SERV PUBLICOS':
-					infowAgebStyle = "#4CB057";
-					infowAgebImg = "images/pservicios.jpg";
-					break;
-				case 'PROPUESTA VIALIDAD':
-					infowAgebStyle = "#4CB057";
-					infowAgebImg = "images/pvialidad.jpg";
-					break;
-				case 'PROPUESTA SEGURIDAD':
-					infowAgebStyle = "#4CB057";
-					infowAgebImg = "images/pseguridad.jpg";
-					break;
-				case 'INCENDIO':
-					infowAgebStyle = "#669FD2";
-					infowAgebImg = "images/incendio.jpg";
-					break;
-				case 'ROBO':
-					infowAgebStyle = "#669FD2";
-					infowAgebImg = "images/robo.jpg";
-					break;
-				case 'SITUACION DE RIESGO':
-					infowAgebStyle = "#669FD2";
-					infowAgebImg = "images/sitriesgo.jpg";
-					break;
-				case 'DETENCION DE BANDAS':
-					infowAgebStyle = "#669FD2";
-					infowAgebImg = "images/bandas.png";
-					break;
-				case 'EXTORSION':
-					infowAgebStyle = "#669FD2";
-					infowAgebImg = "images/extorsion.png";
-					break;
-				case 'HOMICIDIO':
-					infowAgebStyle = "#669FD2";
-					infowAgebImg = "images/homicidio.png";
-					break;
-				case 'SECUESTRO':
-					infowAgebStyle = "#669FD2";
-					infowAgebImg = "images/secuestro.png";
-					break;
-				case 'SOSPECHOSO':
-					infowAgebStyle = "#669FD2";
-					infowAgebImg = "images/sospechoso.png";
-					break;
-				case 'AUTO ABANDONADO':
-					infowAgebStyle = "#669FD2";
-					infowAgebImg = "images/autoabandonado.png";
-					break;
-				case 'PERCEPCION DE INSEGURIDAD':
-					infowAgebStyle = "#669FD2";
-					infowAgebImg = "images/percinseg.png";
-					break;
-				case 'EMERGENCIAS':
-					infowAgebStyle = "#DB3539";
-					infowAgebImg = "images/emergencias.jpg";
-					break;
-				default:
-					infowAgebStyle = "#FFFFFF";
-					infowAgebImg = "images/serv.png";
-					break;
-				}
+				for (var j = 0; j < catMarkers.length; j++) {
+					if (data.rows[i].post_cat === catMarkers[j][0]) {
+						infowAgebImg = sourceurl + "cat/" + catMarkers[j][1];
+						for (var x = 0; x < catColors.length; x++) {
+							if (catColors[x][1] === catMarkers[j][2]) {
+								infowAgebStyle = catColors[x][0];
+							}
+						}
+					}
+				}				
 				var url = window.location.href.split('?')[0] + '?ticket=' + data.rows[i].ticket + '&table_name=' + table_name;
 				var agebReportContent = data.rows[i].post_title || data.rows[i].post_content;
-				writeHtml += "<br><div><a href='" + url + "' target= _blank> <img style= width='17' height='17' src=" + infowAgebImg + "></a> <div class='ageb-infowindow' style='background-color:" + infowAgebStyle + ";'>" + agebReportContent + " <a href='" + url + "' target= _blank>>></a></div></div>";
+				writeHtml += "<br><div><a href='" + url + "' target= _blank> <img width='40' height='40' src=" + infowAgebImg + "></a> <div class='ageb-infowindow' style='background-color:" + infowAgebStyle + ";'>" + agebReportContent + " <a href='" + url + "' target= _blank>>></a></div></div>";
 			}
 			$("#agebReportDetail").html(writeHtml);
 		}).error(function(errors) {});

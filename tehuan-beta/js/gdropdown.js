@@ -1,7 +1,6 @@
 	/************Classes to set up the drop-down control************/
-		
+
 	function checkBox(options) {
-		//first make the outer container
 		var dropDownContainer = document.createElement('DIV');
 		dropDownContainer.className = "checkboxContainer";
 		dropDownContainer.title = options.title;
@@ -21,45 +20,29 @@
 		span.appendChild(bDiv);
 		dropDownContainer.appendChild(span);
 		dropDownContainer.appendChild(label);
-		
 		google.maps.event.addDomListener(dropDownContainer, 'click', function() {
-			if (document.getElementById(bDiv.id).style.display == 'block') { 
+			if (document.getElementById(bDiv.id).style.display == 'block') {
 				document.getElementById(bDiv.id).style.display = 'none';
-				if(options.layer=="carto"){
-					if(activeView == 'home')layers[0].hide();
-					else if(activeView == 'agebUrbano')layers[1].hide();
-				
-				}else if(options.layer=="gheat"){
-				
-				if(heatmap) heatmap.setMap(null);
-				
-				}else{
+				if (options.layer == "carto") {
+					if (activeView == 'home') layers[0].hide();
+					else if (activeView == 'agebUrbano') layers[1].hide();
+				} else if (options.layer == "gheat") {
+					if (heatmap) heatmap.setMap(null);
+				} else {
 					options.layer.setMap(null);
 				}
-			}else{
+			} else {
 				document.getElementById(bDiv.id).style.display = 'block';
-				if(options.layer=="carto"){
-				
-					if(activeView == 'home')layers[0].show();
-					else if(activeView == 'agebUrbano')layers[1].show();
-				
-				}else if(options.layer=="gheat"){
-				
-				console.log("Las opciones");
-				console.log(options);
-					n=options.q;
-					sql.execute(n).done(function(data) {
-						gHeatmap(data);
-					}).error(function(errors) {});
-				
-				}else{
+				if (options.layer == "carto") {
+					if (activeView == 'home') layers[0].show();
+					else if (activeView == 'agebUrbano') layers[1].show();
+				} else {
 					options.layer.setMap(map);
 				}
 			}
 		})
 		return dropDownContainer;
 	}
-
 	function dropDownOptionsDiv(options) {
 		var dropDownContainer = document.createElement('DIV');
 		dropDownContainer.className = "dropDownOptionsDiv";
@@ -69,9 +52,7 @@
 		}
 		return dropDownContainer;
 	}
-
 	function dropDownControl(options) {
-		
 		var dropDownContainer = document.createElement('DIV');
 		dropDownContainer.className = 'dropDownContainer';
 		var control = document.createElement('DIV');
@@ -85,7 +66,6 @@
 		dropDownContainer.appendChild(control);
 		dropDownContainer.appendChild(options.dropDown);
 		options.gmap.controls[options.position].push(dropDownContainer);
-		
 		google.maps.event.addDomListener(dropDownContainer, 'click', function() {
 			cicCheck++;
 			(document.getElementById('myddOptsDiv').style.display == 'block') ? document.getElementById('myddOptsDiv').style.display = 'none' : document.getElementById('myddOptsDiv').style.display = 'block';
