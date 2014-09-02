@@ -1216,8 +1216,8 @@ th.h7, th.h8, th.h9, th.h10, th.h11, th.h12, th.h13, th.h14, th.h15, th.h16, th.
 	padding:10px;
 	border-radius:12px;
 	-webkit-box-shadow: 10px 10px 15px 0px rgba(0,0,0,0.51);
--moz-box-shadow: 10px 10px 15px 0px rgba(0,0,0,0.51);
-box-shadow: 10px 10px 15px 0px rgba(0,0,0,0.51);
+	-moz-box-shadow: 10px 10px 15px 0px rgba(0,0,0,0.51);
+	box-shadow: 10px 10px 15px 0px rgba(0,0,0,0.51);
 }
 
 .my-legend .legend-title {
@@ -1262,6 +1262,23 @@ box-shadow: 10px 10px 15px 0px rgba(0,0,0,0.51);
 .my-legend a {
 	color:#777;
 }
+
+
+/* AGEB TITLE */
+
+.ageb-title {
+	z-index:15;
+	top:22%;
+	left:6%;
+	background-color:#fff;
+	padding:10px;
+	border-radius:12px;
+	-webkit-box-shadow: 10px 10px 15px 0px rgba(0,0,0,0.51);
+	-moz-box-shadow: 10px 10px 15px 0px rgba(0,0,0,0.51);
+	box-shadow: 10px 10px 15px 0px rgba(0,0,0,0.51);
+}
+
+
 
 /*
 	DISQUS

@@ -26,8 +26,7 @@
 				if (options.layer == "carto") {
 					if (activeView == 'home') layers[0].hide();
 					else if (activeView == 'agebUrbano') layers[1].hide();
-				} else if (options.layer == "gheat") {
-					if (heatmap) heatmap.setMap(null);
+				
 				} else {
 					options.layer.setMap(null);
 				}

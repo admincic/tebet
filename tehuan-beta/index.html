@@ -63,34 +63,92 @@
 
 <!-- CONFIGURATION VARS -->
 <script type="text/javascript">
-	/* ACCOUNT-DEPENDING CONFIGURATIONS */
+	//* ACCOUNT-DEPENDING CONFIGURATIONS */
 	
 	//MARKER IMAGES SOURCE URL
-	var sourceurl = "http://cic-workshop.biz/tehuan-beta/ico/";
+	var sourceurl = "http://i.cic.mx/";
+
 	//DISQUS BOARD NAME FOR COMMENTS
 	var disqus_shortname = 'tehuan-beta';
-	//CARTO
-	var area_name = 'mun_poly';
+
+	//CARTO TABLES
+	var table_area = 'mun_poly';
 	var table_name = 'nl_public';
 	var table_ageb = 'nl_ageb2010';
 	var sql = new cartodb.SQL({ user: 'cicadmin' });
+	
 	//ASSETS & IMAGES
 	var accountURL = 'nl.cic.mx';
+	
 	//VOTES & STARS
 	var accountAPI = 'http://api.cic.mx/ushahidi/nl/api/';
-	//TWITTER
-	var twitterID = ["347783020163518464", "347787216354942976", "348846254127726592", "348817018734137344", "348817444414033922", "347786457651503104", "348817995189075971", "348818811291570177", "348819099444453376", "348819379582017539", "348819636558635008", "348819863118159873", "348820099265884160", "348820315805216769"];
-	var twitterName = ["Cicmty", "viaCICmty", "spuCICmty", "comCICmty", "emeCICmty", "segCICmty", "segCICsp", "segCICgpe", "segCICsn", "segCICapo", "segCICesc", "segCICgar", "segCICcad", "segCICsc"];
 	
-	/* CONSTANTS */
-    
-    var publicServices = ['ALCANTARILLAS','ALUMBRADO PUBLICO','BACHE O VIA DAÑADA','FALTA ELECTRICIDAD','FUGA','PARQUES DESCUIDADOS', 'RECOLECCION DE BASURA','SEMAFORO DESCOMPUESTO'];
-	var reportOrigins = ['Ushahidi', 'URI', 'CRM', 'Twitter', 'MAIL', 'SMS']; 
-	var munNL = ["Abasolo", "Agualeguas", "Allende", "Anáhuac", "Apodaca", "Aramberri", "Bustamante", "Cadereyta Jiménez", "Carmen", "Cerralvo", "China", "Ciénega de Flores", "Dr. Arroyo", "Dr. Coss", "Dr. González", "Galeana", "García", "Gral. Bravo", "Gral. Escobedo", "Gral. Terán", "Gral. Treviño", "Gral. Zaragoza", "Gral. Zuazua", "Guadalupe", "Hidalgo", "Higueras", "Hualahuises", "Iturbide", "Juárez", "Lampazos de Naranjo", "Linares", "Los Aldamas", "Los Herreras", "Los Ramones", "Marín", "Melchor Ocampo", "Mier y Noriega", "Mina", "Montemorelos", "Monterrey", "Parás", "Pesquería", "Rayones", "Sabinas Hidalgo", "Salinas Victoria", "San Nicolás de los Garza", "San Pedro Garza García", "Santa Catarina", "Santiago", "Vallecillo", "Villaldama"];
+	//TWITTER
+	var twitterID = ['347783020163518464', '347787216354942976', '348846254127726592', '348817018734137344', '348817444414033922', '347786457651503104', '348817995189075971', '348818811291570177', '348819099444453376', '348819379582017539', '348819636558635008', '348819863118159873', '348820099265884160', '348820315805216769'];
+	var twitterName = ['Cicmty', 'viaCICmty', 'spuCICmty', 'comCICmty', 'emeCICmty', 'segCICmty', 'segCICsp', 'segCICgpe', 'segCICsn', 'segCICapo', 'segCICesc', 'segCICgar', 'segCICcad', 'segCICsc'];	
+	
+	
+	//* CONSTANTS */
+	
+	//ORIGINS
+   	var reportOrigins = ['Ushahidi', 'URI', 'CRM', 'Twitter', 'MAIL', 'SMS']; 
+	
+	//MUNs SHORT AND LONG NAMES (names as on municipios_nl table, name and long_name columns on cartoDB) 
+	var munNL = [
+		['ABA', 'Abasolo'],
+		['AGU', 'Agualeguas'],
+		['ADE', 'Allende'],
+		['ANC', 'Anáhuac'],
+		['APO', 'Apodaca'],
+		['ARA', 'Aramberri'],
+		['BTE', 'Bustamante'],
+		['CAD', 'Cadereyta Jiménez'],
+		['CAR', 'Carmen'],
+		['CER', 'Cerralvo'],
+		['CHI', 'China'],
+		['CFL', 'Ciénega de Flores'],
+		['DAR', 'Dr. Arroyo'],
+		['DCS', 'Dr. Coss'],
+		['DGZ', 'Dr. González'],
+		['GAL', 'Galeana'],
+		['GAR', 'García'],
+		['BRO', 'Gral. Bravo'],
+		['ESC', 'Gral. Escobedo'],
+		['TER', 'Gral. Terán'],
+		['GTR', 'Gral. Treviño'],
+		['ZAR', 'Gral. Zaragoza'],
+		['ZUA', 'Gral. Zuazua'],
+		['GPE', 'Guadalupe'],
+		['HID', 'Hidalgo'],
+		['HIG', 'Higueras'],
+		['HUA', 'Hualahuises'],
+		['ITU', 'Iturbide'],
+		['JUA', 'Juárez'],
+		['LAM', 'Lampazos de Naranjo'],
+		['LIN', 'Linares'],
+		['ALD', 'Los Aldamas'],
+		['HER', 'Los Herreras'],
+		['RAM', 'Los Ramones'],
+		['MAR', 'Marín'],
+		['MOC', 'Melchor Ocampo'],
+		['MYN', 'Mier y Noriega'],
+		['MIN', 'Mina'],
+		['MON', 'Montemorelos'],
+		['MTY', 'Monterrey'],
+		['PAR', 'Parás'],
+		['PES', 'Pesquería'],
+		['RAY', 'Rayones'],
+		['SAB', 'Sabinas Hidalgo'],
+		['SAL', 'Salinas Victoria'],
+		['SN', 'San Nicolás de los Garza'],
+		['SP', 'San Pedro Garza García'],
+		['SC', 'Santa Catarina'],
+		['STG', 'Santiago'],
+		['VLO', 'Vallecillo'],
+		['VAL', 'Villaldama']
+	];	
 		
-		/*
-OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY CHANGES
-		
+	/*	OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY CHANGES
 		If any category is added or removed or has changed:
 			_tyle_style
 			_tyle_style_cluster
@@ -111,10 +169,10 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 			<div id="filtercate">
 		
 		If categories, municipalities, or new filters:	
-			-ONLOAD JQUERY CHECKBOXES FILTER ACTIVATION	
+			-ONLOAD JQUERY CHECKBOXES FILTER ACTIVATION		
 			-setQ()
 			-resetFilters()
-*/
+	*/
 	
 	//GET TimeZone on client system
 	var dateToday = new Date();
@@ -125,44 +183,47 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 	/* CARTOCSS STYLE */
 	//CATEGORY AND MARKER IMAGE
 	
-	/*CONFIG ARRAY STRUCTURE: [0]: category name as on cartoDB
+	/*
+	CONFIG ARRAY STRUCTURE: [0]: category name as on cartoDB
 					  		[1]: marker or thumbnail image (must be SAME name and type)
-					  		[2]: category group for marker 
+					  		[2]: HTML ID name same as assosiated object property name
+					  		[3]: category group for marker
 	*/
 	
 	var catMarkers = [
-		['MTYMUYBIEN', 'com-mty.png', 'COMUNIDAD'],
-		['AVISOS', 'com_avisos.png', 'COMUNIDAD'],
-		['EVENTO PUBLICO', 'com_eventos.png', 'COMUNIDAD'],
-		['OBSERVADOR CIUDADANO', 'com_observador.png', 'COMUNIDAD'],
-		['ALCANTARILLAS', 'ser_alcantarilla.png', 'SERVICIOS PUBLICOS'],
-		['ALUMBRADO PUBLICO', 'ser_alumbrado.png', 'SERVICIOS PUBLICOS'],
-		['FALTA ELECTRICIDAD', 'ser_electricidad.png', 'SERVICIOS PUBLICOS'],
-		['FUGA', 'ser_fuga.png', 'SERVICIOS PUBLICOS'],
-		['PARQUES DESCUIDADOS', 'ser_parque.png', 'SERVICIOS PUBLICOS'],
-		['RECOLECCION DE BASURA', 'ser_basura.png', 'SERVICIOS PUBLICOS'],
-		['ACCIDENTE', 'via_accidente.png', 'VIALIDAD Y TRANSITO'],
-		['BACHE O VIA DAÑADA', 'via_bache.png', 'VIALIDAD Y TRANSITO'],
-		['OBRAS Y/O VIA CERRADA', 'via_obras.png', 'VIALIDAD Y TRANSITO'],
-		['SEMAFORO DESCOMPUESTO', 'via_semaforo.png', 'VIALIDAD Y TRANSITO'],
-		['VIALIDAD', 'vialidad.png', 'VIALIDAD Y TRANSITO'],
-		['PROPUESTA COMUNIDAD', 'pro_comunidad.png', 'PROPUESTAS CIUDADANAS'],
-		['PROPUESTA SEGURIDAD', 'pro_seguridad.png', 'PROPUESTAS CIUDADANAS'],
-		['PROPUESTA SERV PUBLICOS', 'pro_servicios.png', 'PROPUESTAS CIUDADANAS'],
-		['PROPUESTA VIALIDAD', 'pro_vialidad.png', 'PROPUESTAS CIUDADANAS'],
-		['EMERGENCIAS', 'emergencia.png', 'EMERGENCIAS'],
-		['INCENDIO', 'seg_incendio.png', 'SEGURIDAD'],
-		['ROBO', 'seg_robo.png', 'SEGURIDAD'],
-		['SITUACION DE RIESGO', 'seg_sitriesgo.png', 'SEGURIDAD'],
-		['DETENCION DE BANDAS', 'seg_detbandas.png', 'SEGURIDAD'],
-		['EXTORSION', 'seg_extorsion.png', 'SEGURIDAD'],
-		['HOMICIDIO', 'seg_homicidio.png', 'SEGURIDAD'],
-		['SECUESTRO', 'seg_secuestro.png', 'SEGURIDAD'],
-		['SOSPECHOSO', 'seg_sospechoso.png', 'SEGURIDAD'],
-		['AUTO ABANDONADO', 'seg_autoaban.png', 'SEGURIDAD'],
-		['PERCEPCION DE INSEGURIDAD', 'seg_percdeinseg.png', 'SEGURIDAD'],
-		['OTROS', 'otros.png', 'OTROS'],
-		['ROBO AUTO', 'seg_roboauto.png', 'SEGURIDAD']
+		['MTYMUYBIEN', 'com-mty.png', 'mtymuybien', 'COMUNIDAD'],
+		['AVISOS', 'com_avisos.png', 'avisos', 'COMUNIDAD'],
+		['EVENTO PUBLICO', 'com_eventos.png', 'eventos', 'COMUNIDAD'],
+		['OBSERVADOR CIUDADANO', 'com_observador.png', 'observador', 'COMUNIDAD'],
+		['ALCANTARILLAS', 'ser_alcantarilla.png', 'alcantarillas', 'SERVICIOS PUBLICOS'],
+		['ALUMBRADO PUBLICO', 'ser_alumbrado.png', 'alumbrado', 'SERVICIOS PUBLICOS'],
+		['FALTA ELECTRICIDAD', 'ser_electricidad.png', 'electricidad', 'SERVICIOS PUBLICOS'],
+		['FUGA', 'ser_fuga.png', 'fuga', 'SERVICIOS PUBLICOS'],
+		['PARQUES DESCUIDADOS', 'ser_parque.png', 'parques', 'SERVICIOS PUBLICOS'],
+		['RECOLECCION DE BASURA', 'ser_basura.png', 'basura', 'SERVICIOS PUBLICOS'],
+		['ACCIDENTE', 'via_accidente.png', 'accidente', 'VIALIDAD Y TRANSITO'],
+		['BACHE O VIA DAÑADA', 'via_bache.png', 'bache', 'VIALIDAD Y TRANSITO'],
+		['OBRAS Y/O VIA CERRADA', 'via_obras.png', 'obras', 'VIALIDAD Y TRANSITO'],
+		['SEMAFORO DESCOMPUESTO', 'via_semaforo.png', 'semaforo', 'VIALIDAD Y TRANSITO'],
+		['VIALIDAD', 'vialidad.png', '', 'VIALIDAD Y TRANSITO'],
+		['PROPUESTA COMUNIDAD', 'pro_comunidad.png', 'pcomunidad', 'PROPUESTAS CIUDADANAS'],
+		['PROPUESTA SEGURIDAD', 'pro_seguridad.png', 'pseguridad', 'PROPUESTAS CIUDADANAS'],
+		['PROPUESTA SERV PUBLICOS', 'pro_servicios.png', 'pservicios', 'PROPUESTAS CIUDADANAS'],
+		['PROPUESTA VIALIDAD', 'pro_vialidad.png', 'pvialidad', 'PROPUESTAS CIUDADANAS'],
+		['EMERGENCIAS', 'emergencia.png', 'emergencias', 'EMERGENCIAS'],
+		['INCENDIO', 'seg_incendio.png', 'incendio', 'SEGURIDAD'],
+		['ROBO', 'seg_robo.png', 'robo', 'SEGURIDAD'],
+		['SITUACION DE RIESGO', 'seg_sitriesgo.png', 'sitriesgo', 'SEGURIDAD'],
+		['DETENCION DE BANDAS', 'seg_detbandas.png', '', 'SEGURIDAD'],
+		['EXTORSION', 'seg_extorsion.png', '', 'SEGURIDAD'],
+		['HOMICIDIO', 'seg_homicidio.png', '', 'SEGURIDAD'],
+		['SECUESTRO', 'seg_secuestro.png', '', 'SEGURIDAD'],
+		['SOSPECHOSO', 'seg_sospechoso.png', '', 'SEGURIDAD'],
+		['AUTO ABANDONADO', 'seg_autoaban.png', '', 'SEGURIDAD'],
+		['PERCEPCION DE INSEGURIDAD', 'seg_percdeinseg.png', '', 'SEGURIDAD'],
+		['OTROS', 'otros.png', '', 'OTROS'],
+		['ROBO AUTO', 'seg_roboauto.png', 'roboauto', 'SEGURIDAD']
+		
 	];	
 	var catColors = [
 		[ "#F48F33", 'VIALIDAD Y TRANSITO'],
@@ -173,6 +234,15 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 		[ "#669FD2", 'SEGURIDAD'],
 		[ "#DB3539", 'EMERGENCIAS']
 	];
+	
+	//GENERATE PUBLIC SERVICES ARRAY AND EXTRA CATEGORIES
+	var publicServices = [];
+	for (var i = 0, j = catMarkers.length; i < j; i++) {
+		if (catMarkers[i][3] == 'SERVICIOS PUBLICOS') {
+			publicServices.push(catMarkers[i][0]);
+		}
+	}
+	publicServices.push('SEMAFORO DESCOMPUESTO','BACHE O VIA DAÑADA');	
 	
 	function createTileStyle(tStyle) {
 		var mOverlap;
@@ -227,7 +297,7 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 	var _tile_style = createTileStyle("normal");
 	var _tile_style_cluster = createTileStyle("cluster");
 	var _heatmap_style = "#{{table_name}}{marker-fill:#FFCC00;marker-width:12;marker-line-color:#FFF;marker-line-width:3;marker-line-opacity:0.9;marker-opacity:0.9;marker-comp-op:multiply;marker-type:ellipse;marker-placement:point;marker-allow-overlap:true;marker-clip:false;marker-multi-policy:largest;}";
-	var _intensity_style = "#{{table_name}}{first/marker-fill:#0011cc;first/marker-opacity:0.01;first/marker-width:80;first/marker-line-width:0;first/marker-placement:point;first/marker-allow-overlap:true;first/marker-comp-op:lighten;second/marker-fill:#00cc11;second/marker-opacity:0.02;second/marker-width:50;second/marker-line-width:0;second/marker-placement:point;second/marker-allow-overlap:true;second/marker-comp-op:lighten;third/marker-fill:#00ff00;third/marker-opacity:0.04;third/marker-width:20;third/marker-line-width:0;third/marker-placement:point;third/marker-allow-overlap:true;third/marker-comp-op:lighten;}";
+	var _intensity_style = "#{{table_name}}{first/marker-fill:#0011cc;first/marker-opacity:0.01;first/marker-width:80;first/marker-line-width:0;first/marker-placement:point;first/marker-allow-overlap:true;first/marker-comp-op:lighten;second/marker-fill:#00cc11;second/marker-opacity:0.02;second/marker-width:50;second/marker-line-width:0;second/marker-placement:point;second/marker-allow-overlap:true;second/marker-comp-op:lighten;third/marker-fill:#00ff00;third/marker-opacity:0.04;third/marker-width:20;third/marker-line-width:0;third/marker-placement:point;third/marker-allow-overlap:true;third/marker-comp-op:lighten;}";	
 	
     /* VIEWS */
     var activeView ='home';
@@ -307,49 +377,32 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 	var rmdHexArr;
 	
     /* FILTER VARIABLES AND JQUERY TRIGGERS FOR QUERY DEFINITION */
-    //categorias
-    var categories = {
-		avisos : false,
-		eventos : false,
-		observador : false,
-		mtymuybien : false,
-		pcomunidad : false,
-		pseguridad : false,
-		pservicios : false,
-		pvialidad : false,
-		incendio : false,
-		robo : false,
-		sitriesgo : false,
-		alcantarillas : false,
-		alumbrado : false,
-		electricidad : false,
-		fuga : false,
-		parques : false,
-		basura : false,
-		accidente : false,
-		bache : false,
-		obras : false,
-		semaforo : false,
-		emergencias : false
-	};
-	//fecha
+    
+    //CATs are made using catMarker config array
+	var categories = {};
+	for (var i = 0, j = catMarkers.length; i < j; i++) {
+		if (catMarkers[i][2] != '') {
+			categories[catMarkers[i][2]] = false;
+		}
+	}    
+	//DATES
     var dates = {
 		calendario :  false,
-		sietedias : false,
-		quincedias : false,
-		treintadias : false,
-		noventadias : false,
-		domingo: false,
-		lunes: false, 
-		martes: false,
-		miercoles: false,
-		jueves: false,
-		viernes: false,
-		sabado: false,
+		sietedias_7 : false,
+		quincedias_15 : false,
+		treintadias_30 : false,
+		noventadias_90 : false,
+		domingo_0: false,
+		lunes_1: false, 
+		martes_2: false,
+		miercoles_3: false,
+		jueves_4: false,
+		viernes_5: false,
+		sabado_6: false,
 		ulthoras : false,
 		horasdeldia : false,
 	};
-	//municipio
+	//MUNs
 	var mun = {
 		mty : false,
 		sp : false,
@@ -363,13 +416,13 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 		cad : false,
 		stg : false
 	};
-	//status de reporte
+	//STATUS
     var repStatus = {
-		open : false,
+		read : false,
 		closed : false,
 		closed_fail : false
 	};
-    //detalle de reporte
+    //DETAIL
     var repDetail = {
 	  	voto: false,
 	  	star: false,
@@ -378,8 +431,8 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
     var totalvotos = 0;
     var totalstar = 0;
     
-    //distancia
-    var closedistance = false;
+    //DISTANCE
+    var closeDistance = false;
     var radius = {	//radio de interes
 		set : false,
 		lat : mapCenter[0],
@@ -558,7 +611,6 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 					id: gMapsLayers[i][1] +"Check",
 					label: gMapsLayers[i][1],
 					layer: gMapsLayers[i][0],
-					q: "SELECT st_y(the_geom) as lat, st_x(the_geom) as lon FROM "+table_name
 			}
 			var check = new checkBox(checkOptions);
 			checkItems.push(check);
@@ -655,20 +707,14 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 			}
 			if (obj.ticket) n = "SELECT " + qSelect + " FROM " + table_name + " WHERE ticket = '" + obj.ticket + "'";
 			if (obj.hasOwnProperty('filter')) {
-				switch (obj.filter) {
-				case 'vialidad':
-					n = "SELECT " + qSelect + " FROM " + table_name + " WHERE (" + table_name + ".post_cat ilike '%ACCIDENTE%' OR " + table_name + ".post_cat ilike '%BACHE%' OR " + table_name + ".post_cat ilike '%OBRAS%' OR " + table_name + ".post_cat ilike '%SEMAFORO%')";
-					break;
-				case 'servicios':
-					n = "SELECT " + qSelect + " FROM " + table_name + " WHERE (" + table_name + " .post_cat ilike '%ALCANTARILLA%' OR " + table_name + " .post_cat ilike '%ALUMBR%' OR " + table_name + " .post_cat ilike '%ELECTRICIDAD%' OR " + table_name + " .post_cat ilike '%FUGA%' OR " + table_name + " .post_cat ilike '%PARQUES%' OR " + table_name + " .post_cat ilike '%BASURA%')";
-					break;
-				case 'seguridad':
-					n = "SELECT " + qSelect + " FROM " + table_name + "  WHERE (" + table_name + " .post_cat ilike '%INCENDIO%' OR " + table_name + " .post_cat ilike '%ROBO%' OR " + table_name + " .post_cat ilike '%RIESGO%')";
-					break;
-				case 'emergencias/':
-					n = "SELECT " + qSelect + " FROM " + table_name + " WHERE (" + table_name + ".post_cat ilike '%EMERGENCIA%')";
-					break;
+				var filterGrp = [];
+				for(var i= 0, j = catMarkers.length; i<j;i++ ){
+					var s = catMarkers[i][3].search(obj.filter.toUpperCase());
+					if (s!= -1){
+						filterGrp.push("'"+catMarkers[i][0]+"'");
+					}
 				}
+				n = "SELECT " + qSelect + " FROM " + table_name + " WHERE " + table_name + ".post_cat IN ("+filterGrp.join()+")";
 			}
 			if (n && whatFor == 'groupCounter') {
 				n += qGroup;
@@ -732,18 +778,17 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 				agebClick();
 			}).on('error', function() {window.location.reload();});
 	      
-		//TOTAL COUNTER
-		var q = "SELECT COUNT(*) FROM " + table_name;
-		if (someUrl) n = filteredUrl("totalCounter", q);
-		else n = q;
-		sql.execute(n).done(function(data) {
-			$("#counterVal").val(addCommas(data.rows[0].count));
-		}).error(function(errors) {});
-		//PER CAT COUNTER
+		
+		//COUNTERS
 		q = "SELECT " + table_name + ".post_cat, COUNT (*) FROM " + table_name + " GROUP BY " + table_name + ".post_cat";
 		if (someUrl) n = filteredUrl("groupCounter", q);
 		else n = q;
 		sql.execute(n).done(function(data) {
+			var totalCount=0;
+			for (var i = 0; i<data.total_rows;i++){
+				totalCount += data.rows[i].count;
+			}
+			$( "#counterVal" ).val(addCommas(totalCount));
 			updateCounters(data);
 		}).error(function(errors) {});
 	}
@@ -783,27 +828,23 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 	/* INFOWINDOW  + REPORT CONTENT HELPERS */  
     
 	function getImg(category) {
-		var cat = typeof category !== 'undefined' ? category : selectedCat;
-		var img = false,
-			img2 = false;
-		if (document.getElementById("theImg")) img = true;
-		if (document.getElementById("theImg2")) img2 = true;
-		var src = "";
-		for (var i = 0; i < catMarkers.length; i++) {
+		var cat = category || selectedCat;
+		var src = '';
+		for (var i = 0, j = catMarkers.length; i<j; i++) {
 			if (cat === catMarkers[i][0]) {
-				src = sourceurl + "cat/" + catMarkers[i][1];
+				src = sourceurl + 'cat/' + catMarkers[i][1];
 				break;
 			}
 		}
-		if (img) document.getElementById("theImg").src = src;
-		if (img2) document.getElementById("theImg2").src = src;
+		if (document.getElementById('theImg')) document.getElementById('theImg').src = src;
+		if (document.getElementById('theImg2')) document.getElementById('theImg2').src = src;
 		if (category) return src;
 	}   
 	function getAssets(assets){
     	var _asset = typeof assets !== 'undefined' ? assets : selectedAssets;
 	    var src = '';
 	    var assets = false;
-	    if (document.getElementById("theAssets")) assets =true;
+	    if (document.getElementById('theAssets')) assets =true;
 	    var assetsString = '';
 	    if (_asset)
 	    	if (_asset.search(/"/i) != -1){
@@ -813,11 +854,11 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 	    	    else if  (assetsString.search(/http/i) != -1) src = assetsString;
 	    	    else src = 'http://assets.' + accountURL + assetsString;
 		    	if (assets){
-		    		document.getElementById("assetID").href= src;
-		    		document.getElementById("assetID").target = "_blank";
-		    		document.getElementById("theAssets").width=200;
-					document.getElementById("theAssets").height=200;
-					document.getElementById("theAssets").src=src;
+		    		document.getElementById('assetID').href= src;
+		    		document.getElementById('assetID').target = '_blank';
+		    		document.getElementById('theAssets').width=200;
+					document.getElementById('theAssets').height=200;
+					document.getElementById('theAssets').src=src;
 					
 				}
 	    	}
@@ -1161,35 +1202,23 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 	  	var target = document.getElementById('map');
 	  	var spinner = new Spinner(opts).spin(target); 
 	  	
-	  	/* LOWER FILTER MENU */
-	    var auxSlide = "";	
-		var sliderID;
+	  	//* LOWER FILTER MENU EVENT HANDLER */
+	    
+	    //last slide opened
+	    var lastSlide = '';
+		
 		$('.dock-item2').click(function() {
-			fade(auxSlide);
-			console.log(this);
-			switch ($(this).attr('id')) {
-			case 'slide-cate':
-				sliderID = "filtercate";
-				break;
-			case 'slide-date':
-				sliderID = "filterdate";
-				break;
-			case 'slide-muni':
-				sliderID = "filtermuni";
-				break;
-			case 'slide-stat':
-				sliderID = "filterstat";
-				break;
-			case 'slide-dist':
-				sliderID = "filterdist";
-				break;
-			}
-			if ($("#" + sliderID).is(":visible")) {
-				$("#" + sliderID).hide('fold', {}, 400);
-				auxSlide = "";
+			
+			if (lastSlide) $( "#"+lastSlide+":visible" ).hide('fold', {}, 400);
+			
+			var sliderID = 'filter'+$(this).attr('id').substring($(this).attr('id').search('-')+1);
+			
+			if ($('#' + sliderID).is(':visible')) {
+				$('#' + sliderID).hide('fold', {}, 400);
+				lastSlide = '';
 			} else {
-				$("#" + sliderID).show('fold', {}, 400);
-				auxSlide = sliderID;
+				$('#' + sliderID).show('fold', {}, 400);
+				lastSlide = sliderID;
 			}
 			return false;
 		});	  	
@@ -1285,7 +1314,7 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 	  	
 	  	
 	  	//SLIDER CONTROL CLOSE DISTANCE
-	  	$("#slider-closedistance").slider({
+	  	$("#slider-closeDistance").slider({
 	  		range: "max",
 	  		min: 1,
 	  		max: 100,
@@ -1295,7 +1324,7 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 	  			closeByReports = ui.value;
 	  		}
 	  	});
-	  	$("#amountReports").val($("#slider-closedistance").slider("value"));
+	  	$("#amountReports").val($("#slider-closeDistance").slider("value"));
 	  	
 	  	//SLIDER CONTROL VOTOS
 	  	$("#slider-voto").slider({
@@ -1321,7 +1350,9 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 	  			totalstar = ui.value;
 	  		}
 	  	});
-	  	$("#amountstar").val($("#slider-star").slider("value")); /* CHARTS OPTIONS */
+	  	$("#amountstar").val($("#slider-star").slider("value")); 
+	  	
+	  	/* CHARTS OPTIONS */
 	  	
 	  	//HIGHCHART LANGUAGE OPTIONS
 	  	Highcharts.setOptions({
@@ -1377,40 +1408,21 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 	  /* METHODS TO SHOW AGEB SLIDER*/
 	  function showAgebslide(){
 		if($('#ageb-content').is(':visible')) {
-		  $("#ageb-content").hide('clip', {}, 400);  
+		  $('#ageb-content').hide('clip', {}, 400);  
 		}else{
-		  $("#ageb-content").show('clip', {}, 400);  
+		  $('#ageb-content').show('clip', {}, 400);  
 		}
 	  }
 	  
 	  /* METHODS TO UPDATE COUNTERS*/
 	  function updateCounters(data) {
 	  	for(var x in categories){
-		  	if(!categories[x]) $("#counterVal_"+x).val(0);
+		  	if(!categories[x]) $('#counterVal_'+ x).val(0);
 	  	}
 	  	for (var i = 0; i < data.total_rows; i++) {
-	  		if (data.rows[i].post_cat == "AVISOS") $("#counterVal_avisos").val(addCommas(data.rows[i].count));
-	  		if (data.rows[i].post_cat == "MTYMUYBIEN") $("#counterVal_mtymuybien").val(addCommas(data.rows[i].count));
-	  		if (data.rows[i].post_cat == "EVENTO PUBLICO") $("#counterVal_eventos").val(addCommas(data.rows[i].count));
-	  		if (data.rows[i].post_cat == "OBSERVADOR CIUDADANO") $("#counterVal_observador").val(addCommas(data.rows[i].count));
-	  		if (data.rows[i].post_cat == "PROPUESTA COMUNIDAD") $("#counterVal_pcomunidad").val(addCommas(data.rows[i].count));
-	  		if (data.rows[i].post_cat == "PROPUESTA SEGURIDAD") $("#counterVal_pseguridad").val(addCommas(data.rows[i].count));
-	  		if (data.rows[i].post_cat == "PROPUESTA SERV PUBLICOS") $("#counterVal_pservicios").val(addCommas(data.rows[i].count));
-	  		if (data.rows[i].post_cat == "PROPUESTA VIALIDAD") $("#counterVal_pvialidad").val(addCommas(data.rows[i].count));
-	  		if (data.rows[i].post_cat == "INCENDIO") $("#counterVal_incendio").val(addCommas(data.rows[i].count));
-	  		if (data.rows[i].post_cat == "ROBO") $("#counterVal_robo").val(addCommas(data.rows[i].count));
-	  		if (data.rows[i].post_cat == "SITUACION DE RIESGO") $("#counterVal_sitriesgo").val(addCommas(data.rows[i].count));
-	  		if (data.rows[i].post_cat == "ACCIDENTE") $("#counterVal_accidente").val(addCommas(data.rows[i].count));
-	  		if (data.rows[i].post_cat == "BACHE O VIA DAÑADA") $("#counterVal_bache").val(addCommas(data.rows[i].count));
-	  		if (data.rows[i].post_cat == "OBRAS Y/O VIA CERRADA") $("#counterVal_obras").val(addCommas(data.rows[i].count));
-	  		if (data.rows[i].post_cat == "SEMAFORO DESCOMPUESTO") $("#counterVal_semaforo").val(addCommas(data.rows[i].count));
-	  		if (data.rows[i].post_cat == "ALCANTARILLAS") $("#counterVal_alcantarillas").val(addCommas(data.rows[i].count));
-	  		if (data.rows[i].post_cat == "ALUMBRADO PUBLICO") $("#counterVal_alumbrado").val(addCommas(data.rows[i].count));
-	  		if (data.rows[i].post_cat == "FALTA ELECTRICIDAD") $("#counterVal_electricidad").val(addCommas(data.rows[i].count));
-	  		if (data.rows[i].post_cat == "FUGA") $("#counterVal_fuga").val(addCommas(data.rows[i].count));
-	  		if (data.rows[i].post_cat == "PARQUES DESCUIDADOS") $("#counterVal_parques").val(addCommas(data.rows[i].count));
-	  		if (data.rows[i].post_cat == "RECOLECCION DE BASURA") $("#counterVal_basura").val(addCommas(data.rows[i].count));
-	  		if (data.rows[i].post_cat == "EMERGENCIAS") $("#counterVal_emergencias").val(addCommas(data.rows[i].count));
+	  		for (var x= 0, y = catMarkers.length; x<y; x++) {
+		  		if (data.rows[i].post_cat === catMarkers[x][0] && catMarkers[x][2]) $('#counterVal_'+ catMarkers[x][2]).val(addCommas(data.rows[i].count));
+	  		}
 	  	}
 	  }
 	  function addCommas(val) {
@@ -1422,16 +1434,16 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 	  
 	  /* METHODS FOR ACTIVE FILTERS*/
 	  function updateActiveFilters() {
-	  	var divCat = document.getElementById("activeF_Cat");
-	  	var htmlCat = "";
-	  	var divDat = document.getElementById("activeF_Dat");
-	  	var htmlDat = "";
-	  	var divMun = document.getElementById("activeF_Mun");
-	  	var htmlMun = "";
-	  	var divSta = document.getElementById("activeF_Sta");
-	  	var htmlSta = "";
-	  	var divDis = document.getElementById("activeF_Dis");
-	  	var htmlDis = "";
+	  	var divCat = document.getElementById('activeF_Cat');
+	  	var htmlCat = '';
+	  	var divDat = document.getElementById('activeF_Dat');
+	  	var htmlDat = '';
+	  	var divMun = document.getElementById('activeF_Mun');
+	  	var htmlMun = '';
+	  	var divSta = document.getElementById('activeF_Sta');
+	  	var htmlSta = '';
+	  	var divDis = document.getElementById('activeF_Dis');
+	  	var htmlDis = '';
 	  	anyFilter = false;
 	  	if (categories.avisos) {
 	  		htmlCat += "<br><input type=\"text\" class=\"rangevalue\" value=\"Avisos\"style=\"width:auto; text-align:center; font-size:12px;\"disabled/>";
@@ -1525,47 +1537,47 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 	  		htmlDat += "<br><input type=\"text\" class=\"rangevalue\" value=\"Calendario\"style=\"width:auto; text-align:center; font-size:12px;\"disabled/>";
 	  		anyFilter = true;
 	  	}
-	  	if (dates.sietedias) {
+	  	if (dates.sietedias_7) {
 	  		htmlDat += "<br><input type=\"text\" class=\"rangevalue\" value=\"7 días\"style=\"width:auto; text-align:center; font-size:12px;\"disabled/>";
 	  		anyFilter = true;
 	  	}
-	  	if (dates.quincedias) {
+	  	if (dates.quincedias_15) {
 	  		htmlDat += "<br><input type=\"text\" class=\"rangevalue\" value=\"15 días\"style=\"width:auto; text-align:center; font-size:12px;\"disabled/>";
 	  		anyFilter = true;
 	  	}
-	  	if (dates.treintadias) {
+	  	if (dates.treintadias_30) {
 	  		htmlDat += "<br><input type=\"text\" class=\"rangevalue\" value=\"30 días\"style=\"width:auto; text-align:center; font-size:12px;\"disabled/>";
 	  		anyFilter = true;
 	  	}
-	  	if (dates.noventadias) {
+	  	if (dates.noventadias_90) {
 	  		htmlDat += "<br><input type=\"text\" class=\"rangevalue\" value=\"90 días\"style=\"width:auto; text-align:center; font-size:12px;\"disabled/>";
 	  		anyFilter = true;
 	  	}
-	  	if (dates.domingo) {
+	  	if (dates.domingo_0) {
 	  		htmlDat += "<br><input type=\"text\" class=\"rangevalue\" value=\"Domingo\"style=\"width:auto; text-align:center; font-size:12px;\"disabled/>";
 	  		anyFilter = true;
 	  	}
-	  	if (dates.lunes) {
+	  	if (dates.lunes_1) {
 	  		htmlDat += "<br><input type=\"text\" class=\"rangevalue\" value=\"Lunes\"style=\"width:auto; text-align:center; font-size:12px;\"disabled/>";
 	  		anyFilter = true;
 	  	}
-	  	if (dates.martes) {
+	  	if (dates.martes_2) {
 	  		htmlDat += "<br><input type=\"text\" class=\"rangevalue\" value=\"Martes\"style=\"width:auto; text-align:center; font-size:12px;\"disabled/>";
 	  		anyFilter = true;
 	  	}
-	  	if (dates.miercoles) {
+	  	if (dates.miercoles_3) {
 	  		htmlDat += "<br><input type=\"text\" class=\"rangevalue\" value=\"Miércoles\"style=\"width:auto; text-align:center; font-size:12px;\"disabled/>";
 	  		anyFilter = true;
 	  	}
-	  	if (dates.jueves) {
+	  	if (dates.jueves_4) {
 	  		htmlDat += "<br><input type=\"text\" class=\"rangevalue\" value=\"Jueves\"style=\"width:auto; text-align:center; font-size:12px;\"disabled/>";
 	  		anyFilter = true;
 	  	}
-	  	if (dates.viernes) {
+	  	if (dates.viernes_5) {
 	  		htmlDat += "<br><input type=\"text\" class=\"rangevalue\" value=\"Viernes\"style=\"width:auto; text-align:center; font-size:12px;\"disabled/>";
 	  		anyFilter = true;
 	  	}
-	  	if (dates.sabado) {
+	  	if (dates.sabado_6) {
 	  		htmlDat += "<br><input type=\"text\" class=\"rangevalue\" value=\"Sábado\"style=\"width:auto; text-align:center; font-size:12px;\"disabled/>";
 	  		anyFilter = true;
 	  	}
@@ -1621,7 +1633,7 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 	  		htmlMun += "<br><input type=\"text\" class=\"rangevalue\" value=\"Cadereyta\"style=\"width:auto; text-align:center; font-size:12px;\"disabled/>";
 	  		anyFilter = true;
 	  	}
-	  	if (repStatus.open) {
+	  	if (repStatus.read) {
 	  		htmlSta += "<br><input type=\"text\" class=\"rangevalue\" value=\"Abiertos\"style=\"width:auto; text-align:center; font-size:12px;\"disabled/>";
 	  		anyFilter = true;
 	  	}
@@ -1653,7 +1665,7 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 	  		htmlDis += "<br><input type=\"text\" class=\"rangevalue\" value=\"Polígonos\"style=\"width:auto; text-align:center; font-size:12px;\"disabled/>";
 	  		anyFilter = true;
 	  	}
-	  	if (closedistance) {
+	  	if (closeDistance) {
 	  		htmlDis += "<br><input type=\"text\" class=\"rangevalue\" value=\"Ubicación\"style=\"width:auto; text-align:center; font-size:12px;\"disabled/>";
 	  		anyFilter = true;
 	  	}
@@ -1705,8 +1717,8 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 		  	polyfilter = false;
 		    $('#polyfilter').attr('checked', false);
 		  	
-		  	closedistance=false;
-		    $('#closedistance').attr('checked', false);
+		  	closeDistance=false;
+		    $('#closeDistance').attr('checked', false);
 		  	
 			map.setZoom(11);
 			execRepOffset=0;
@@ -1719,204 +1731,65 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 	  }
 	  
 	  /* METHODS TO HIDE FILTER SLIDE*/	
-	  function fade(auxSlide){
-			if (auxSlide == 'filtercate')$( "#filtercate:visible" ).hide('fold', {}, 400);
-			if (auxSlide == 'filterdate')$( "#filterdate:visible" ).hide('fold', {}, 400);
-			if (auxSlide == 'filtermuni')$( "#filtermuni:visible" ).hide('fold', {}, 400);
-			if (auxSlide == 'filterstat')$( "#filterstat:visible" ).hide('fold', {}, 400);
-			if (auxSlide == 'filterdist')$( "#filterdist:visible" ).hide('fold', {}, 400);
-			if (auxSlide == 'all'){
-					$( "#filtercate:visible" ).hide('fold', {}, 400);
-					$( "#filterdate:visible" ).hide('fold', {}, 400);
-					$( "#filtermuni:visible" ).hide('fold', {}, 400);
-					$( "#filterstat:visible" ).hide('fold', {}, 400);
-					$( "#filterdist:visible" ).hide('fold', {}, 400);
-					$( '#report-content:visible').hide('fold', {}, 400); 
-					$( '#infowindow:visible').hide('fold', {}, 400);
-					$( '#infowindow_ag:visible').hide('fold', {}, 400);
-					$( '.activeslide:visible').hide('fold', {}, 400); 
-					$( '.activesslide:visible').hide('fold', {}, 400);
-					$( '.counterslide:visible').hide('fold', {}, 400);
-					$( '#ageb-content').hide('clip', {}, 400);
+		
+		function fade(auxSlide) {
+			$('#report-content:visible').hide('fold', {}, 400);
+			$('#infowindow:visible').hide('fold', {}, 400);
+			$('#infowindow_ag:visible').hide('fold', {}, 400);
+			$('#ageb-content').hide('clip', {}, 400);
+			$('.filterslide:visible').hide('fold', {}, 400);
+			$('.activesslide:visible').hide('fold', {}, 400);
+			if (auxSlide == 'all') {
+				$('.activeslide:visible').hide('fold', {}, 400);
+				$('.counterslide:visible').hide('fold', {}, 400);
 			}
-			if (auxSlide == 'showSlides'){
-					$( '.activeslide:hidden').show('fold', {}, 400); 
-					$( '.counterslide:hidden').show('fold', {}, 400);
-					$( '#report-content:visible').hide('fold', {}, 400); 
-					$( '#infowindow:visible').hide('fold', {}, 400);
-					$( '#infowindow_ag:visible').hide('fold', {}, 400);
-					$( "#filtercate:visible" ).hide('fold', {}, 400);
-					$( "#filterdate:visible" ).hide('fold', {}, 400);
-					$( "#filtermuni:visible" ).hide('fold', {}, 400);
-					$( "#filterstat:visible" ).hide('fold', {}, 400);
-					$( "#filterdist:visible" ).hide('fold', {}, 400);
-					$('.activesslide').hide('fold', {}, 400);
-					$('.countersslide').hide('fold', {}, 400);
-					$( '#ageb-content').hide('clip', {}, 400);
+			if (auxSlide == 'showSlides') {
+				$('.activeslide:hidden').show('fold', {}, 400);
+				$('.counterslide:hidden').show('fold', {}, 400);
 			}
-	  }
+		}	  
 	  
 	  /* METHODS FOR ADDITIONAL CATEGORIES FILTERING*/
-	  function multipleCat(group, aux){
-		  aux = typeof aux !== 'undefined' ? aux : true;
-		  var q = true;
-		  
-		  switch (group){
-			  case 'MUNICIPIO':
-			        if (!mun.mty  || !mun.sp  || !mun.sn  || !mun.sc  || !mun.gpe  || !mun.apo  || !mun.esc  || !mun.jua  || !mun.gar  || !mun.cad  || !mun.stg) aux=true; else aux = false;
-				  	for (var a in mun){
-					  	mun[a]= aux;
-					  	document.getElementById(a).checked = aux;
-				  	}
-		  	  break;
-			  case 'COMUNIDAD':
-			        if (!categories.avisos || !categories.eventos || !categories.observador || !categories.mtymuybien) aux=true; else aux = false;
-			  		categories.avisos = aux;
-					categories.eventos = aux;
-					categories.observador = aux;
-					categories.mtymuybien = aux;
-					document.getElementById("avisos").checked =aux;
-					document.getElementById("eventos").checked =aux;
-					document.getElementById("observador").checked =aux;
-					document.getElementById("mtymuybien").checked =aux;
-			  break;
-			  case 'PROPUESTAS CIUDADANAS':
-			        if (!categories.pcomunidad || !categories.pseguridad || !categories.pservicios || !categories.pvialidad) aux=true; else aux = false;
-			  		categories.pcomunidad = aux;
-					categories.pseguridad = aux;
-					categories.pservicios = aux;
-					categories.pvialidad = aux;
-					document.getElementById("pcomunidad").checked =aux;
-					document.getElementById("pseguridad").checked =aux;
-					document.getElementById("pservicios").checked =aux;
-					document.getElementById("pvialidad").checked =aux;
-			  break;
-			  case 'SEGURIDAD':
-			  		if (!categories.incendio || !categories.robo || !categories.sitriesgo) aux=true; else aux = false;
-			  		categories.incendio = aux;
-					categories.robo = aux;
-					categories.sitriesgo = aux;
-					document.getElementById("incendio").checked =aux;
-					document.getElementById("robo").checked =aux;
-					document.getElementById("sitriesgo").checked =aux;
-			  break;
-			  case 'SERVICIOS PUBLICOS':
-			  		if (!categories.alcantarillas || !categories.alumbrado || !categories.electricidad || !categories.fuga || !categories.parques || !categories.basura) aux=true; else aux = false;
-			  		categories.alcantarillas = aux;
-					categories.alumbrado = aux;
-					categories.electricidad = aux;
-					categories.fuga = aux;
-					categories.parques = aux;
-					categories.basura = aux;
-					document.getElementById("alcantarillas").checked =aux;
-					document.getElementById("alumbrado").checked =aux;
-					document.getElementById("electricidad").checked =aux;
-					document.getElementById("fuga").checked =aux;
-					document.getElementById("parques").checked =aux;
-					document.getElementById("basura").checked =aux;
-			  break;
-			  case 'VIALIDAD Y TRANSITO':
-			  		if (!categories.accidente || !categories.bache || !categories.obras || !categories.semaforo) aux=true; else aux = false;
-			  		categories.accidente = aux;
-					categories.bache = aux;
-					categories.obras = aux;
-					categories.semaforo = aux;
-					document.getElementById("accidente").checked =aux;
-					document.getElementById("bache").checked =aux;
-					document.getElementById("obras").checked =aux;
-					document.getElementById("semaforo").checked =aux;
-			  break;
-			  case 'EMERGENCIAS':
-			  		if (!categories.emergencias) aux=true; else aux = false;
-			  		categories.emergencias = aux;
-			  		document.getElementById("emergencias").checked =aux;
-			  break;
-			  case 'all':
-				  	for (var a in categories){
-					  categories[a]= aux;
-					  document.getElementById(a).checked = aux;
-				  	}			  		
-/*
-			  		categories.avisos = aux;
-					categories.eventos = aux;
-					categories.observador = aux;
-					categories.mtymuybien = aux;
-					document.getElementById("avisos").checked =aux;
-					document.getElementById("eventos").checked =aux;
-					document.getElementById("observador").checked =aux;
-					document.getElementById("mtymuybien").checked =aux;
-					categories.pcomunidad = aux;
-					categories.pseguridad = aux;
-					categories.pservicios = aux;
-					categories.pvialidad = aux;
-					document.getElementById("pcomunidad").checked =aux;
-					document.getElementById("pseguridad").checked =aux;
-					document.getElementById("pservicios").checked =aux;
-					document.getElementById("pvialidad").checked =aux;
-					categories.incendio = aux;
-					categories.robo = aux;
-					categories.sitriesgo = aux;
-					document.getElementById("incendio").checked =aux;
-					document.getElementById("robo").checked =aux;
-					document.getElementById("sitriesgo").checked =aux;
-					categories.alcantarillas = aux;
-					categories.alumbrado = aux;
-					categories.electricidad = aux;
-					categories.fuga = aux;
-					categories.parques = aux;
-					categories.basura = aux;
-					document.getElementById("alcantarillas").checked =aux;
-					document.getElementById("alumbrado").checked =aux;
-					document.getElementById("electricidad").checked =aux;
-					document.getElementById("fuga").checked =aux;
-					document.getElementById("parques").checked =aux;
-					document.getElementById("basura").checked =aux;
-					categories.accidente = aux;
-					categories.bache = aux;
-					categories.obras = aux;
-					categories.semaforo = aux;
-					document.getElementById("accidente").checked =aux;
-					document.getElementById("bache").checked =aux;
-					document.getElementById("obras").checked =aux;
-					document.getElementById("semaforo").checked =aux;
-					categories.emergencias = aux;
-			  		document.getElementById("emergencias").checked =aux;
-*/
-			  		q=false;
-			  break;
-		  }
-		  if (q) setQ();
-	  }
-	  function filterFromStat(cat){
-		  switch (cat){
-		  	  case 'MTYMUYBIEN': multipleCat('all',false); categories.mtymuybien =true; $('#mtymuybien').attr('checked', true); ;break;
-		  	  case 'ACCIDENTE': multipleCat('all',false); categories.accidente =true; $('#accidente').attr('checked', true); ;break;
-		  	  case 'ALCANTARILLAS': multipleCat('all',false); categories.alcantarillas =true; $('#alcantarillas').attr('checked', true); ;break;
-		  	  case 'ALUMBRADO PUBLICO': multipleCat('all',false); categories.alumbrado =true; $('#alumbrado').attr('checked', true); ;break;
-		  	  case 'AVISOS': multipleCat('all',false); categories.avisos =true; $('#avisos').attr('checked', true); ;break;
-		  	  case 'BACHE O VIA DAÑADA': multipleCat('all',false); categories.bache =true; $('#bache').attr('checked', true); ;break;
-		  	  case 'EMERGENCIAS': multipleCat('all',false); categories.emergencias =true; $('#emergencias').attr('checked', true); ;break;
-		  	  case 'EVENTO PUBLICO': multipleCat('all',false); categories.eventos =true; $('#eventos').attr('checked', true); ;break;
-		  	  
-		  	  case 'FALTA ELECTRICIDAD': multipleCat('all',false); categories.electricidad =true; $('#electricidad').attr('checked', true); ;break;
-		  	  case 'FUGA': multipleCat('all',false); categories.fuga =true; $('#fuga').attr('checked', true); ;break;
-		  	  case 'INCENDIO': multipleCat('all',false); categories.incendio =true; $('#incendio').attr('checked', true); ;break;
-		  	  case 'OBRAS Y/O VIA CERRADA': multipleCat('all',false); categories.obras =true; $('#obras').attr('checked', true); ;break;
-		  	  case 'OBSERVADOR CIUDADANO': multipleCat('all',false); categories.observador =true; $('#observador').attr('checked', true); ;break;
-		  	  case 'PARQUES DESCUIDADOS': multipleCat('all',false); categories.parques =true; $('#parques').attr('checked', true); ;break;
-		  	  case 'PROPUESTA COMUNIDAD': multipleCat('all',false); categories.pcomunidad =true; $('#pcomunidad').attr('checked', true); ;break;
-		  	  
-		  	  case 'PROPUESTA SEGURIDAD': multipleCat('all',false); categories.pseguridad =true; $('#pseguridad').attr('checked', true); ;break;
-		  	  case 'PROPUESTA SERV PUBLICOS': multipleCat('all',false); categories.pservicios =true; $('#pservicios').attr('checked', true); ;break;
-		  	  case 'PROPUESTA VIALIDAD': multipleCat('all',false); categories.pvialidad =true; $('#pvialidad').attr('checked', true); ;break;
-		  	  case 'RECOLECCION DE BASURA': multipleCat('all',false); categories.basura =true; $('#basura').attr('checked', true); ;break;
-		  	  case 'ROBO': multipleCat('all',false); categories.robo =true; $('#robo').attr('checked', true); ;break;
-		  	  case 'SEMAFORO DESCOMPUESTO': multipleCat('all',false); categories.semaforo =true; $('#semaforo').attr('checked', true); ;break;
-		  	  case 'SITUACION DE RIESGO': multipleCat('all',false); categories.sitriesgo =true; $('#sitriesgo').attr('checked', true); ;break;	
-			  default:break;
-		  }
-		  setQ();
-	  }
+		
+		function multipleCat(group) {
+			var aux = false;
+			switch (group) {
+				// WHEN CLICK ON MUN MENU HEADER, FOR ALL MUNs IN MUN OBJECT
+				case 'MUNICIPIO':
+					for (var m in mun) {
+						if (!mun[m]) aux = true;
+						mun[m] = aux;
+						document.getElementById(m).checked = aux;
+					}
+				break;
+				// WHEN CLICK ON CAT GROUP HEADER ON CAT MENU, FOR ALL CATs IN CAT OBJECT
+				default:
+					for (var i = 0, j = catMarkers.length; i < j; i++) {
+						if (group === catMarkers[i][3] && catMarkers[i][2]) {
+							if (!categories[catMarkers[i][2]]) aux = true;
+							categories[catMarkers[i][2]] = aux;
+							document.getElementById(catMarkers[i][2]).checked = aux;
+						}
+					}
+				break
+			}
+			setQ();
+		}
+		
+		function filterFromStat(cat) {
+			for (var i = 0, j = catMarkers.length; i < j; i++) {
+				if (cat === catMarkers[i][0] && catMarkers[i][2]) {
+					for (var a in categories) {
+						categories[a] = false;
+						document.getElementById(a).checked = false;
+					}
+					categories[catMarkers[i][2]] = true;
+					document.getElementById(catMarkers[i][2]).checked = true;
+					break;
+				}
+			}
+			setQ();
+		}	  
 	  
 	  /* METHODS FOR QUERYING BY DISTANCE */
 	  function drawCircle() {
@@ -2064,16 +1937,16 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 				clearPolygons();
 				break;
 			case "rad":
-				closedistance = false;
-				document.getElementById('closedistance').checked = false;
+				closeDistance = false;
+				document.getElementById('closeDistance').checked = false;
 				polyfilter = false;
 				document.getElementById('polyfilter').checked = false;
 				clearGeo();
 				clearPolygons();
 				break;
 			case "poly":
-				closedistance = false;
-				document.getElementById('closedistance').checked = false;
+				closeDistance = false;
+				document.getElementById('closeDistance').checked = false;
 				radius.set = false;
 				document.getElementById('radius').checked = false;
 				clearGeo();
@@ -2086,7 +1959,7 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 	  /* METHOD FOR DATE AND TIME FILTERING */
 	  function clearDates(date) {
 	  	//array contains HTML IDs which toggle between each other 
-	  	var array = ["calendario", "sietedias", "quincedias", "treintadias", "noventadias", "ulthoras"];
+	  	var array = ["calendario", "sietedias_7", "quincedias_15", "treintadias_30", "noventadias_90", "ulthoras"];
 	  	var index = array.indexOf(date);
 	  	if (index > -1) {
 	  		var pushBack = array[index];
@@ -2276,10 +2149,10 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 	
 	}
 	  
-	/* METHODS FOR DRAWING SCORE CHARTS*/
+	
+	  /* METHODS FOR DRAWING SCORE CHARTS*/
 	   	
-	   	
-	   	/*DRAW SCORE FOR CATS */
+	  //DRAW SCORE FOR CATS
 	  function drawScore(score,status,origin){
 	  		var promSPmun = {};
 	  		var promSPcat = {};
@@ -2568,23 +2441,13 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 				});
 			}
 		}
-	  function getFullName(name){
-	  		switch(name){
-		  		case 'APO': return 'Apodaca';
-		  		case 'CAD': return 'Cadereyta';
-		  		case 'ESC': return 'Escobedo';
-		  		case 'GAR': return 'García';
-		  		case 'GPE': return 'Guadalupe';
-		  		case 'JUA': return 'Juárez';
-		  		case 'MTY': return 'Monterrey';
-		  		case 'SC': return 'Santa Catarina';
-		  		case 'SN': return 'San Nicolás';
-		  		case 'SP': return 'San Pedro';
-		  		case 'STG': return 'Santiago';
-		  		default: break;
-	  		}
-	  }
-	  
+	  function getFullName(name) {
+			for (var i = 0, j = munNL.length; i < j; i++) {
+				if (name === munNL[i][0]) return munNL[i][1];
+			}
+	  }	  
+	 
+	 
 	  /*					 **
 	  **      VIEWS 	     **
 	  **      METHODS		 **
@@ -2717,7 +2580,7 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 			
 		    ///SLICE QUERY IN THREE DIFFERENT PARTS FOR SIMPLICITY///
 			//SELECT STATEMENT//
-			var querycount = "SELECT COUNT("+table_name+".*) as y, "+area_name+".name as ejeX, "+table_name+".post_cat as seriesname FROM "+table_name+", "+area_name+" ";
+			var querycount = "SELECT COUNT("+table_name+".*) as y, "+table_area+".name as ejeX, "+table_name+".post_cat as seriesname FROM "+table_name+", "+table_area+" ";
 			//WHERE CLAUSE EXTRACTED FROM ORIGINAL QUERY
 			if (querytehuan.search(/where/i) != -1){
 				var querywhere = querytehuan.substring(querytehuan.search(/where/i));
@@ -2727,41 +2590,41 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 			//console.log('---Where clause extracted---');
 			//console.log(querywhere);
 			///GROUP AND ORDER CLAUSE
-			var querygroup = " GROUP BY "+area_name+".name,"+table_name+".post_cat order by "+table_name+".post_cat, "+area_name+".name asc"
+			var querygroup = " GROUP BY "+table_area+".name,"+table_name+".post_cat order by "+table_name+".post_cat, "+table_area+".name asc"
 			
 			///BUILD QUERY FOR COUNTING
 			queryStats = querycount + querywhere + querygroup;
 			
 			//VARIABLES FOR QUERY STRING MANIPULATION
 			var m = queryStats.search(' GROUP BY');
-			var p = queryStats.search('ST_Intersects("+table_name+".the_geom, "+area_name+".the_geom)');
+			var p = queryStats.search('ST_Intersects("+table_name+".the_geom, "+table_area+".the_geom)');
 			
 			//CHECK FOR POLYGON GEOM INTERSECTION
 			if (p === -1){
 				var p1= queryStats.search(/where/i);
 				if (p1 === -1){
-					queryStats = queryStats.splice(m,0,"WHERE ST_Intersects("+table_name+".the_geom, "+area_name+".the_geom)");
+					queryStats = queryStats.splice(m,0,"WHERE ST_Intersects("+table_name+".the_geom, "+table_area+".the_geom)");
 				}else{
 					queryStats = queryStats.replace("WHERE","");
-					queryStats = queryStats.splice(p1,0,"WHERE ST_Intersects("+table_name+".the_geom, "+area_name+".the_geom) AND ");
+					queryStats = queryStats.splice(p1,0,"WHERE ST_Intersects("+table_name+".the_geom, "+table_area+".the_geom) AND ");
 				}
 			}
 			
 			//VARIABLES FOR POLYGON QUERY	
-			querypoly = "SELECT name FROM "+area_name+" order by name asc";
-			var n = queryStats.search('"+area_name+".name =');
+			querypoly = "SELECT name FROM "+table_area+" order by name asc";
+			var n = queryStats.search('"+table_area+".name =');
 			m = queryStats.search(' GROUP BY'); //search again because index might change
 			//CHECK TO RETURN JUST QUERIED COUNTIES ON X AXIS
 			if (n != -1){
 				var o = "("+queryStats.substring(n, m);
-				querypoly = "SELECT name FROM "+area_name+" where "+o+" order by name asc";
+				querypoly = "SELECT name FROM "+table_area+" where "+o+" order by name asc";
 			}
 			//console.log("---Query del poligono para eje X---");
 			//console.log(querypoly);
 			//console.log("---Query para series de HC---");
 			//console.log(queryStats);
 			var re = new RegExp(table_name,"g");		
-		    if(closedistance){
+		    if(closeDistance){
 				var str     = queryStats;
 				var n       = str.replace(re, "data");
 				queryStats = "WITH data AS ("+_geoq+") "+n;
@@ -3052,8 +2915,8 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 		   ///SLICE QUERY IN THREE DIFFERENT PARTS FOR SIMPLICITY///
 			///SELECT STATEMENT///
 
-			if (querytehuan.search(area_name) != -1){
-				var querycount = "SELECT date_part('year', "+table_name+".created_at) as year, date_part('month', "+table_name+".created_at) as month, date_part('day', "+table_name+".created_at) as day, count( "+table_name+".*) FROM "+table_name+", "+area_name+" ";
+			if (querytehuan.search(table_area) != -1){
+				var querycount = "SELECT date_part('year', "+table_name+".created_at) as year, date_part('month', "+table_name+".created_at) as month, date_part('day', "+table_name+".created_at) as day, count( "+table_name+".*) FROM "+table_name+", "+table_area+" ";
 			}else{
 				var querycount = "SELECT date_part('year', "+table_name+".created_at) as year, date_part('month', "+table_name+".created_at) as month, date_part('day', "+table_name+".created_at) as day, count( "+table_name+".*) FROM "+table_name+" "
 			}
@@ -3073,17 +2936,17 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 			
 			//VARIABLES FOR QUERY STRING MANIPULATION
 			var m = queryTrends.search(' GROUP BY');
-			var p = queryTrends.search('ST_Intersects("+table_name+".the_geom, "+area_name+".the_geom)');
+			var p = queryTrends.search('ST_Intersects("+table_name+".the_geom, "+table_area+".the_geom)');
 			
 			//CHECK FOR POLYGON GEOM INTERSECTION
-			if (querytehuan.search('"+area_name+"') != -1){
+			if (querytehuan.search('"+table_area+"') != -1){
 				if (p === -1){
 					var p1= queryTrends.search(/where/i);
 					if (p1 === -1){
-						queryTrends = queryTrends.splice(m,0,"WHERE ST_Intersects("+table_name+".the_geom, "+area_name+".the_geom)");
+						queryTrends = queryTrends.splice(m,0,"WHERE ST_Intersects("+table_name+".the_geom, "+table_area+".the_geom)");
 					}else{
 						queryTrends = queryTrends.replace("WHERE","");
-						queryTrends = queryTrends.splice(p1,0,"WHERE ST_Intersects("+table_name+".the_geom, "+area_name+".the_geom) AND ");
+						queryTrends = queryTrends.splice(p1,0,"WHERE ST_Intersects("+table_name+".the_geom, "+table_area+".the_geom) AND ");
 					}
 				}
 			}
@@ -3092,7 +2955,7 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 		    console.log(queryTrends);
 */
 		    var re = new RegExp(table_name,"g");
-		    if(closedistance){
+		    if(closeDistance){
 				var str     = queryTrends;
 				var n       = str.replace(re, "data");
 				queryTrends = "WITH data AS ("+_geoq+") "+n;
@@ -3577,10 +3440,10 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 	  	  var bigoSco = {};
 	  	  var bigoSta = {};
 	  	  var bigoOri = {};
-		  var queryMun = "SELECT DISTINCT(name) from "+area_name+" order by name asc";
-	  	  var queryScore = "select avg(date_part('days',("+table_name+".last_mod-"+table_name+".created_at))) as dias_promedio, "+area_name+".name as municipio, "+table_name+".post_cat as categoria from "+table_name+", "+area_name+" where st_intersects("+table_name+".the_geom, "+area_name+".the_geom) and ("+table_name+".post_cat ilike '%alcantarilla%' or "+table_name+".post_cat ilike '%alumbr%' or "+table_name+".post_cat ilike '%electricidad%' or "+table_name+".post_cat ilike '%fuga%' or "+table_name+".post_cat ilike '%parques%' or "+table_name+".post_cat ilike '%basura%' or "+table_name+".post_cat ilike '%bache%' or "+table_name+".post_cat ilike '%semaforo%') and ("+table_name+".status ='closed') and ((now() at time zone '"+TZ+"')-"+table_name+".created_at < interval '90 day') group by "+area_name+".name,"+table_name+".post_cat order by "+area_name+".name,"+table_name+".post_cat asc";
-	  	  var queryStatus = "select count("+table_name+".*) as cuenta, "+area_name+".name as municipio, "+table_name+".post_cat as categoria, "+table_name+".status as status, "+table_name+".close_fail as close_fail from "+table_name+", "+area_name+" where st_intersects("+table_name+".the_geom, "+area_name+".the_geom) and ("+table_name+".status ilike '%read%' or "+table_name+".status ilike '%closed%' and "+table_name+".close_fail = false or "+table_name+".status ilike '%closed%' and "+table_name+".close_fail = true) and ("+table_name+".post_cat ilike '%alcantarilla%' or "+table_name+".post_cat ilike '%alumbr%' or "+table_name+".post_cat ilike '%electricidad%' or "+table_name+".post_cat ilike '%fuga%' or "+table_name+".post_cat ilike '%parques%' or "+table_name+".post_cat ilike '%basura%' or "+table_name+".post_cat ilike '%bache%' or "+table_name+".post_cat ilike '%semaforo%') and ((now() at time zone '"+TZ+"')-"+table_name+".created_at < interval '90 day') group by "+area_name+".name,"+table_name+".post_cat, "+table_name+".status, "+table_name+".close_fail order by "+area_name+".name,"+table_name+".post_cat asc";
-	  	  var queryOrigin ="select count(*), channel as origen, "+area_name+".name as municipio from "+table_name+", "+area_name+" where (now() at time zone '"+TZ+"'-"+table_name+".created_at at time zone '"+TZ+"') < interval '90 day' and st_intersects("+table_name+".the_geom, "+area_name+".the_geom) and ("+table_name+".post_cat ilike '%alcantarilla%' or "+table_name+".post_cat ilike '%alumbr%' or "+table_name+".post_cat ilike '%electricidad%' or "+table_name+".post_cat ilike '%fuga%' or "+table_name+".post_cat ilike '%parques%' or "+table_name+".post_cat ilike '%basura%' or "+table_name+".post_cat ilike '%bache%' or "+table_name+".post_cat ilike '%semaforo%') group by channel,"+area_name+".name order by municipio";
+		  var queryMun = "SELECT DISTINCT(name) from "+table_area+" order by name asc";
+	  	  var queryScore = "select avg(date_part('days',("+table_name+".last_mod-"+table_name+".created_at))) as dias_promedio, "+table_area+".name as municipio, "+table_name+".post_cat as categoria from "+table_name+", "+table_area+" where st_intersects("+table_name+".the_geom, "+table_area+".the_geom) and ("+table_name+".post_cat ilike '%alcantarilla%' or "+table_name+".post_cat ilike '%alumbr%' or "+table_name+".post_cat ilike '%electricidad%' or "+table_name+".post_cat ilike '%fuga%' or "+table_name+".post_cat ilike '%parques%' or "+table_name+".post_cat ilike '%basura%' or "+table_name+".post_cat ilike '%bache%' or "+table_name+".post_cat ilike '%semaforo%') and ("+table_name+".status ='closed') and ((now() at time zone '"+TZ+"')-"+table_name+".created_at < interval '90 day') group by "+table_area+".name,"+table_name+".post_cat order by "+table_area+".name,"+table_name+".post_cat asc";
+	  	  var queryStatus = "select count("+table_name+".*) as cuenta, "+table_area+".name as municipio, "+table_name+".post_cat as categoria, "+table_name+".status as status, "+table_name+".close_fail as close_fail from "+table_name+", "+table_area+" where st_intersects("+table_name+".the_geom, "+table_area+".the_geom) and ("+table_name+".status ilike '%read%' or "+table_name+".status ilike '%closed%' and "+table_name+".close_fail = false or "+table_name+".status ilike '%closed%' and "+table_name+".close_fail = true) and ("+table_name+".post_cat ilike '%alcantarilla%' or "+table_name+".post_cat ilike '%alumbr%' or "+table_name+".post_cat ilike '%electricidad%' or "+table_name+".post_cat ilike '%fuga%' or "+table_name+".post_cat ilike '%parques%' or "+table_name+".post_cat ilike '%basura%' or "+table_name+".post_cat ilike '%bache%' or "+table_name+".post_cat ilike '%semaforo%') and ((now() at time zone '"+TZ+"')-"+table_name+".created_at < interval '90 day') group by "+table_area+".name,"+table_name+".post_cat, "+table_name+".status, "+table_name+".close_fail order by "+table_area+".name,"+table_name+".post_cat asc";
+	  	  var queryOrigin ="select count(*), channel as origen, "+table_area+".name as municipio from "+table_name+", "+table_area+" where (now() at time zone '"+TZ+"'-"+table_name+".created_at at time zone '"+TZ+"') < interval '90 day' and st_intersects("+table_name+".the_geom, "+table_area+".the_geom) and ("+table_name+".post_cat ilike '%alcantarilla%' or "+table_name+".post_cat ilike '%alumbr%' or "+table_name+".post_cat ilike '%electricidad%' or "+table_name+".post_cat ilike '%fuga%' or "+table_name+".post_cat ilike '%parques%' or "+table_name+".post_cat ilike '%basura%' or "+table_name+".post_cat ilike '%bache%' or "+table_name+".post_cat ilike '%semaforo%') group by channel,"+table_area+".name order by municipio";
 		  
 		  
 		  
@@ -3740,7 +3603,7 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 	  		if (_total.search(/,/i) != -1){
 				_total = parseFloat(_total) + _total.substring(_total.search(/,/i)+1);
 			}
-	  		if (!closedistance) querytehuan+=" ORDER BY " + table_name + ".created_at DESC LIMIT "+ execRepLimit +" OFFSET "+ execRepLimit*execRepOffset;
+	  		if (!closeDistance) querytehuan+=" ORDER BY " + table_name + ".created_at DESC LIMIT "+ execRepLimit +" OFFSET "+ execRepLimit*execRepOffset;
 	  		
 	  		sql.execute(querytehuan).done(function(data) {
 		      var execRep="<table id=\"table_rep\"><thead><tr style=\"background-image: url(images/bg-tabletd.png);background-repeat: repeat-x;height: 50px;font-size: 12px;color:#FFF;padding: 0 30px;border: 1px solid #333;vertical-align: middle; text-align: center;\"><td style=\"background-repeat: repeat-x; height: 50px;font-size: 12px;color: #FFF;padding: 0 30px;border: 1px solid #333;vertical-align: middle;\">CATEGORIA</td><td style=\"background-repeat: repeat-x; height: 50px;font-size: 12px;color: #FFF;padding: 0 30px;border: 1px solid #333;vertical-align: middle;\">INFORMACIÓN</td><td style=\"background-repeat: repeat-x; height: 50px;font-size: 12px;color: #FFF;padding: 0 30px;border: 1px solid #333;vertical-align: middle;\">ESTADO</td></tr></thead><tbody>"; 
@@ -3808,10 +3671,11 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 	  function changeView(view){
         activeView = view;
 	    switch (view){
-		    case 'agebUrbano': if($('#ageb-content').is(':visible')) $("#ageb-content").hide('clip', {}, 400);
-		    				   document.getElementById("buttonAgeb").disabled=true;
-		    				   document.getElementById('torqueDATGUI').style.display='none';
-
+		    case 'agebUrbano': 
+		    	if($('#ageb-content').is(':visible')) $("#ageb-content").hide('clip', {}, 400);
+		    	document.getElementById("buttonAgeb").disabled=true;
+		    	document.getElementById("CICCheck").style.display = 'block';
+		    	
 		    case 'home': 
 		    	$('#mun-legend-div').css('display', 'none');
 		    	clearAgebHighlight();
@@ -4022,6 +3886,7 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 	
 				var that = $(this).attr('id');
 		  		/* CATEGORIES */
+		  		
 		  		for (var a in categories){
 			  		if (a==that){
 					  	this.checked ? categories[that] = true : categories[that] = false;
@@ -4106,10 +3971,10 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 		  	
 		  	/* GEO LOCATION */
 		  	
-		  	$('#closedistance').change(function() {
-		  		this.checked ? closedistance = true : closedistance = false;
+		  	$('#closeDistance').change(function() {
+		  		this.checked ? closeDistance = true : closeDistance = false;
 		  		execRepOffset = 0;
-		  		if (!closedistance) {
+		  		if (!closeDistance) {
 		  			clearGeo();
 		  			setQ();
 		  		} else {
@@ -4117,8 +3982,8 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 		  			detectUserLocation();
 		  		}
 		  	});
-		  	$('#slider-closedistance').on("slidestop", function() {
-		  		if (closedistance) {
+		  	$('#slider-closeDistance').on("slidestop", function() {
+		  		if (closeDistance) {
 		  			execRepOffset = 0;
 		  			setQ();
 		  		}
@@ -4215,326 +4080,370 @@ OTHER THINGS THAT MUST BE HIDDEN OR FIXED ACCORDING TO CATEGORY or MUNICIPALITY 
 	  
 	  });
 	  
-	  
 	  /* SET Q */
 	  /* QUERY CONSTRUCTOR + CARTODB CALL*/
 	  function setQ(){
-var auxMun = false;   //helper for querying polygons
-var auxWhere = false; //helper for adding 'where' to the query
-var auxInter = false; //helper for inter-filtering '(' and ')' toggling
-(mun.mty || mun.sp || mun.sn || mun.sc || mun.gpe || mun.apo || mun.esc || mun.jua || mun.gar || mun.cad || mun.stg) ? auxMun = true : auxMun = false;
-
-// Query setup
-if(auxMun) { _query="SELECT "+table_name+".* FROM "+table_name+", "+area_name+" WHERE ST_Intersects("+table_name+".the_geom, "+area_name+".the_geom)"; auxWhere = true;}
-else  _query="SELECT * FROM "+table_name+"";
-
-
-/* CATEGORIES */
-if (categories.avisos){ 		if (auxWhere) {if(auxInter) {_query+=" OR ";} else {_query+=" AND ("}} else {_query+=" WHERE (";} 
-							_query+=""+table_name+".post_cat ilike '%AVISOS%'" ; auxWhere=true; auxInter=true;} 
-if (categories.eventos){ 		if (auxWhere) {if(auxInter) {_query+=" OR ";} else {_query+=" AND ("}} else {_query+=" WHERE (";} 
-							_query+=""+table_name+".post_cat ilike '%EVENTO%'" ; auxWhere=true; auxInter=true;} 
-if (categories.observador){ 	if (auxWhere) {if(auxInter) {_query+=" OR ";} else {_query+=" AND ("}} else {_query+=" WHERE (";} 
-							_query+=""+table_name+".post_cat ilike '%OBSERVADOR%'" ; auxWhere=true; auxInter=true;} 
-if (categories.mtymuybien){ 	if (auxWhere) {if(auxInter) {_query+=" OR ";} else {_query+=" AND ("}} else {_query+=" WHERE (";} 
-							_query+=""+table_name+".post_cat ilike '%MTYMUYBIEN%'" ; auxWhere=true; auxInter=true;} 
-if (categories.pcomunidad){ 	if (auxWhere) {if(auxInter) {_query+=" OR ";} else {_query+=" AND ("}} else {_query+=" WHERE (";} 
-							_query+=""+table_name+".post_cat ilike '%COMUNIDAD%'" ; auxWhere=true; auxInter=true;} 
-if (categories.pseguridad){ 	if (auxWhere) {if(auxInter) {_query+=" OR ";} else {_query+=" AND ("}} else {_query+=" WHERE (";} 
-							_query+=""+table_name+".post_cat ilike '%SEGURIDAD%'" ; auxWhere=true; auxInter=true;} 
-if (categories.pservicios){ 	if (auxWhere) {if(auxInter) {_query+=" OR ";} else {_query+=" AND ("}} else {_query+=" WHERE (";} 
-							_query+=""+table_name+".post_cat ilike '%SERV PUBLICOS%'" ; auxWhere=true; auxInter=true;} 
-if (categories.pvialidad){ 	if (auxWhere) {if(auxInter) {_query+=" OR ";} else {_query+=" AND ("}} else {_query+=" WHERE (";} 
-							_query+=""+table_name+".post_cat ilike '%PROPUESTA VIALIDAD%'" ; auxWhere=true; auxInter=true;} 
-if (categories.incendio){ 	if (auxWhere) {if(auxInter) {_query+=" OR ";} else {_query+=" AND ("}} else {_query+=" WHERE (";} 
-							_query+=""+table_name+".post_cat ilike '%INCENDIO%'" ; auxWhere=true; auxInter=true;} 
-if (categories.robo){ 		if (auxWhere) {if(auxInter) {_query+=" OR ";} else {_query+=" AND ("}} else {_query+=" WHERE (";} 
-							_query+=""+table_name+".post_cat ilike '%ROBO%'" ; auxWhere=true; auxInter=true;} 
-if (categories.sitriesgo){ 	if (auxWhere) {if(auxInter) {_query+=" OR ";} else {_query+=" AND ("}} else {_query+=" WHERE (";} 
-							_query+=""+table_name+".post_cat ilike '%RIESGO%'" ; auxWhere=true; auxInter=true;} 
-if (categories.alcantarillas){if (auxWhere) {if(auxInter) {_query+=" OR ";} else {_query+=" AND ("}} else {_query+=" WHERE (";} 
-							_query+=""+table_name+".post_cat ilike '%ALCANTARILLA%'" ; auxWhere=true; auxInter=true;} 
-if (categories.alumbrado){ 	if (auxWhere) {if(auxInter) {_query+=" OR ";} else {_query+=" AND ("}} else {_query+=" WHERE (";} 
-							_query+=""+table_name+".post_cat ilike '%ALUMBR%'" ; auxWhere=true; auxInter=true;} 
-if (categories.electricidad){ if (auxWhere) {if(auxInter) {_query+=" OR ";} else {_query+=" AND ("}} else {_query+=" WHERE (";} 
-							_query+=""+table_name+".post_cat ilike '%ELECTRICIDAD%'" ; auxWhere=true; auxInter=true;} 
-if (categories.fuga){ 		if (auxWhere) {if(auxInter) {_query+=" OR ";} else {_query+=" AND ("}} else {_query+=" WHERE (";} 
-							_query+=""+table_name+".post_cat ilike '%FUGA%'" ; auxWhere=true; auxInter=true;} 
-if (categories.parques){ 		if (auxWhere) {if(auxInter) {_query+=" OR ";} else {_query+=" AND ("}} else {_query+=" WHERE (";} 
-							_query+=""+table_name+".post_cat ilike '%PARQUES%'" ; auxWhere=true; auxInter=true;} 
-if (categories.basura){ 		if (auxWhere) {if(auxInter) {_query+=" OR ";} else {_query+=" AND ("}} else {_query+=" WHERE (";} 
-							_query+=""+table_name+".post_cat ilike '%BASURA%'" ; auxWhere=true; auxInter=true;} 
-if (categories.accidente){ 	if (auxWhere) {if(auxInter) {_query+=" OR ";} else {_query+=" AND ("}} else {_query+=" WHERE (";} 
-							_query+=""+table_name+".post_cat ilike '%ACCIDENTE%'" ; auxWhere=true; auxInter=true;} 
-if (categories.bache){ 		if (auxWhere) {if(auxInter) {_query+=" OR ";} else {_query+=" AND ("}} else {_query+=" WHERE (";} 
-							_query+=""+table_name+".post_cat ilike '%BACHE%'" ; auxWhere=true; auxInter=true;} 
-if (categories.obras){ 		if (auxWhere) {if(auxInter) {_query+=" OR ";} else {_query+=" AND ("}} else {_query+=" WHERE (";} 
-							_query+=""+table_name+".post_cat ilike '%OBRAS%'" ; auxWhere=true; auxInter=true;} 
-if (categories.semaforo){ 	if (auxWhere) {if(auxInter) {_query+=" OR ";} else {_query+=" AND ("}} else {_query+=" WHERE (";} 
-							_query+=""+table_name+".post_cat ilike '%SEMAFORO%'" ; auxWhere=true; auxInter=true;} 
-if (categories.emergencias){	if (auxWhere) {if(auxInter) {_query+=" OR ";} else {_query+=" AND ("}} else {_query+=" WHERE (";} 
-							_query+=""+table_name+".post_cat ilike '%EMERGENCIA%'" ; auxWhere=true; auxInter=true;} 
-if (auxInter) {_query+=")"; auxInter = false}; 
-
-/* DATES */  
-if (dates.calendario) {
-	if (auxWhere) {
-		_query += " AND ("
-	} else {
-		_query += " WHERE (";
-	}
-	_query += "(" + table_name + ".created_at at time zone '" + TZ + "' BETWEEN ('" + desde + "') AND (DATE '" + hasta + "' + 1))";
-	auxWhere = true;
-	auxInter = true;
-}
-							  
-if (dates.sietedias){ 		if (auxWhere) {_query+=" AND (" } else {_query+=" WHERE (";} 
-							_query+="((now() at time zone '"+TZ+"')-"+table_name+".created_at at time zone '"+TZ+"') < INTERVAL '7 day'" ; auxWhere=true; auxInter=true; }
-if (dates.quincedias){ 		if (auxWhere) {_query+=" AND (" } else {_query+=" WHERE (";} 
-							_query+="((now() at time zone '"+TZ+"')-"+table_name+".created_at at time zone '"+TZ+"') < INTERVAL '15 day'" ; auxWhere=true; auxInter=true; }
-if (dates.treintadias){ 		if (auxWhere) {_query+=" AND (" } else {_query+=" WHERE (";} 
-							_query+="((now() at time zone '"+TZ+"')-"+table_name+".created_at at time zone '"+TZ+"') < INTERVAL '30 day'" ; auxWhere=true; auxInter=true;}
-if (dates.noventadias){ 		if (auxWhere) {_query+=" AND (" } else {_query+=" WHERE (";} 
-							_query+="((now() at time zone '"+TZ+"')-"+table_name+".created_at at time zone '"+TZ+"') < INTERVAL '90 day'" ; auxWhere=true; auxInter=true; }  
-if (auxInter) {_query+=")"; auxInter = false;};
-
-/* DAYS */
-if (dates.domingo){ 		if (auxWhere) {_query+=" AND (" } else {_query+=" WHERE (";} 
-							_query+="EXTRACT(dow FROM "+table_name+".created_at) = 0" ; auxWhere=true; auxInter=true; }  
-if (dates.lunes){ 		if (auxWhere) { if(auxInter) {_query+=" OR ";} else {_query+=" AND ("}} else {_query+=" WHERE (";} 
-							_query+="EXTRACT(dow FROM "+table_name+".created_at) = 1" ; auxWhere=true; auxInter=true; }  
-if (dates.martes){ 		if (auxWhere) { if(auxInter) {_query+=" OR ";} else {_query+=" AND ("}} else {_query+=" WHERE (";} 
-							_query+="EXTRACT(dow FROM "+table_name+".created_at) = 2" ; auxWhere=true; auxInter=true; }  
-if (dates.miercoles){ 	if (auxWhere) { if(auxInter) {_query+=" OR ";} else {_query+=" AND ("}} else {_query+=" WHERE (";} 
-							_query+="EXTRACT(dow FROM "+table_name+".created_at) = 3" ; auxWhere=true; auxInter=true; }  
-if (dates.jueves){ 		if (auxWhere) { if(auxInter) {_query+=" OR ";} else {_query+=" AND ("}} else {_query+=" WHERE (";}  
-							_query+="EXTRACT(dow FROM "+table_name+".created_at) = 4" ; auxWhere=true; auxInter=true; }  
-if (dates.viernes){ 		if (auxWhere) { if(auxInter) {_query+=" OR ";} else {_query+=" AND ("}} else {_query+=" WHERE (";}  
-							_query+="EXTRACT(dow FROM "+table_name+".created_at) = 5" ; auxWhere=true; auxInter=true; }  
-if (dates.sabado){ 		if (auxWhere) { if(auxInter) {_query+=" OR ";} else {_query+=" AND ("}} else {_query+=" WHERE (";} 
-							_query+="EXTRACT(dow FROM "+table_name+".created_at) = 6" ; auxWhere=true; auxInter=true; } 
-if (auxInter) {_query+=")";auxInter = false;};
-
-/* HOURS */
-if (dates.ulthoras){ 		if (auxWhere) {_query+=" AND (" } else {_query+=" WHERE (";} 
-							_query+="((now() at time zone '"+TZ+"')-"+table_name+".created_at at time zone '"+TZ+"') < INTERVAL '"+ valUltHoras +" hour'" ; auxWhere=true; auxInter=true; }
-if (auxInter) {_query+=")"; auxInter = false;};
-if (dates.horasdeldia){ 	if (auxWhere) {_query+=" AND (" } else {_query+=" WHERE (";} 
-							_query+= queryhorasdeldia; auxWhere=true; auxInter=true; }
-if (auxInter) {_query+=")"; auxInter = false;};
-
-
-/* REP STATUS */
-if (repStatus.open){ 		    if (auxWhere) {_query+=" AND ("} else {_query+=" WHERE (";} 
-							_query+=""+table_name+".status ilike '%read%'" ; auxWhere=true; auxInter=true;} 
-if (repStatus.closed){ 		if (auxWhere) {if(auxInter) {_query+=" OR ";} else {_query+=" AND ("}} else {_query+=" WHERE (";} 
-							_query+=""+table_name+".status ilike '%closed%' AND "+table_name+".close_fail = false" ; auxWhere=true; auxInter=true;}
-if (repStatus.closed_fail){	if (auxWhere) {if(auxInter) {_query+=" OR ";} else {_query+=" AND ("}} else {_query+=" WHERE (";} 
-							_query+=""+table_name+".status ilike '%closed%' AND "+table_name+".close_fail = true" ; auxWhere=true; auxInter=true;}
-if (auxInter) {_query+=")"; auxInter = false};
-
-//VOTES
-if (repDetail.voto){	if (auxWhere) {_query+=" AND (" } else {_query+=" WHERE (";} 
-							_query+=table_name+".votes >= "+ totalvotos ; auxWhere=true; auxInter=true;}
-if (auxInter) {_query+=")"; auxInter = false};
-
-//STAR RATING
-if ( repDetail.star){	if (auxWhere) {_query+=" AND (" } else {_query+=" WHERE (";} 
-							_query+=table_name+".stars >= "+ totalstar ; auxWhere=true; auxInter=true;}
-if (auxInter) {_query+=")"; auxInter = false};
-
-//ASSETS
-if ( repDetail.asset){	if (auxWhere) {_query+=" AND (" } else {_query+=" WHERE (";} 
-							_query+=table_name+".assets != '[]'" + " AND " + table_name+".assets not ilike '%citivox%'"; auxWhere=true; auxInter=true;}
-if (auxInter) {_query+=")"; auxInter = false};
-
-/* POLYGON */ 
-if (radius.set){	
- if (auxWhere) {_query+=" AND ("} else {_query+=" WHERE (";} 
- _query+=" ST_Intersects("+table_name+".the_geom,ST_Buffer( ST_SetSRID('POINT(" + radius.lng + " " + radius.lat + ")'::geometry , 4326)" + "," + radDeg + "))"; 
- if (polyfilter && shapesArray.length >0){	
-     _query+=" OR ";
-     var _q,lnglato;
-     if (shapesArray.length==1) _q='POLYGON(';
-     else _q='MULTIPOLYGON(';
-     
-     for(var i = 0; i < shapesArray.length; i++){
-         if (i!=0) _q+=',';
-         if (shapesArray.length==1) _q+='('; else _q+='((';
-         
-         shapesArray[i].getPath().forEach(function(xy, j) {
-          if (j == 0 ){lnglato=xy.lng() + ' ' + xy.lat();;}
-          _q+= xy.lng() + ' ' + xy.lat() + ',';
-         });
-         _q+=lnglato;
-         if (shapesArray.length==1) _q+=')'; else _q+='))';
-         
-     }
-     _query+=" ST_Intersects("+table_name+".the_geom,ST_GeomFromText('"+ _q +")',4326))";
-  }  
-  auxWhere=true; auxInter=true;
-} 
-if (auxInter) {_query+=")"; auxInter = false};
-/* CUSTOM POLYGON IN CASE RAD IS NOT SET*/
-if (polyfilter && shapesArray.length >0 && !radius.set){	
- if (auxWhere) {_query+=" AND ("} else {_query+=" WHERE (";} 
- var _q,lnglato;
- if (shapesArray.length==1) _q='POLYGON(';
- else _q='MULTIPOLYGON(';
- 
- for(var i = 0; i < shapesArray.length; i++){
-     if (i!=0) _q+=',';
-     if (shapesArray.length==1) _q+='('; else _q+='((';
-     
-     shapesArray[i].getPath().forEach(function(xy, j) {
-      if (j == 0 ){lnglato=xy.lng() + ' ' + xy.lat();;}
-	  _q+= xy.lng() + ' ' + xy.lat() + ',';
-	 });
-	 _q+=lnglato;
-	 if (shapesArray.length==1) _q+=')'; else _q+='))';
-	 
- }
-	 _query+=" ST_Intersects("+table_name+".the_geom,ST_GeomFromText('"+ _q +")',4326))";
-	 auxWhere=true; auxInter=true;
-} 
-if (auxInter) {_query+=")"; auxInter = false};
-
-/* SEARCH INPUT */
-if(searchInput != "") {
-if (auxWhere) {_query+=" AND ("} else {_query+=" WHERE (";} 
-		_query+=" "+table_name+".post_content ilike '%"+ searchInput  +"%' OR "+table_name+".ticket ilike '%"+ searchInput  +"%' OR "+table_name+".formatted_address ilike '%"+ searchInput  +"%')";
-	//searchInput = "";  Moved to the end of SetQ
-}
-
-
-/* MUN */ 
-if (mun.mty){ 		if (auxWhere) { if(auxInter) {_query+=" OR ";} else {_query+=" AND ("}}
-								_query+=""+area_name+".name = 'MTY'" ; auxWhere=true; auxInter=true;} 
-if (mun.sp){ 		if (auxWhere) { if(auxInter) {_query+=" OR ";} else {_query+=" AND ("}} 
-  								_query+=""+area_name+".name = 'SP'" ;auxWhere=true; auxInter=true;} 
-if (mun.sn){ 		if (auxWhere) { if(auxInter) {_query+=" OR ";} else {_query+=" AND ("}} 
-  								_query+=""+area_name+".name = 'SN'" ; auxWhere=true; auxInter=true;} 
-if (mun.sc){ 		if (auxWhere) { if(auxInter) {_query+=" OR ";} else {_query+=" AND ("}} 
-  						        _query+=""+area_name+".name = 'SC'" ; auxWhere=true; auxInter=true;} 
-if (mun.gpe){ 		if (auxWhere) { if(auxInter) {_query+=" OR ";} else {_query+=" AND ("}} 
-  								_query+=""+area_name+".name = 'GPE'";auxWhere=true; auxInter=true;} 
-if (mun.apo){ 		if (auxWhere) { if(auxInter) {_query+=" OR ";} else {_query+=" AND ("}} 
-  								_query+=""+area_name+".name = 'APO'" ; auxWhere=true; auxInter=true;} 
-if (mun.esc){ 		if (auxWhere) { if(auxInter) {_query+=" OR ";} else {_query+=" AND ("}} 
-  								_query+=""+area_name+".name = 'ESC'" ; auxWhere=true; auxInter=true;} 
-if (mun.jua){ 		if (auxWhere) { if(auxInter) {_query+=" OR ";} else {_query+=" AND ("}} 
-  								_query+=""+area_name+".name = 'JUA'" ; auxWhere=true; auxInter=true;} 
-if (mun.gar){		if (auxWhere) { if(auxInter) {_query+=" OR ";} else {_query+=" AND ("}} 
-  								_query+=""+area_name+".name = 'GAR'" ; auxWhere=true; auxInter=true;}
-if (mun.stg){ 		if (auxWhere) { if(auxInter) {_query+=" OR ";} else {_query+=" AND ("}} 
-  								_query+=""+area_name+".name = 'STG'" ; auxWhere=true; auxInter=true;}
-if (mun.cad){ 		if (auxWhere) { if(auxInter) {_query+=" OR ";} else {_query+=" AND ("}} 
-  								_query+=""+area_name+".name = 'CAD'" ; auxWhere=true; auxInter=true;}
-if (auxInter) {_query+=")"; auxInter = false};
-
-
-
-
-/* MAP LAYER OR ACTIVE VIEW UPDATE */
-$('#report-content:visible').hide('fold', {}, 400);  // hide report if visible
-$('#infowindow:visible').hide('fold', {}, 400);      // hide infowindow if visible
-_geoq = _query;
-if(closedistance) _geoq += " ORDER BY "+table_name+".the_geom <-> ST_SetSRID(ST_MakePoint("+myLon+","+myLat+"),4326) ASC LIMIT "+closeByReports+"";
-checkOptions.q=_geoq;
-console.log(checkOptions);
-// AT THIS POINT QUERY IS COMPLETE
-console.log("MAIN Q");
-console.log(_geoq);
-if (activeView == 'home'){
-	layers[1].hide();
-	if ( repDetail.voto){	
-		if (mapcluster) {layers[0].setOptions({query: _geoq,tile_style: _tile_style_cluster,interactivity: _interactivity});
-				if(polyfilter&&(shapesArray.length==0))layers[0].hide();
-				else {layers[0].show();
-					document.getElementById("CICCheck").style.display = 'block';
-				}
-				}
-		else {layers[0].setOptions({query: _geoq,tile_style: _tile_style,interactivity: _interactivity});
-				if(polyfilter&&(shapesArray.length==0))layers[0].hide();
-				else {layers[0].show();
-					document.getElementById("CICCheck").style.display = 'block';
-				}
-				}
-		if (bubbles) {layers[0].setOptions({query: _geoq,tile_style: _tile_style_bubbles,interactivity: _interactivity});
-				if(polyfilter&&(shapesArray.length==0))layers[0].hide();
-				else {layers[0].show();
-					document.getElementById("CICCheck").style.display = 'block';
-				}
-				
-				}
-	}else if(mapcluster) {
-		layers[0].setOptions({query: _geoq,tile_style: _tile_style_cluster,interactivity: _interactivity});
-		if(polyfilter&&(shapesArray.length==0))layers[0].hide();
-		else {layers[0].show();
-			document.getElementById("CICCheck").style.display = 'block';
+			
+		function interFilter(aux) {
+			if (aux) {
+				_query += ")";
+				auxInter = false;
 			}
-	}else {layers[0].setOptions({query: _geoq,tile_style: _tile_style,interactivity: _interactivity});
-		if(polyfilter&&(shapesArray.length==0))layers[0].hide();
-		else {layers[0].show();
-			document.getElementById("CICCheck").style.display = 'block';
+		}
+		var auxMun = false;
+		var auxWhere = false;
+		var auxInter = false;
+		for (var x in mun) {
+			if (mun[x]) {
+				auxMun = true;
+				break;
+			} else auxMun = false;
+		}
+		if (auxMun) {
+			_query = "SELECT " + table_name + ".* FROM " + table_name + ", " + table_area + " WHERE ST_Intersects(" + table_name + ".the_geom, " + table_area + ".the_geom)";
+			auxWhere = true;
+		} else _query = "SELECT * FROM " + table_name;
+		
+		
+		//CATEGORIES
+/*
+		for (var y in categories) {
+			if (categories[y]) {
+				if (auxWhere) {
+					if (auxInter) {
+						_query += " , ";
+					} else {
+						_query += " AND " + table_name + ".post_cat IN (";
+					}
+				} else {
+					_query += " WHERE " + table_name + ".post_cat IN (";
+				}
+				for (var i = 0, j = catMarkers.length; i < j; i++) {
+					if (catMarkers[i][2] === y) {
+						_query += "'" + catMarkers[i][0] + "'";
+						auxWhere = true;
+						auxInter = true;
+					}
+				}
 			}
-		}  
-}else if (activeView == 'agebUrbano'){
-	layers[0].hide();
-	drawAgeb(_geoq, "agebUrbano");
-}else if (activeView == 'heat'){
-	layers[1].hide();
-	layers[0].setOptions({query: _geoq,tile_style: _heatmap_style,interactivity: _interactivity}); 
-}else if (activeView == 'intensity'){
-	layers[1].hide();
-	layers[0].setOptions({query: _geoq,tile_style: _intensity_style,interactivity: _interactivity}); 
-}else if(activeView == 'torque'){
-	layers[1].hide();
-	displayTorque(_geoq);
-}else if(activeView == 'wordle'){
-	layers[1].hide();
-	displayWordle(_geoq);
-}else if(activeView == 'stats'){
-	layers[1].hide();
-	displayStats(_query);
-}else if(activeView == 'trends'){
-	layers[1].hide();
-	displayTrends(_query);
-}else if(activeView == 'occur'){
-	layers[1].hide();
-	displayOccurrence(_query);
-}else if(activeView == 'execrep'){
-	layers[1].hide();
-	displayExecRep(_geoq);
-}	 
-/* COUNTER UPDATE */
-var str=_geoq;
-var n;
-if (auxMun) n=str.replace("SELECT "+table_name+".* FROM "+table_name+", "+area_name+"","SELECT COUNT("+table_name+".*) FROM "+table_name+", "+area_name+"");
-else n=str.replace("SELECT * FROM "+table_name+"","SELECT COUNT (*) FROM "+table_name+"");
+		}
+		interFilter(auxInter);
+*/
+		
+		var catGrp = [];
+		var t;
+		for (var y in categories) {
+			if (categories[y]) {
+				for (var i = 0, j = catMarkers.length; i < j; i++) {
+					if (catMarkers[i][2] === y) {
+						catGrp.push("'" + catMarkers[i][0] + "'");
+					}
+				}
+				if (auxWhere) t = " AND ";
+				else t = " WHERE ";
+				t += table_name + ".post_cat IN (" + catGrp.join() + ")"
+			}
+		}
+		if (t){
+			auxWhere = true;
+			_query += t;
+		} 		
+		
+		//DATE AND TIME
+		for (var y in dates) {
+			if (dates[y]) {
+				if (!((y == "domingo_0") || (y == "lunes_1") || (y == "martes_2") || (y == "miercoles_3") || (y == "jueves_4") || (y == "viernes_5") || (y == "sabado_6"))) {
+					if (auxWhere) {
+						_query += " AND (";
+					} else {
+						_query += " WHERE (";
+					}
+					if (y == "calendario") _query += "(" + table_name + ".created_at at time zone '" + TZ + "' BETWEEN ('" + desde + "') AND (DATE '" + hasta + "' + 1))";
+					if ((y == "sietedias_7") || (y == "quincedias_15") || (y == "treintadias_30") || (y == "noventadias_90")) {
+						var dias = y.substring(y.search("_") + 1);
+						_query += "((now() at time zone '" + TZ + "')-" + table_name + ".created_at at time zone '" + TZ + "') < INTERVAL '" + dias + " day'";
+					}
+					if (y == "ulthoras") {
+						_query += "((now() at time zone '" + TZ + "')-" + table_name + ".created_at at time zone '" + TZ + "') < INTERVAL '" + valUltHoras + " hour'";
+						interFilter(auxInter);
+					}
+					if (y == "horasdeldia") {
+						_query += queryhorasdeldia;
+						interFilter(auxInter);
+					}
+					auxWhere = true;
+					auxInter = true;
+				}
+			}
+		}
+		interFilter(auxInter);
+		
+		//DAYS OF THE WEEK
+		for (var y in dates) {
+			if (dates[y]) {
+				if ((y == "domingo_0") | (y == "lunes_1") | (y == "martes_2") | (y == "miercoles_3") | (y == "jueves_4") | (y == "viernes_5") | (y == "sabado_6")) {
+					if (auxWhere) {
+						if (auxInter) {
+							_query += " , ";
+						} else {
+							_query += " AND EXTRACT(dow FROM " + table_name + ".created_at at time zone '" + TZ + "') IN (";
+						}
+					} else {
+						_query += " WHERE EXTRACT(dow FROM " + table_name + ".created_at at time zone '" + TZ + "') IN (";
+					}
+					var dow = y.substring(y.search("_") + 1);
+					_query += dow;
+					auxWhere = true;
+					auxInter = true;
+				}
+			}
+		}
+		interFilter(auxInter);
+		
+		//STATUS
+		for (var y in repStatus) {
+			if (repStatus[y]) {
+				if (y == "closed_fail") y = y.substring(0, y.search("_"));
+				if (auxWhere) {
+					if (auxInter) {
+/* 						if (y != "closed_fail") _query += ","; */
+						_query += ",";
+					} else {
+						_query += " AND " + table_name + ".status IN (";
+					}
+				} else {
+					_query += " WHERE " + table_name + ".status IN (";
+				}
+				_query += "'" + y + "'";
+/*
+				if (y != "closed_fail") {
+					_query += "'" + y + "'";
+				} else {
+					if (!repStatus.closed && !repStatus.read) _query += "'closed'";
+					else _query += ",'closed'";
+				}
+*/
+				auxWhere = true;
+				auxInter = true;
+			}
+		}
+		interFilter (auxInter);
+		if (!(repStatus.closed && repStatus.closed_fail)) {
+			if (repStatus.closed || repStatus.closed_fail) {
+				_query += " AND " + table_name + ".close_fail = " + repStatus.closed_fail;
+			}
+		}			
+		
+		//DETAILS
+		for (var y in repDetail) {
+			if (repDetail[y]) {
+				if (auxWhere) {
+					_query += " AND (";
+				} else {
+					_query += " WHERE (";
+				}
+				if (y == "voto") _query += table_name + ".votes >= " + totalvotos;
+				if (y == "star") _query += table_name + ".stars >= " + totalstar;
+				if (y == "asset") _query += table_name + ".assets != '[]'" + " AND " + table_name + ".assets NOT ilike '%citivox%'";
+				auxWhere = true;
+				_query += ")";
+			}
+		}
+		
+		//RADIAL
+		if (radius.set) {
+			if (auxWhere) {
+				_query += " AND (";
+			} else {
+				_query += " WHERE (";
+			}
+			_query += " ST_Intersects(" + table_name + ".the_geom,ST_Buffer( ST_SetSRID('POINT(" + radius.lng + " " + radius.lat + ")'::geometry , 4326)" + "," + radDeg + "))";
+			auxWhere = true;
+			auxInter = true;
+		}
+		interFilter(auxInter);
+		
+		//CUSTOM POLYGON
+		if (polyfilter && shapesArray.length > 0 && !radius.set) {
+			if (auxWhere) {
+				_query += " AND (";
+			} else {
+				_query += " WHERE (";
+			}
+			var _q, lnglato;
+			if (shapesArray.length == 1) _q = 'POLYGON(';
+			else _q = 'MULTIPOLYGON(';
+			for (var i = 0; i < shapesArray.length; i++) {
+				if (i !== 0) _q += ',';
+				if (shapesArray.length == 1) _q += '(';
+				else _q += '((';
+				shapesArray[i].getPath().forEach(function(xy, j) {
+					if (j === 0) {
+						lnglato = xy.lng() + ' ' + xy.lat();
+					}
+					_q += xy.lng() + ' ' + xy.lat() + ',';
+				});
+				_q += lnglato;
+				if (shapesArray.length == 1) _q += ')';
+				else _q += '))';
+			}
+			_query += " ST_Intersects(" + table_name + ".the_geom,ST_GeomFromText('" + _q + ")',4326))";
+			auxWhere = true;
+			auxInter = true;
+		}
+		interFilter(auxInter);
+		
+		//TEXT SEARCH
+		if (searchInput !== "") {
+			if (auxWhere) {
+				_query += " AND (";
+			} else {
+				_query += " WHERE (";
+			}
+			_query += " " + table_name + ".post_content ilike '%" + searchInput + "%' OR " + table_name + ".ticket ilike '%" + searchInput + "%' OR " + table_name + ".formatted_address ilike '%" + searchInput + "%')";
+		}
+		
+		//MUNS
+		for (var y in mun) {
+			if (mun[y]) {
+				if (auxWhere) {
+					if (auxInter) {
+						_query += ",";
+					} else {
+						_query += " AND " + table_area + ".name IN (";
+					}
+				}
+				_query += "'" + y.toUpperCase() + "'";
+				auxWhere = true;
+				auxInter = true;
+			}
+		}
+		interFilter(auxInter);			
+			
+		//CLOSE DISTANCE
+		_geoq = _query;
+		if(closeDistance) _geoq += " ORDER BY "+table_name+".the_geom <-> ST_SetSRID(ST_MakePoint("+myLon+","+myLat+"),4326) ASC LIMIT "+closeByReports;
+			
+		//HIDE REPORT SLIDE & INFOWINDOW
 
-if (closedistance) n = _geoq;
-sql.execute(n).done(function(data) {
-    var result;
-		if (closedistance) result = data.total_rows;
-		else for (var i = 0; i < data.total_rows; i++) { result = data.rows[i].count;} 
-		$( "#counterVal" ).val(addCommas(result));
-}).error(function(errors) {});
+		if(!closeDistance){
+			$('#report-content:visible').hide('fold', {}, 400);  // hide report if visible
+			$('#infowindow:visible').hide('fold', {}, 400);      // hide infowindow if visible
+		}
+			
+		// QUERY IS COMPLETE
+		console.log("MAIN Q");
+		console.log(_geoq);
+			
+		
+		//UPDATE LAYER 0 WITH DATA
+		layers[0].setOptions({
+			query: _geoq,
+			interactivity: _interactivity
+		});
+		//HIDE/SHOW AGEB/CIC LAYER ACCORDINGLY
+		if (activeView === 'agebUrbano') {
+			layers[0].hide();
+		} else {
+			layers[1].hide();
+		}
+		
+		//UPDATE VIEW WITH LAYER STYLE OR CALL FOR DIFFERENT VIEW
+		switch (activeView) {
+			case 'home':
+				if (repDetail.voto && bubbles) {
+					layers[0].setOptions({
+						tile_style: _tile_style_bubbles
+					});
+				} else if (mapcluster) {
+					layers[0].setOptions({
+						tile_style: _tile_style_cluster
+					});
+				} else {
+					layers[0].setOptions({
+						tile_style: _tile_style
+					});
+				}
+				if (polyfilter && (shapesArray.length == 0)) layers[0].hide();
+				else {
+					layers[0].show();
+					document.getElementById("CICCheck").style.display = 'block';
+				}
+				break;
+			case 'agebUrbano':
+				drawAgeb(_geoq, "agebUrbano");
+				break;
+			case 'heat':
+				layers[0].setOptions({
+					tile_style: _heatmap_style
+				});
+				break;
+			case 'intensity':
+				layers[0].setOptions({
+					tile_style: _intensity_style
+				});
+				break;
+			case 'torque':
+				displayTorque(_geoq);
+				break;
+			case 'wordle':
+				displayWordle(_geoq);
+				break;
+			case 'stats':
+				displayStats(_query);
+				break;
+			case 'trends':
+				displayTrends(_query);
+				break;
+			case 'occur':
+				displayOccurrence(_query);
+				break;
+			case 'execrep':
+				displayExecRep(_geoq);
+				break;
+		}			
+			
+			
+			// MAIN COUNTER UPDATE //
+			var str=_geoq;
+			var n;
+			
+/*
+			if (auxMun) n=str.replace("SELECT "+table_name+".* FROM "+table_name+", "+table_area+"","SELECT COUNT("+table_name+".*) FROM "+table_name+", "+table_area+"");
+			else n=str.replace("SELECT * FROM "+table_name+"","SELECT COUNT (*) FROM "+table_name+"");
+			
+			if (closeDistance) n = _geoq;
 
-if (auxMun) n=str.replace("SELECT "+table_name+".* FROM "+table_name+", "+area_name+"","SELECT "+table_name+".post_cat, COUNT("+table_name+".*) FROM "+table_name+", "+area_name+"");
-else n=str.replace("SELECT * FROM "+table_name+"","SELECT "+table_name+".post_cat, COUNT (*) FROM "+table_name+"");
-n+=" GROUP BY "+table_name+".post_cat";
-if (closedistance) n = "WITH data AS ("+_geoq+") SELECT post_cat, COUNT(*) FROM data GROUP BY post_cat ORDER BY post_cat ASC";
-sql.execute(n).done(function(data) {
-		updateCounters(data);
-}).error(function(errors) {});
-
-
-/* ACTIVE FILTERS UPDATE */  
-updateActiveFilters();
-
-/* RESET THE SEARCH INPUT */
-searchInput = "";
+			sql.execute(n).done(function(data) {
+			    var result = data.rows[0].count;
+				if (closeDistance) result = data.total_rows;
+				$( "#counterVal" ).val(addCommas(result));
+			}).error(function(errors) {});
+*/
+			
+			//COUNTER UPDATE //
+			
+			if (auxMun) n=str.replace("SELECT "+table_name+".* FROM "+table_name+", "+table_area, "SELECT "+table_name+".post_cat, COUNT("+table_name+".*) FROM "+table_name+", "+table_area);
+			else n=str.replace("SELECT * FROM "+table_name,"SELECT "+table_name+".post_cat, COUNT (*) FROM "+table_name);
+			
+			n+=" GROUP BY "+table_name+".post_cat";
+			
+			if (closeDistance) n = "WITH data AS ("+_geoq+") SELECT post_cat, COUNT(*) FROM data GROUP BY post_cat ORDER BY post_cat ASC";
+			
+			sql.execute(n).done(function(data) {
+				var totalCount=0;
+				for (var i = 0; i<data.total_rows;i++){
+					totalCount += data.rows[i].count;
+				}
+				$( "#counterVal" ).val(addCommas(totalCount));
+				updateCounters(data);
+			}).error(function(errors) {});
+			
+			/* ACTIVE FILTERS UPDATE */  
+			updateActiveFilters();
+			
+			/* RESET THE SEARCH INPUT */
+			searchInput = "";
 	   }
 </script>
   	
@@ -4550,8 +4459,10 @@ searchInput = "";
 		<!--top dock -->
 		<a href="http://cic.mx"><img src="images/cic.png" style="width:auto; z-index:11; position:absolute; top:2px; left:20px; height:35px; "/></a>
 		<div id="socialshare" style="width:auto; z-index:11; position:absolute; top:1px; left:125px;"></div>
+		
 		<ul class="dock" id="dock">
 			<div class="dock-container" data-step="1" data-intro="Este es el menú de vistas, con cada uno de los botones aquí, puedes cambiar el despliegue central de la página. Da clic en siguiente para ver la descripción de cada elemento." >
+			    
 			    <li class="active"><a class="dock-item" onclick="if (activeView != 'home' || getUrlVars()) changeView('home')"  style="margin-left:0;"><img src="images/bt-home.png" data-step="2" data-intro="Este botón te llevará al despliegue inicial en su vista agrupada. Si deseas desagrupar los marcadores en el mapa puedes desactivar el selector en la parte inferior derecha." data-position="bottom"/><span>Inicio</span></a></li>
 				<li><a class="dock-item" onclick="if (activeView != 'heat') changeView('heat');" style="margin-left:40;"><img src="images/bt-heatmap.png" data-step="3" data-intro="Este botón te llevará al despliegue en mapa de calor de la información que tengas filtrada. Con esta herramienta podrás encontrar focos de interés alrededor de la ciudad." data-position="bottom"/><span>Mapa de Calor</span></a></li>			            <li><a class="dock-item" onclick="if (activeView != 'intensity') changeView('intensity')" style="margin-left:80;"><img src="images/bt-intensity.png" data-step="4" data-intro="Este botón te llevará al despliegue de radios de influencia, permitiéndote observar la permeabilidad de los eventos que ocurren en la ciudad." data-position="bottom"/><span>Radios de influencia</span></a></li>   
 				<li><a class="dock-item" onclick="if (activeView != 'torque') changeView('torque')" style="margin-left:120;"><img src="images/bt-play.png" data-step="5" data-intro="Este botón te llevará al despliegue animado, en el cual podrás observar como ocurren en el tiempo los diversos incidentes que se reportan al CIC." data-position="bottom"/><span>Mapa Animado</span></a></li>
@@ -4563,13 +4474,16 @@ searchInput = "";
 				<li><a class="dock-item" onclick="if (activeView != 'twitter') changeView('twitter')" style="margin-left:360;"><img src="images/bt-twitter.png" data-step="11" data-intro="Este botón te llevará al despliegue de la red de ciudadanos en Twitter, que se mantienen activos y nutren la información que traemos para ti en este espacio." data-position="bottom"/><span>Red de Ciudadanos</span></a></li> 
 				<li><a class="dock-item" onclick="if (activeView != 'execrep') changeView('execrep')" style="margin-left:400;"><img src="images/bt-execrep.png" data-step="12" data-intro="Finalmente, este botón te llevará al despliegue en formato de lista de reportes según hayas utilizado los filros." data-position="bottom"/><span>Listado de Reportes</span></a></li>
 				<li><a class="dock-item" onclick="if (activeView != 'agebUrbano') changeView('agebUrbano')" style="margin-left:440;"><img src="images/bt-ageb.png" data-step="13" data-intro="Este botón te llevará al despliegue de agebs urbanos segun INEGI." data-position="bottom"/><span>AGEBs Urbanos</span></a></li> 
+			
 			</div> 
 		</ul>
 		
 		<div id="dockRight" >
 			<!-- <a href="http://tehuan.cic.mx/notificaciones-cic/" target="blank" style="text-decoration:none;"><img src="images/bt-flag.png" style="height:28px; width:auto; z-index:11; position:absolute; top:7px; right:75px;" data-step="20" data-intro="También te brindamos la opción de suscribirte a las notificaciones con este botón." data-position="left"/><span style="top: 35px; right: 45px;">Notificaciones</span></a> -->
+			
 			<a href="http://www.cic.mx/?p=50" target="blank"  style="text-decoration:none;"><img src="images/bt-newrep.png" style="height:28px; width:auto; z-index:11; position:absolute; top:7px; right:33px;" data-step="21" data-intro="Y, por último con este botón podrás crear un nuevo reporte desde este mismo espacio, contribuyendo así con una mayor participación ciudadana. Otras formas de contribuir las tendrás al darle un clic a los marcadores en el mapa, pudiendo votar por los reportes creando una suma de voces, podrás comentar en ellos, compartirlos en tus redes sociales, y calificarlos según tu opinión." data-position="left"/><span style="top: 35px; right: 5px;">Crear Reporte</span></a>
 			<a href="#" onclick="introJs().start()"><img src="images/bt-help.png" style="height:28px; width:auto; z-index:11; position:absolute; top:7px; right:-2px;"/></a>
+			
 			<div  class="wrapper" style="height:28px; width:auto; z-index:11; position:absolute; top:7px; right:78px;" data-step="19" data-intro="Adicionalmente, en este apartado te proveemos la oportunidad de buscar texto o tickets de reportes que te interesen." data-position="left"><input type="text" id="search-green" />
 			</div>
         </div>
@@ -4851,11 +4765,11 @@ searchInput = "";
 	</div>
 	
 	<div class="agebslide" id="ageb-content">
-		<div id="ageb_title" >
-			<h2 id="ageb-clave"></h2>
-			<h3 id="ageb-belong"></h3>
+		<div id="ageb_title" class="ageb-title" >
+			<h2 id="ageb-clave" style="	color:#000; font-size:22"></h2>
+			<h3 id="ageb-belong" style=" color:#000;font-size:12"></h3>
 		</div>
-		
+		<br>
 		<div id="ageb_pob" class="ageb-chart"></div>
 		<br>
 		<div id="ageb_eco" class="ageb-chart"></div>
@@ -5111,6 +5025,13 @@ searchInput = "";
 					&nbsp;&nbsp;Robo
 				</label>
 			</div>
+			<div>
+				<input type="checkbox" id="roboauto" class="switch" />
+				<label for="roboauto"> 
+					<img style="vertical-align:text-top" width="17" height="17" src="images/robo.jpg">
+					&nbsp;&nbsp;Robo Auto
+				</label>
+			</div>
 			<div>	
 				<input type="checkbox" id="sitriesgo" class="switch" />
 				<label for="sitriesgo"> 
@@ -5219,49 +5140,49 @@ searchInput = "";
 				</div>
 		    </div>
 		    <div style="margin-top:3px">
-				<input type="checkbox" id="sietedias" name="checkbox" class="switch"  />
-				<label for="sietedias">Últimos 7 Días</label>
+				<input type="checkbox" id="sietedias_7" name="checkbox" class="switch"  />
+				<label for="sietedias_7">Últimos 7 Días</label>
 			</div>
 			<div>	
-				<input type="checkbox" id="quincedias" name="checkbox" class="switch" />
-				<label for="quincedias">Últimos 15 Días</label> 
+				<input type="checkbox" id="quincedias_15" name="checkbox" class="switch" />
+				<label for="quincedias_15">Últimos 15 Días</label> 
 			</div>
 			<div>	
-				<input type="checkbox" id="treintadias" name="checkbox" class="switch" />
-				<label for="treintadias">Últimos 30 Días</label> 
+				<input type="checkbox" id="treintadias_30" name="checkbox" class="switch" />
+				<label for="treintadias_30">Últimos 30 Días</label> 
 			</div>
 			<div>	
-				<input type="checkbox" id="noventadias" name="checkbox" class="switch" />
-				<label for="noventadias">Últimos 90 Días</label> 
+				<input type="checkbox" id="noventadias_90" name="checkbox" class="switch" />
+				<label for="noventadias_90">Últimos 90 Días</label> 
 			</div>	
 			<img style="padding-top:8px; padding-bottom:3px;" src="images/diario.png" alt="DIAS">
 			<div style="margin-top:3px">
-				<input type="checkbox" id="domingo" name="checkbox" class="switch"  />
-				<label for="domingo">Domingo</label>
+				<input type="checkbox" id="domingo_0" name="checkbox" class="switch"  />
+				<label for="domingo_0">Domingo</label>
 			</div>
 			<div>	
-				<input type="checkbox" id="lunes" name="checkbox" class="switch" />
-				<label for="lunes">Lunes</label> 
+				<input type="checkbox" id="lunes_1" name="checkbox" class="switch" />
+				<label for="lunes_1">Lunes</label> 
 			</div>
 			<div>	
-				<input type="checkbox" id="martes" name="checkbox" class="switch" />
-				<label for="martes">Martes</label> 
+				<input type="checkbox" id="martes_2" name="checkbox" class="switch" />
+				<label for="martes_2">Martes</label> 
 			</div>
 			<div>	
-				<input type="checkbox" id="miercoles" name="checkbox" class="switch" />
-				<label for="miercoles">Miércoles</label> 
+				<input type="checkbox" id="miercoles_3" name="checkbox" class="switch" />
+				<label for="miercoles_3">Miércoles</label> 
 			</div>
 			<div>	
-				<input type="checkbox" id="jueves" name="checkbox" class="switch" />
-				<label for="jueves">Jueves</label> 
+				<input type="checkbox" id="jueves_4" name="checkbox" class="switch" />
+				<label for="jueves_4">Jueves</label> 
 			</div>
 			<div>	
-				<input type="checkbox" id="viernes" name="checkbox" class="switch" />
-				<label for="viernes">Viernes</label> 
+				<input type="checkbox" id="viernes_5" name="checkbox" class="switch" />
+				<label for="viernes_5">Viernes</label> 
 			</div>
 			<div>	
-				<input type="checkbox" id="sabado" name="checkbox" class="switch" />
-				<label for="sabado">Sábado</label> 
+				<input type="checkbox" id="sabado_6" name="checkbox" class="switch" />
+				<label for="sabado_6">Sábado</label> 
 			</div>
 			<img style="padding-top:8px; padding-bottom:3px;" src="images/horario.png" alt="HORARIO">
 			<div>
@@ -5369,8 +5290,8 @@ searchInput = "";
 		     <h2 style="max-width:250px;"> Detalle de reporte </h2><br>
 			<img style="padding-top:3px; padding-bottom:6px;" src="images/repstatus.png" alt="ESTADO">
 			<div>
-				<input type="checkbox" id="open" class="switch" />
-				<label for="open"> 
+				<input type="checkbox" id="read" class="switch" />
+				<label for="read"> 
 					<img style="vertical-align:text-top" width="17" height="17" src="images/bt-open.png">
 					&nbsp;&nbsp;Abierto
 				</label>
@@ -5431,12 +5352,12 @@ searchInput = "";
 		     <h2 style="max-width:250px;"> Distancia </h2><br>
 			<img class="imgDist" src="images/mapposition.png" alt="POLÍGONO">
 			<div>
-				<input type="checkbox" id="closedistance" class="switch" />
-				<label for="closedistance"> 
+				<input type="checkbox" id="closeDistance" class="switch" />
+				<label for="closeDistance"> 
 					&nbsp;&nbsp;Total de reportes
 				</label>
 				<input type="text" id="amountReports" class="rangevalue" style="float:left; margin-right: 60%; width: 52px!important; margin-left: 3px!important; text-align: center; " disabled/>
-				<div id="slider-closedistance" style="width: 126px; margin-left: 70px!important;"></div>
+				<div id="slider-closeDistance" style="width: 126px; margin-left: 70px!important;"></div>
 			</div>
 			<img class="imgDist" src="images/polygonrad.png" alt="RADIO">
 			<div>
@@ -5552,10 +5473,7 @@ _sf_async_config.domain = "cic.mx";
     var s = document.getElementsByTagName('script')[0];
     s.parentNode.insertBefore(po, s);
   })();
-  </script>
-
-
-
+</script>
 
 
 <script type="text/javascript">
