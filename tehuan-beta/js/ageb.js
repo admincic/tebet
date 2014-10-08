@@ -175,6 +175,12 @@
 		sql.execute(q).done(function(data) {
 			cartoCssBins = data.rows[0].cdb_quantilebins;
 			cartoCssStyle = "#{{table_name}}{polygon-fill:#FFFFB2;polygon-opacity:0.8;line-color:#000;line-width:1;line-opacity:1;}#{{table_name}}[cuenta<=" + cartoCssBins[2] + "]{polygon-fill:" + colorArray[0] + ";}#{{table_name}}[cuenta<=" + cartoCssBins[1] + "]{polygon-fill:" + colorArray[1] + ";}#{{table_name}}[cuenta<=" + cartoCssBins[0] + "]{polygon-fill:" + colorArray[2] + ";}";
+			
+			console.log('Query choropleth');
+			console.log(n);
+			console.log('CSS choropleth');
+			console.log(cartoCssStyle);
+
 			document.getElementById("upperAgeb").innerHTML = cartoCssBins[2];
 			document.getElementById("lowerAgeb").innerHTML = "<" + cartoCssBins[0];
 			layers[1].setOptions({

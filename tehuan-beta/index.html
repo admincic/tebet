@@ -235,7 +235,7 @@
 		[ "#DB3539", 'EMERGENCIAS']
 	];
 	
-	//GENERATE PUBLIC SERVICES ARRAY AND EXTRA CATEGORIES
+	//GENERATE PUBLIC SERVICES ARRAY AND ADD EXTRA CATS
 	var publicServices = [];
 	for (var i = 0, j = catMarkers.length; i < j; i++) {
 		if (catMarkers[i][3] == 'SERVICIOS PUBLICOS') {
@@ -277,22 +277,37 @@
 		}
 		return tileStyle;
 	}
+	
 	//BUBBLE STYLE
 	var upperVotes;
-	var widthMarkers = [];
-	var steps = 10;
-	var widthMin=5;
-	var widthMax=60;
-	for (var i = 0; i < steps; i++) {
-		var t = i / (steps - 1);
-		widthMarkers.push((widthMin + t * (widthMax - widthMin)).toFixed(1));
-	}	var votesBins = 10;
-	var votesCssq = "SELECT CDB_JenksBins(array_agg(votes::numeric), "+votesBins+") FROM "+table_name;
-	sql.execute(votesCssq).done(function(data) {
-		upperVotes = data.rows[0].cdb_jenksbins;
-		_tile_style_bubbles = createTileStyle("bubble");
-		$("#slider-voto").slider({max: upperVotes[upperVotes.length - 1]});
-	}).error(function(errors) {});
+	var widthMarkers;
+	var _tile_style_bubbles;
+	var votesBins = 10;
+	var votesCssq = "SELECT CDB_JenksBins(array_agg(votes::numeric), " + votesBins + ") FROM " + table_name;
+
+	function bubbleStyle (cssQ) {		
+		widthMarkers = [];
+		var steps = 10;
+		var widthMin = 5;
+		var widthMax = 60;
+		for (var i = 0; i < steps; i++) {
+			var t = i / (steps - 1);
+			widthMarkers.push((widthMin + t * (widthMax - widthMin)).toFixed(1));
+		}
+		sql.execute(cssQ).done(function(data) {
+			upperVotes = data.rows[0].cdb_jenksbins;
+			upperVotes = upperVotes.map(function(val, i) {
+			    return val === null ? 0 : val;
+			});			
+			_tile_style_bubbles = createTileStyle("bubble");
+			$("#slider-voto").slider({
+				max: upperVotes[upperVotes.length - 1]
+			});
+		}).error(function(errors) {});
+	}	
+	
+	bubbleStyle(votesCssq);
+	
 	//OTHER STYLES
 	var _tile_style = createTileStyle("normal");
 	var _tile_style_cluster = createTileStyle("cluster");
@@ -378,7 +393,7 @@
 	
     /* FILTER VARIABLES AND JQUERY TRIGGERS FOR QUERY DEFINITION */
     
-    //CATs are made using catMarker config array
+    //CATs made using catMarker config array
 	var categories = {};
 	for (var i = 0, j = catMarkers.length; i < j; i++) {
 		if (catMarkers[i][2] != '') {
@@ -450,10 +465,10 @@
     var normalkm = false;	//normalizar pot km
     
     //text search over post content, formatted address, ticket or wordcloud click
-    var searchInput = "";
+    var searchInput = '';
     
-    // globals for query definition
-    var _query = "SELECT * FROM "+table_name; //initial query
+    // query definition
+    var _query = 'SELECT * FROM '+ table_name;
     var _geoq;
 	
 	var selectedCat, selectedTitle, selectedContent, selectedTicket, selectedAddress, selectedUrl, selectedStatus, selectedFail, selectedCreate, selectedUpdate, selectedFollowup, selectedFollowupExt, selectedVotes, selectedStars, selectedAssets, selectedComments, selectedUUID;
@@ -724,7 +739,7 @@
 		
 		/* CHECK FOR ANY URL PARAMETERS*/
 		var obj = getUrlVars();
-		if (obj.table_name) table_name = obj.table_name;
+		if (obj.table_name) table_name = obj.table_name.replace('/','');
 		
 		if ((obj.table_name && obj.ticket ) || obj.hasOwnProperty('filter')){
 			var someUrl = true;
@@ -1162,12 +1177,13 @@
     <a href="#" class="button" style="display:none;"></a>
 
 <script type="text/javascript">
-	  /* ONLOAD CONFIGURATIONS */
 	  
 	  //EXECUTE ON DOM READY
-	  $(function() { //execute when DOM is ready
+	  $(function() {
 	  	BrowserDetect.init();
-	  	$(window).load(function() { /* RAPTOR */
+	  	
+	  	/* RAPTOR */
+	  	$(window).load(function() { 
 	  		
 	  		$('.button').raptorize({
 	  			'enterOn': 'konami-code'
@@ -1288,9 +1304,9 @@
 	  			$("#amountHrsDia").val(ui.values[0] + " - " + ui.values[1]);
 	  			queryhorasdeldia = "(date_part('hour', " + table_name + ".created_at at time zone '" + TZ + "')";
 	  			if (ui.values[0] === ui.values[1]) {
-	  				queryhorasdeldia = " = " + ui.values[0] + " )";
+	  				queryhorasdeldia += " = " + ui.values[0] + " )";
 	  			} else {
-	  				queryhorasdeldia = " BETWEEN " + ui.values[0] + " AND " + ui.values[1] + ")";
+	  				queryhorasdeldia += " BETWEEN " + ui.values[0] + " AND " + ui.values[1] + ")";
 	  			}
 	  		}
 	  	});
@@ -2455,7 +2471,7 @@
 	  
 	  /* METHOD FOR BUILDING STATS VIEW */
 	  function displayStats(querytehuan){
-			var mun_p=[],mun_p_nonzero = [];
+			var mun_p=[], mun_p_nonzero = [];
 			var categorias=[];
 			var auxCat=0;
 			var bigo={};
@@ -2578,21 +2594,22 @@
 			$('#columnContainer').highcharts().showLoading('Recopilando la información, por favor espere...');
 	        
 			
-		    ///SLICE QUERY IN THREE DIFFERENT PARTS FOR SIMPLICITY///
-			//SELECT STATEMENT//
+		    /*SLICE QUERY IN THREE DIFFERENT PARTS FOR SIMPLICITY*/
+			
+			//SELECT STATEMENT
 			var querycount = "SELECT COUNT("+table_name+".*) as y, "+table_area+".name as ejeX, "+table_name+".post_cat as seriesname FROM "+table_name+", "+table_area+" ";
+			
 			//WHERE CLAUSE EXTRACTED FROM ORIGINAL QUERY
 			if (querytehuan.search(/where/i) != -1){
 				var querywhere = querytehuan.substring(querytehuan.search(/where/i));
 			}else{
 				var querywhere = "";
 			}
-			//console.log('---Where clause extracted---');
-			//console.log(querywhere);
-			///GROUP AND ORDER CLAUSE
+
+			//GROUP AND ORDER CLAUSE
 			var querygroup = " GROUP BY "+table_area+".name,"+table_name+".post_cat order by "+table_name+".post_cat, "+table_area+".name asc"
 			
-			///BUILD QUERY FOR COUNTING
+			//BUILD QUERY FOR COUNTING
 			queryStats = querycount + querywhere + querygroup;
 			
 			//VARIABLES FOR QUERY STRING MANIPULATION
@@ -2613,16 +2630,15 @@
 			//VARIABLES FOR POLYGON QUERY	
 			querypoly = "SELECT name FROM "+table_area+" order by name asc";
 			var n = queryStats.search('"+table_area+".name =');
-			m = queryStats.search(' GROUP BY'); //search again because index might change
+
+			//search again because index might change
+			m = queryStats.search(' GROUP BY');
+			
 			//CHECK TO RETURN JUST QUERIED COUNTIES ON X AXIS
 			if (n != -1){
 				var o = "("+queryStats.substring(n, m);
 				querypoly = "SELECT name FROM "+table_area+" where "+o+" order by name asc";
 			}
-			//console.log("---Query del poligono para eje X---");
-			//console.log(querypoly);
-			//console.log("---Query para series de HC---");
-			//console.log(queryStats);
 			var re = new RegExp(table_name,"g");		
 		    if(closeDistance){
 				var str     = queryStats;
@@ -2630,12 +2646,6 @@
 				queryStats = "WITH data AS ("+_geoq+") "+n;
 			}
 			
-/*
-			console.log("Query for stats (querypoly):");
-		    console.log(querypoly);
-		    console.log("Query for stats (queryStats):");
- 		    console.log(queryStats);	   
-*/
 			///Get array from polygon names (includes all municipalities drawn)
 			sql.execute(querypoly)
 			      .done(function(data) {
@@ -2643,8 +2653,6 @@
 			          		mun_p[i] = data.rows[i].name;
 			          		bigo[mun_p[i]] = {};
 			        }
-					//console.log("---Arreglo Municipios:---");
-					//console.log(mun_p);
 					
 					//Manage arrays in preparation for highcharts		
 					sql.execute(queryStats)
@@ -2699,15 +2707,6 @@
 								}
 					        }
 
-/*
-							console.log("---Objeto de objetos por municipio con totales por categoria---");
-							console.log(bigo);
-
-							console.log("---Objeto de objetos por categoria con totales por municipio---");
-							console.log(biga);				
-*/
-					
-							
 							//Extract Series Elements from Objects for average
 							var prom = [];
 							var sumas = [];
@@ -2730,21 +2729,10 @@
 									}	
 								 
 							}
-/*
-							console.log("CONSOLIDADO DE CAT POR MUN");
-							console.log(sumas);
-*/
-							
-							
+
 							var mun_p_fullname =[];
 							for (var i=0; i < mun_p_nonzero.length;i++){mun_p_fullname.push(getFullName(mun_p_nonzero[i]));}
 							$('#columnContainer').highcharts().xAxis[0].setCategories(mun_p_fullname);
-/*
-							console.log('Mun p non zero');
-							console.log(mun_p_nonzero);
-*/
-							//console.log("---Promedios---");
-							//console.log(prom);							
 					
 							//Extract Series Elements from Objects for data
 							if(!muncons){
@@ -2762,11 +2750,6 @@
 								 	 var series = new Object();
 									 series['data']= catarray;
 									 series['name']= idx;
-/*
-									 console.log("Esta es la serie original impresa");
-									 console.log(idx);
-									 console.log(catarray);
-*/
 								 	 $('#columnContainer').highcharts().addSeries(series);
 								 }
 							}
@@ -3352,9 +3335,12 @@
 	      
 	      d3.select('#vis').classed(colorScheme, true);
 	      
+	      var url = encodeURI("http://cicadmin.cartodb.com/api/v2/sql/?q=SELECT date_part('dow', "+table_name+".created_at at time zone '"+TZ+"') as day_y, date_part('hour', "+table_name+".created_at at time zone '"+TZ+"') as hour_x, count( "+table_name+".*) " + _q + " GROUP BY day_y, hour_x ORDER BY day_y, hour_x asc");
+	      
+	      
 	      // QUERY CARTODB
 		  $.ajax({
-			url: encodeURI("http://cicadmin.cartodb.com/api/v2/sql/?q=SELECT date_part('dow', "+table_name+".created_at) as day_y, date_part('hour', "+table_name+".created_at at time zone '"+TZ+"') as hour_x, count( "+table_name+".*) " + _q + " GROUP BY day_y, hour_x ORDER BY day_y, hour_x asc"),
+			url: url.replace('+','%2B'),
 			dataType: 'json',
 			success: function(data) {
 				for (var i =0; i < data.total_rows ; i++){
@@ -3399,8 +3385,13 @@
 		  var target = document.getElementById('wordle-container');
 		  var spinner = new Spinner(opts).spin(target);
 		  // QUERY CARTODB
+		  
+	      var url = encodeURI("http://cicadmin.cartodb.com/api/v2/sql/?q=SELECT "+table_name+".post_content " + _q);
+	      
+	      
+	      // QUERY CARTODB
 		  $.ajax({
-			url: encodeURI("http://cicadmin.cartodb.com/api/v2/sql/?q=SELECT "+table_name+".post_content " + _q),
+			url: url.replace('+','%2B'),
 			dataType: 'json',
 			success: function(data) {
 				for (var i =0; i < data.total_rows ; i++){
@@ -3884,12 +3875,12 @@
 		  	
 			$('.switch').change(function() {
 	
-				var that = $(this).attr('id');
+				var _this = $(this).attr('id');
 		  		/* CATEGORIES */
 		  		
 		  		for (var a in categories){
-			  		if (a==that){
-					  	this.checked ? categories[that] = true : categories[that] = false;
+			  		if (a==_this){
+					  	this.checked ? categories[_this] = true : categories[_this] = false;
 					  	execRepOffset = 0;
 					  	setQ();
 					  	break;	
@@ -3897,9 +3888,9 @@
 		  		}
 		  		/* DATES */
 		  		for (var b in dates){
-			  		if (b==that){
-					  	this.checked ? dates[that] = true : dates[that] = false;
-					  	clearDates(that);
+			  		if (b==_this){
+					  	this.checked ? dates[_this] = true : dates[_this] = false;
+					  	clearDates(_this);
 					  	execRepOffset = 0;
 					  	setQ();
 					  	break;	
@@ -3907,8 +3898,8 @@
 		  		}
 		  		/* MUNS */
 		  		for (var c in mun){
-			  		if (c==that){
-					  	this.checked ? mun[that] = true : mun[that] = false;
+			  		if (c==_this){
+					  	this.checked ? mun[_this] = true : mun[_this] = false;
 					  	execRepOffset = 0;
 					  	setQ();
 					  	break;	
@@ -3916,8 +3907,8 @@
 		  		}
 		  		/* REPORT STATUS */
 		  		for (var d in repStatus){
-			  		if (d==that){
-					  	this.checked ? repStatus[that] = true : repStatus[that] = false;
+			  		if (d==_this){
+					  	this.checked ? repStatus[_this] = true : repStatus[_this] = false;
 					  	execRepOffset = 0;
 					  	setQ();
 					  	break;	
@@ -3926,8 +3917,8 @@
 			  	
 		  		/* REPORT DETAIL */
 		  		for (var e in repDetail){
-			  		if (e==that){
-					  	this.checked ? repDetail[that] = true : repDetail[that] = false;
+			  		if (e==_this){
+					  	this.checked ? repDetail[_this] = true : repDetail[_this] = false;
 					  	execRepOffset = 0;
 					  	setQ();
 					  	break;	
@@ -4106,29 +4097,6 @@
 		
 		
 		//CATEGORIES
-/*
-		for (var y in categories) {
-			if (categories[y]) {
-				if (auxWhere) {
-					if (auxInter) {
-						_query += " , ";
-					} else {
-						_query += " AND " + table_name + ".post_cat IN (";
-					}
-				} else {
-					_query += " WHERE " + table_name + ".post_cat IN (";
-				}
-				for (var i = 0, j = catMarkers.length; i < j; i++) {
-					if (catMarkers[i][2] === y) {
-						_query += "'" + catMarkers[i][0] + "'";
-						auxWhere = true;
-						auxInter = true;
-					}
-				}
-			}
-		}
-		interFilter(auxInter);
-*/
 		
 		var catGrp = [];
 		var t;
@@ -4203,37 +4171,29 @@
 		//STATUS
 		for (var y in repStatus) {
 			if (repStatus[y]) {
-				if (y == "closed_fail") y = y.substring(0, y.search("_"));
+				if (repStatus.closed && repStatus.closed_fail && y === 'closed_fail') continue
+				if (y === 'closed_fail') y = y.substring(0, y.search('_'));
 				if (auxWhere) {
 					if (auxInter) {
-/* 						if (y != "closed_fail") _query += ","; */
-						_query += ",";
+						_query += ',';
 					} else {
-						_query += " AND " + table_name + ".status IN (";
+						_query += ' AND ' + table_name + '.status IN (';
 					}
 				} else {
-					_query += " WHERE " + table_name + ".status IN (";
+					_query += ' WHERE ' + table_name + '.status IN (';
 				}
 				_query += "'" + y + "'";
-/*
-				if (y != "closed_fail") {
-					_query += "'" + y + "'";
-				} else {
-					if (!repStatus.closed && !repStatus.read) _query += "'closed'";
-					else _query += ",'closed'";
-				}
-*/
 				auxWhere = true;
 				auxInter = true;
 			}
 		}
-		interFilter (auxInter);
+		interFilter(auxInter);
 		if (!(repStatus.closed && repStatus.closed_fail)) {
 			if (repStatus.closed || repStatus.closed_fail) {
 				_query += " AND " + table_name + ".close_fail = " + repStatus.closed_fail;
 			}
-		}			
-		
+		}		
+
 		//DETAILS
 		for (var y in repDetail) {
 			if (repDetail[y]) {
@@ -4327,20 +4287,26 @@
 		//HIDE REPORT SLIDE & INFOWINDOW
 
 		if(!closeDistance){
-			$('#report-content:visible').hide('fold', {}, 400);  // hide report if visible
-			$('#infowindow:visible').hide('fold', {}, 400);      // hide infowindow if visible
+			$('#report-content:visible').hide('fold', {}, 400);
+			$('#infowindow:visible').hide('fold', {}, 400);  
 		}
 			
 		// QUERY IS COMPLETE
 		console.log("MAIN Q");
 		console.log(_geoq);
-			
 		
+		if(repDetail.voto){
+		votesCssq =  "WITH data AS ("+_geoq+") SELECT CDB_JenksBins(array_agg(votes::numeric), " + votesBins + ") FROM data";
+		bubbleStyle(votesCssq);
+		}
+		
+			
 		//UPDATE LAYER 0 WITH DATA
 		layers[0].setOptions({
 			query: _geoq,
 			interactivity: _interactivity
 		});
+		
 		//HIDE/SHOW AGEB/CIC LAYER ACCORDINGLY
 		if (activeView === 'agebUrbano') {
 			layers[0].hide();
@@ -4403,26 +4369,11 @@
 				break;
 		}			
 			
-			
 			// MAIN COUNTER UPDATE //
 			var str=_geoq;
 			var n;
-			
-/*
-			if (auxMun) n=str.replace("SELECT "+table_name+".* FROM "+table_name+", "+table_area+"","SELECT COUNT("+table_name+".*) FROM "+table_name+", "+table_area+"");
-			else n=str.replace("SELECT * FROM "+table_name+"","SELECT COUNT (*) FROM "+table_name+"");
-			
-			if (closeDistance) n = _geoq;
-
-			sql.execute(n).done(function(data) {
-			    var result = data.rows[0].count;
-				if (closeDistance) result = data.total_rows;
-				$( "#counterVal" ).val(addCommas(result));
-			}).error(function(errors) {});
-*/
-			
+						
 			//COUNTER UPDATE //
-			
 			if (auxMun) n=str.replace("SELECT "+table_name+".* FROM "+table_name+", "+table_area, "SELECT "+table_name+".post_cat, COUNT("+table_name+".*) FROM "+table_name+", "+table_area);
 			else n=str.replace("SELECT * FROM "+table_name,"SELECT "+table_name+".post_cat, COUNT (*) FROM "+table_name);
 			
