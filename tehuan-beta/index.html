@@ -2234,6 +2234,9 @@
 	  
 	  //DRAW IND CHARTS FOR MUN
 	  function plotCounty(status, origin, mun) {
+			
+			console.log(status);
+			
 			var datalabel = true;
 			var datapie = [];
 			var datawfall = [];
@@ -2645,7 +2648,8 @@
 				var n       = str.replace(re, "data");
 				queryStats = "WITH data AS ("+_geoq+") "+n;
 			}
-			
+			console.log('Stats');
+			console.log(queryStats);
 			///Get array from polygon names (includes all municipalities drawn)
 			sql.execute(querypoly)
 			      .done(function(data) {
@@ -3385,11 +3389,8 @@
 		  var target = document.getElementById('wordle-container');
 		  var spinner = new Spinner(opts).spin(target);
 		  // QUERY CARTODB
-		  
-	      var url = encodeURI("http://cicadmin.cartodb.com/api/v2/sql/?q=SELECT "+table_name+".post_content " + _q);
-	      
-	      
-	      // QUERY CARTODB
+		  var url = encodeURI("http://cicadmin.cartodb.com/api/v2/sql/?q=SELECT "+table_name+".post_content " + _q);
+
 		  $.ajax({
 			url: url.replace('+','%2B'),
 			dataType: 'json',
@@ -3436,7 +3437,8 @@
 	  	  var queryStatus = "select count("+table_name+".*) as cuenta, "+table_area+".name as municipio, "+table_name+".post_cat as categoria, "+table_name+".status as status, "+table_name+".close_fail as close_fail from "+table_name+", "+table_area+" where st_intersects("+table_name+".the_geom, "+table_area+".the_geom) and ("+table_name+".status ilike '%read%' or "+table_name+".status ilike '%closed%' and "+table_name+".close_fail = false or "+table_name+".status ilike '%closed%' and "+table_name+".close_fail = true) and ("+table_name+".post_cat ilike '%alcantarilla%' or "+table_name+".post_cat ilike '%alumbr%' or "+table_name+".post_cat ilike '%electricidad%' or "+table_name+".post_cat ilike '%fuga%' or "+table_name+".post_cat ilike '%parques%' or "+table_name+".post_cat ilike '%basura%' or "+table_name+".post_cat ilike '%bache%' or "+table_name+".post_cat ilike '%semaforo%') and ((now() at time zone '"+TZ+"')-"+table_name+".created_at < interval '90 day') group by "+table_area+".name,"+table_name+".post_cat, "+table_name+".status, "+table_name+".close_fail order by "+table_area+".name,"+table_name+".post_cat asc";
 	  	  var queryOrigin ="select count(*), channel as origen, "+table_area+".name as municipio from "+table_name+", "+table_area+" where (now() at time zone '"+TZ+"'-"+table_name+".created_at at time zone '"+TZ+"') < interval '90 day' and st_intersects("+table_name+".the_geom, "+table_area+".the_geom) and ("+table_name+".post_cat ilike '%alcantarilla%' or "+table_name+".post_cat ilike '%alumbr%' or "+table_name+".post_cat ilike '%electricidad%' or "+table_name+".post_cat ilike '%fuga%' or "+table_name+".post_cat ilike '%parques%' or "+table_name+".post_cat ilike '%basura%' or "+table_name+".post_cat ilike '%bache%' or "+table_name+".post_cat ilike '%semaforo%') group by channel,"+table_area+".name order by municipio";
 		  
-		  
+		  console.log("displaystat");
+		  console.log(queryScore);
 		  
 		  $('#chart0').highcharts({
 				chart: {
@@ -4126,7 +4128,9 @@
 					} else {
 						_query += " WHERE (";
 					}
-					if (y == "calendario") _query += "(" + table_name + ".created_at at time zone '" + TZ + "' BETWEEN ('" + desde + "') AND (DATE '" + hasta + "' + 1))";
+					if (y == "calendario") {
+					console.log(hasta);
+					_query += "(" + table_name + ".created_at at time zone '" + TZ + "' BETWEEN ('" + desde + "') AND (DATE '" + hasta + "' + 1))";}
 					if ((y == "sietedias_7") || (y == "quincedias_15") || (y == "treintadias_30") || (y == "noventadias_90")) {
 						var dias = y.substring(y.search("_") + 1);
 						_query += "((now() at time zone '" + TZ + "')-" + table_name + ".created_at at time zone '" + TZ + "') < INTERVAL '" + dias + " day'";
@@ -5379,6 +5383,26 @@ s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
 }());
 </script>
 
+<!-- Add Categories Menu Images -->
+<script type="text/javascript">
+
+var labels = document.getElementsByTagName('LABEL');
+
+for(var k=0, l= catMarkers.length; k<l; k++){
+		
+		for (var i = 0; i < labels.length; i++) {
+		    if (labels[i].htmlFor == catMarkers[k][2]&&labels[i].htmlFor != '') {
+		         var menuSrc = sourceurl + 'cat/' + catMarkers[k][1];
+		         var str = catMarkers[k][0];
+		         labels[i].innerHTML= '<img style="vertical-align:text-top" width="25" height="22" src="'+menuSrc+'"> &nbsp;&nbsp;'+str.charAt(0).toUpperCase() + str.toLowerCase().slice(1);
+		    }
+		}
+}
+console.log("ESTAS SON LAS LABELS");
+
+console.log(labels);
+
+</script>
 
 <!-- Chartbeat -->
 
